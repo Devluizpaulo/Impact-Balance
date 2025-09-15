@@ -64,7 +64,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     const breakdown: { category: string; ucs: number; cost: number }[] = [];
 
-    // Participants
+    // Participants Impact
     const staffParticipants = (participants.organizers || 0) +
                               (participants.assemblers || 0) +
                               (participants.suppliers || 0) +
@@ -72,33 +72,28 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                               (participants.supportTeam || 0) +
                               (participants.attendants || 0) +
                               (participants.support || 0);
-
-    const staffHours = staffParticipants * (durationDays || 0) * 8; // Staff work 8 hours/day
+    const staffHours = staffParticipants * (durationDays || 0) * 8;
     const visitorHours = (participants.visitors || 0) * (durationHours || 0);
     const totalParticipantHours = staffHours + visitorHours;
     const participantUcs = totalParticipantHours * perCapitaFactors.hourlyUcsConsumption;
     breakdown.push({ category: "Participants", ucs: participantUcs, cost: participantUcs * ucsCostPerUnit });
 
-    // Direct factors
-    const durationUcs = (values.durationDays || 0) * ucsFactors.durationDays;
-    breakdown.push({ category: "Duration", ucs: durationUcs, cost: durationUcs * ucsCostPerUnit });
+    // Direct Factors Impact
+    const directFactors: { category: string; value: number; factor: number; }[] = [
+        { category: "Duration", value: values.durationDays || 0, factor: ucsFactors.durationDays },
+        { category: "Venue Size", value: values.venueSizeSqm || 0, factor: ucsFactors.venueSizeSqm },
+        { category: "Travel", value: values.travelKm || 0, factor: ucsFactors.travelKm },
+        { category: "Waste", value: values.wasteKg || 0, factor: ucsFactors.wasteKg },
+        { category: "Water", value: values.waterLiters || 0, factor: ucsFactors.waterLiters },
+        { category: "Energy", value: values.energyKwh || 0, factor: ucsFactors.energyKwh },
+    ];
 
-    const venueUcs = (values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm;
-    breakdown.push({ category: "Venue Size", ucs: venueUcs, cost: venueUcs * ucsCostPerUnit });
-    
-    const travelUcs = (values.travelKm || 0) * ucsFactors.travelKm;
-    breakdown.push({ category: "Travel", ucs: travelUcs, cost: travelUcs * ucsCostPerUnit });
+    directFactors.forEach(item => {
+        const ucs = item.value * item.factor;
+        breakdown.push({ category: item.category, ucs, cost: ucs * ucsCostPerUnit });
+    });
 
-    const wasteUcs = (values.wasteKg || 0) * ucsFactors.wasteKg;
-    breakdown.push({ category: "Waste", ucs: wasteUcs, cost: wasteUcs * ucsCostPerUnit });
-
-    const waterUcs = (values.waterLiters || 0) * ucsFactors.waterLiters;
-    breakdown.push({ category: "Water", ucs: waterUcs, cost: waterUcs * ucsCostPerUnit });
-
-    const energyUcs = (values.energyKwh || 0) * ucsFactors.energyKwh;
-    breakdown.push({ category: "Energy", ucs: energyUcs, cost: energyUcs * ucsCostPerUnit });
-
-    // Indirect costs
+    // Indirect Costs Impact
     if (values.includeOwnershipRegistration) {
       const ownershipUcs = indirectCosts.ownershipRegistration;
       breakdown.push({ category: "Ownership Registration", ucs: ownershipUcs, cost: ownershipUcs * ucsCostPerUnit });
@@ -112,6 +107,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       breakdown.push({ category: "Website Page", ucs: websiteUcs, cost: websiteUcs * ucsCostPerUnit });
     }
 
+    // Final Calculation
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = totalUCS * ucsCostPerUnit;
     const totalEventHours = (values.durationDays || 0) * 24;
@@ -132,7 +128,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     onCalculate(results, values);
   }
-
 
   const handleResetClick = () => {
     form.reset();
