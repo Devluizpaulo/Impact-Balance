@@ -1,4 +1,3 @@
-
 {
   "Header": {
     "title": "Impact Balance",
@@ -42,11 +41,17 @@
       "label": "Event Name",
       "placeholder": "e.g. Annual Tech Conference"
     },
-    "participants": {
-      "label": "Participants"
+    "visitors": {
+      "label": "Visitors"
+    },
+    "operators": {
+      "label": "Staff / Collaborators"
+    },
+    "durationHours": {
+      "label": "Duration (hours for visitors)"
     },
     "durationDays": {
-      "label": "Duration (days)"
+      "label": "Duration (days for staff)"
     },
     "optionalDetails": "Optional: Add more details for a precise calculation.",
     "venueSizeSqm": {
@@ -72,21 +77,23 @@
     "calculateButton": "Calculate Impact",
     "formValidation": {
       "eventNameError": "Event name must be at least 3 characters.",
-      "participantsError": "At least 1 participant is required.",
-      "durationDaysError": "Duration must be at least 1 day."
+      "visitorsError": "Number of visitors must be 0 or more.",
+      "operatorsError": "At least 1 operator/collaborator is required.",
+      "durationHoursError": "Duration for visitors must be at least 1 hour.",
+      "durationDaysError": "Duration for staff must be at least 1 day."
     }
   },
   "ImpactCharts": {
     "title": "Impact Breakdown",
     "description": "Contribution of each category to the total UCS.",
     "categories": {
-        "participants": "Participants",
-        "duration": "Duration",
-        "venueSize": "Venue Size",
-        "travel": "Travel",
-        "waste": "Waste",
-        "water": "Water",
-        "energy": "Energy"
+      "participants": "Participants",
+      "duration": "Duration",
+      "venueSize": "Venue Size",
+      "travel": "Travel",
+      "waste": "Waste",
+      "water": "Water",
+      "energy": "Energy"
     }
   },
   "AiSuggestions": {

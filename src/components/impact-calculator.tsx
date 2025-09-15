@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formSchema, type FormData, type CalculationResult } from "@/lib/types";
 import { UCS_FACTORS, UCS_COST_PER_UNIT, GDP_PER_CAPITA_BRAZIL } from "@/lib/constants";
-import { Calculator, Users, CalendarDays, Maximize, Route, Trash2, Droplets, Zap } from "lucide-react";
+import { Calculator, Users, Clock, CalendarDays, Maximize, Route, Trash2, Droplets, Zap } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 
@@ -31,8 +31,10 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     resolver: zodResolver(formSchema(t)),
     defaultValues: {
       eventName: "",
-      participants: 100,
-      durationDays: 1,
+      visitors: 100,
+      operators: 20,
+      durationHours: 8,
+      durationDays: 3,
       venueSizeSqm: 500,
       travelKm: 250,
       wasteKg: 150,
@@ -43,8 +45,18 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
   function onSubmit(values: FormData) {
+    const totalParticipants = values.visitors + values.operators;
+    
+    // Impact is proportional to the time spent. Visitors stay for hours, operators for days.
+    // We can normalize this by converting days to hours (assuming 8h/day for operators)
+    const operatorHours = values.operators * values.durationDays * 8;
+    const visitorHours = values.visitors * values.durationHours;
+    const totalParticipantHours = operatorHours + visitorHours;
+    
+    const participantFactor = totalParticipantHours * UCS_FACTORS.participants;
+
     const breakdown = [
-      { category: "Participants", value: values.participants, factor: UCS_FACTORS.participants },
+      { category: "Participants", value: participantFactor, factor: 1 }, // Already factored in
       { category: "Duration", value: values.durationDays, factor: UCS_FACTORS.durationDays },
       { category: "Venue Size", value: values.venueSizeSqm, factor: UCS_FACTORS.venueSizeSqm },
       { category: "Travel", value: values.travelKm, factor: UCS_FACTORS.travelKm },
@@ -60,16 +72,17 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = totalUCS * UCS_COST_PER_UNIT;
+    const totalEventHours = values.durationDays * 24;
 
     const results: CalculationResult = {
       totalUCS,
       totalCost,
-      ucsPerParticipant: values.participants > 0 ? totalUCS / values.participants : 0,
-      costPerParticipant: values.participants > 0 ? totalCost / values.participants : 0,
+      ucsPerParticipant: totalParticipants > 0 ? totalUCS / totalParticipants : 0,
+      costPerParticipant: totalParticipants > 0 ? totalCost / totalParticipants : 0,
       breakdown,
       equivalences: {
-        dailyUCS: values.durationDays > 0 ? totalUCS / values.durationDays : 0,
-        hourlyUCS: values.durationDays > 0 ? totalUCS / (values.durationDays * 24) : 0,
+        dailyUCS: totalEventHours > 0 ? totalUCS / values.durationDays : 0,
+        hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
         gdpPercentage: (totalCost / GDP_PER_CAPITA_BRAZIL) * 100,
       },
     };
@@ -108,12 +121,40 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="participants"
+                name="visitors"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center"><Users className="w-4 h-4 mr-2" />{t('participants.label')}</FormLabel>
+                    <FormLabel className="flex items-center"><Users className="w-4 h-4 mr-2" />{t('visitors.label')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="100" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="durationHours"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center"><Clock className="w-4 h-4 mr-2" />{t('durationHours.label')}</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="8" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="operators"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center"><Users className="w-4 h-4 mr-2" />{t('operators.label')}</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="20" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

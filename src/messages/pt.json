@@ -1,4 +1,3 @@
-
 {
   "Header": {
     "title": "Balanço de Impacto",
@@ -42,11 +41,17 @@
       "label": "Nome do Evento",
       "placeholder": "ex: Conferência Anual de Tecnologia"
     },
-    "participants": {
-      "label": "Participantes"
+    "visitors": {
+      "label": "Visitantes"
+    },
+    "operators": {
+      "label": "Colaboradores / Equipe"
+    },
+    "durationHours": {
+      "label": "Duração (horas para visitantes)"
     },
     "durationDays": {
-      "label": "Duração (dias)"
+      "label": "Duração (dias para equipe)"
     },
     "optionalDetails": "Opcional: Adicione mais detalhes para um cálculo preciso.",
     "venueSizeSqm": {
@@ -72,21 +77,23 @@
     "calculateButton": "Calcular Impacto",
     "formValidation": {
       "eventNameError": "O nome do evento deve ter pelo menos 3 caracteres.",
-      "participantsError": "É necessário pelo menos 1 participante.",
-      "durationDaysError": "A duração deve ser de pelo menos 1 dia."
+      "visitorsError": "O número de visitantes deve ser 0 ou maior.",
+      "operatorsError": "É necessário pelo menos 1 colaborador.",
+      "durationHoursError": "A duração para visitantes deve ser de pelo menos 1 hora.",
+      "durationDaysError": "A duração para a equipe deve ser de pelo menos 1 dia."
     }
   },
   "ImpactCharts": {
     "title": "Detalhamento do Impacto",
     "description": "Contribuição de cada categoria para o UCS total.",
     "categories": {
-        "participants": "Participantes",
-        "duration": "Duração",
-        "venueSize": "Local",
-        "travel": "Viagem",
-        "waste": "Resíduos",
-        "water": "Água",
-        "energy": "Energia"
+      "participants": "Participantes",
+      "duration": "Duração",
+      "venueSize": "Local",
+      "travel": "Viagem",
+      "waste": "Resíduos",
+      "water": "Água",
+      "energy": "Energia"
     }
   },
   "AiSuggestions": {
