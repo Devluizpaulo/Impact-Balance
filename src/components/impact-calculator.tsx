@@ -33,7 +33,12 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       eventName: "",
       participants: 100,
       durationDays: 1,
-      currentPractices: t('currentPractices.placeholder'),
+      venueSizeSqm: 500,
+      travelKm: 250,
+      wasteKg: 150,
+      waterLiters: 5000,
+      energyKwh: 1200,
+      currentPractices: "",
     },
   });
 

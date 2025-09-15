@@ -58,12 +58,12 @@ export default function Home() {
         </section>
 
         <div className="container mx-auto px-4 py-8 md:py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             <div className="lg:col-span-1">
               <ImpactCalculator onCalculate={handleCalculation} onReset={handleReset} />
             </div>
-            <div className="lg:col-span-2">
-              <Card className="h-full min-h-[600px]">
+            <div className="lg:col-span-1">
+              <Card className="h-full min-h-[600px] sticky top-24">
                 <CardContent className="p-6">
                   {results && formData ? (
                     <Tabs defaultValue="summary">
@@ -77,7 +77,7 @@ export default function Home() {
                       </div>
                       <TabsContent value="summary">
                         <h3 className="text-2xl font-bold mb-4 font-headline">{t('summary.title')}</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 text-center">
                           <div className="p-4 bg-secondary rounded-lg">
                             <p className="text-sm text-muted-foreground">{t('summary.totalUCS')}</p>
                             <p className="text-2xl font-bold">{results.totalUCS.toFixed(2)}</p>
