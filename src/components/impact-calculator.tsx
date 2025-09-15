@@ -62,16 +62,15 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors, indirectCosts } = settings;
     const { participants, durationDays, durationHours } = values;
 
-    const breakdown: { category: string; ucs: number; cost: number }[] = [];
-
     const totalParticipants = Object.values(participants).reduce((acc, val) => acc + (val || 0), 0);
-
     const staffParticipants = (participants.organizers || 0) + (participants.assemblers || 0) + (participants.suppliers || 0) + (participants.exhibitors || 0) + (participants.supportTeam || 0) + (participants.attendants || 0) + (participants.support || 0);
     const visitorParticipants = participants.visitors || 0;
     
     const staffHours = staffParticipants * (durationDays || 0) * 8;
     const visitorHours = visitorParticipants * (durationHours || 0);
     const participantUcs = (staffHours + visitorHours) * perCapitaFactors.hourlyUcsConsumption;
+    
+    const breakdown: { category: string; ucs: number; cost: number }[] = [];
     
     breakdown.push({ category: "Participants", ucs: participantUcs, cost: participantUcs * ucsCostPerUnit });
 
@@ -298,3 +297,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
