@@ -64,54 +64,47 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     const breakdown: { category: string; ucs: number; cost: number }[] = [];
 
-    // Participants Impact
-    const staffParticipants = (participants.organizers || 0) +
-                              (participants.assemblers || 0) +
-                              (participants.suppliers || 0) +
-                              (participants.exhibitors || 0) +
-                              (participants.supportTeam || 0) +
-                              (participants.attendants || 0) +
-                              (participants.support || 0);
+    const totalParticipants = Object.values(participants).reduce((acc, val) => acc + (val || 0), 0);
+
+    const staffParticipants = (participants.organizers || 0) + (participants.assemblers || 0) + (participants.suppliers || 0) + (participants.exhibitors || 0) + (participants.supportTeam || 0) + (participants.attendants || 0) + (participants.support || 0);
+    const visitorParticipants = participants.visitors || 0;
+    
     const staffHours = staffParticipants * (durationDays || 0) * 8;
-    const visitorHours = (participants.visitors || 0) * (durationHours || 0);
-    const totalParticipantHours = staffHours + visitorHours;
-    const participantUcs = totalParticipantHours * perCapitaFactors.hourlyUcsConsumption;
+    const visitorHours = visitorParticipants * (durationHours || 0);
+    const participantUcs = (staffHours + visitorHours) * perCapitaFactors.hourlyUcsConsumption;
+    
     breakdown.push({ category: "Participants", ucs: participantUcs, cost: participantUcs * ucsCostPerUnit });
 
-    // Direct Factors Impact
-    const directFactors: { category: string; value: number; factor: number; }[] = [
-        { category: "Duration", value: values.durationDays || 0, factor: ucsFactors.durationDays },
-        { category: "Venue Size", value: values.venueSizeSqm || 0, factor: ucsFactors.venueSizeSqm },
-        { category: "Travel", value: values.travelKm || 0, factor: ucsFactors.travelKm },
-        { category: "Waste", value: values.wasteKg || 0, factor: ucsFactors.wasteKg },
-        { category: "Water", value: values.waterLiters || 0, factor: ucsFactors.waterLiters },
-        { category: "Energy", value: values.energyKwh || 0, factor: ucsFactors.energyKwh },
+    const directFactors = [
+      { key: "Duration", value: values.durationDays || 0, factor: ucsFactors.durationDays },
+      { key: "Venue Size", value: values.venueSizeSqm || 0, factor: ucsFactors.venueSizeSqm },
+      { key: "Travel", value: values.travelKm || 0, factor: ucsFactors.travelKm },
+      { key: "Waste", value: values.wasteKg || 0, factor: ucsFactors.wasteKg },
+      { key: "Water", value: values.waterLiters || 0, factor: ucsFactors.waterLiters },
+      { key: "Energy", value: values.energyKwh || 0, factor: ucsFactors.energyKwh }
     ];
-
+    
     directFactors.forEach(item => {
         const ucs = item.value * item.factor;
-        breakdown.push({ category: item.category, ucs, cost: ucs * ucsCostPerUnit });
+        breakdown.push({ category: item.key, ucs: ucs, cost: ucs * ucsCostPerUnit });
     });
-
-    // Indirect Costs Impact
+    
     if (values.includeOwnershipRegistration) {
-      const ownershipUcs = indirectCosts.ownershipRegistration;
-      breakdown.push({ category: "Ownership Registration", ucs: ownershipUcs, cost: ownershipUcs * ucsCostPerUnit });
+        const ucs = indirectCosts.ownershipRegistration;
+        breakdown.push({ category: "Ownership Registration", ucs: ucs, cost: ucs * ucsCostPerUnit });
     }
     if (values.includeCertificateIssuance) {
-      const certificateUcs = indirectCosts.certificateIssuance;
-      breakdown.push({ category: "Certificate Issuance", ucs: certificateUcs, cost: certificateUcs * ucsCostPerUnit });
+        const ucs = indirectCosts.certificateIssuance;
+        breakdown.push({ category: "Certificate Issuance", ucs: ucs, cost: ucs * ucsCostPerUnit });
     }
     if (values.includeWebsitePage) {
-      const websiteUcs = indirectCosts.websitePage;
-      breakdown.push({ category: "Website Page", ucs: websiteUcs, cost: websiteUcs * ucsCostPerUnit });
+        const ucs = indirectCosts.websitePage;
+        breakdown.push({ category: "Website Page", ucs: ucs, cost: ucs * ucsCostPerUnit });
     }
 
-    // Final Calculation
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = totalUCS * ucsCostPerUnit;
     const totalEventHours = (values.durationDays || 0) * 24;
-    const totalParticipants = staffParticipants + (participants.visitors || 0);
 
     const results: CalculationResult = {
       totalUCS,
