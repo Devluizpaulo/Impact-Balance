@@ -126,15 +126,15 @@
     "backButton": "Back to Calculator",
     "saveButton": "Save Changes",
     "resetButton": "Reset to Defaults",
-    "impactFactors": "UCS Impact Factors",
-    "otherConstants": "Other Constants",
-    "costPerUcs": "Cost per UCS Unit",
-    "gdpBrazil": "GDP per Capita (Brazil)",
+    "impactFactors": "UCS Event Impact Factors",
+    "perCapitaBasis": "Per Capita Calculation Basis",
+    "equivalencesAndCosts": "Equivalences and Costs",
+    "costPerUcs": "Cost per UCS Unit (Event)",
     "table": {
       "parameter": "Parameter",
       "value": "Value"
     },
-    "categories": {
+    "ucsFactors": {
       "participants": "Participants (per hour)",
       "durationDays": "Duration (per day)",
       "venueSizeSqm": "Venue Size (per m²)",
@@ -142,6 +142,22 @@
       "wasteKg": "Waste (per kg)",
       "waterLiters": "Water (per liter)",
       "energyKwh": "Energy (per kWh)"
+    },
+    "perCapitaFactors": {
+      "averageUcsPerHectare": "Average UCS per Hectare",
+      "perCapitaConsumptionHa": "Per Capita Consumption (Ha)",
+      "ucsConsumption73years": "UCS Consumption (73 years)",
+      "annualUcsConsumption": "Annual UCS Consumption",
+      "dailyUcsConsumption": "Daily UCS Consumption",
+      "hourlyUcsConsumption": "Hourly UCS Consumption"
+    },
+    "equivalences": {
+      "ucsQuotationValue": "UCS Quotation Value (R$)",
+      "gdpPerCapita": "GDP per Capita (R$)",
+      "equivalenceValuePerYear": "Equivalence Value per Year (R$)",
+      "gdpPercentage": "Equivalence to GDP (%)",
+      "equivalenceValuePerDay": "Equivalence Value per Day (R$)",
+      "equivalenceValuePerHour": "Equivalence Value per Hour (R$)"
     }
   }
 }
