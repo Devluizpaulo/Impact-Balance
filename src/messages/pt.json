@@ -46,12 +46,18 @@
       "label": "Nome do Evento",
       "placeholder": "ex: Conferência Anual de Tecnologia"
     },
-    "visitors": {
-      "label": "Visitantes"
+    "participants": {
+      "title": "Participantes do Evento",
+      "organizers": "Organizadores",
+      "assemblers": "Montadores",
+      "suppliers": "Fornecedores",
+      "exhibitors": "Expositores",
+      "supportTeam": "Equipe de Suporte",
+      "attendants": "Atendentes",
+      "support": "Apoio",
+      "visitors": "Visitantes"
     },
-    "operators": {
-      "label": "Colaboradores / Equipe"
-    },
+    "durationTitle": "Duração do Evento",
     "durationHours": {
       "label": "Duração (horas para visitantes)"
     },
@@ -82,8 +88,6 @@
     "calculateButton": "Calcular Impacto",
     "formValidation": {
       "eventNameError": "O nome do evento deve ter pelo menos 3 caracteres.",
-      "visitorsError": "O número de visitantes deve ser 0 ou maior.",
-      "operatorsError": "É necessário pelo menos 1 colaborador.",
       "durationHoursError": "A duração para visitantes deve ser de pelo menos 1 hora.",
       "durationDaysError": "A duração para a equipe deve ser de pelo menos 1 dia."
     }

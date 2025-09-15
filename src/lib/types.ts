@@ -2,16 +2,24 @@ import { z } from 'zod';
 
 type FormTranslations = {
   'formValidation.eventNameError': string;
-  'formValidation.visitorsError': string;
-  'formValidation.operatorsError': string;
   'formValidation.durationHoursError': string;
   'formValidation.durationDaysError': string;
 };
 
+const participantSchema = z.object({
+  organizers: z.coerce.number().min(0).optional(),
+  assemblers: z.coerce.number().min(0).optional(),
+  suppliers: z.coerce.number().min(0).optional(),
+  exhibitors: z.coerce.number().min(0).optional(),
+  supportTeam: z.coerce.number().min(0).optional(),
+  attendants: z.coerce.number().min(0).optional(),
+  support: z.coerce.number().min(0).optional(),
+  visitors: z.coerce.number().min(0).optional(),
+});
+
 export const formSchema = (t: (key: keyof FormTranslations) => string) => z.object({
   eventName: z.string().min(3, { message: t('formValidation.eventNameError') }),
-  visitors: z.coerce.number().min(0, { message: t('formValidation.visitorsError') }),
-  operators: z.coerce.number().min(1, { message: t('formValidation.operatorsError') }),
+  participants: participantSchema,
   durationHours: z.coerce.number().min(1, { message: t('formValidation.durationHoursError') }),
   durationDays: z.coerce.number().min(1, { message: t('formValidation.durationDaysError') }),
   venueSizeSqm: z.coerce.number().optional(),

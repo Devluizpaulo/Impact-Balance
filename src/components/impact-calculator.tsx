@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formSchema, type FormData, type CalculationResult } from "@/lib/types";
-import { Calculator, Users, Clock, CalendarDays, Maximize, Route, Trash2, Droplets, Zap } from "lucide-react";
+import { Calculator, Users, Clock, CalendarDays, Maximize, Route, Trash2, Droplets, Zap, User, UserCog, Wrench, Building2, Headset, Briefcase, Handshake } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/lib/settings";
@@ -33,8 +33,16 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     resolver: zodResolver(formSchema(t)),
     defaultValues: {
       eventName: "",
-      visitors: 100,
-      operators: 20,
+      participants: {
+        organizers: 10,
+        assemblers: 100,
+        suppliers: 100,
+        exhibitors: 150,
+        supportTeam: 1000,
+        attendants: 200,
+        support: 300,
+        visitors: 4500,
+      },
       durationHours: 8,
       durationDays: 3,
       venueSizeSqm: 500,
@@ -48,11 +56,24 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
   function onSubmit(values: FormData) {
     const { ucsFactors, ucsCostPerUnit, gdpPerCapita } = settings;
-    const totalParticipants = values.visitors + values.operators;
-    
-    const operatorHours = values.operators * values.durationDays * 8;
-    const visitorHours = values.visitors * values.durationHours;
-    const totalParticipantHours = operatorHours + visitorHours;
+    const { participants, durationDays, durationHours } = values;
+
+    const staffParticipants = (
+      (participants.organizers || 0) +
+      (participants.assemblers || 0) +
+      (participants.suppliers || 0) +
+      (participants.exhibitors || 0) +
+      (participants.supportTeam || 0) +
+      (participants.attendants || 0) +
+      (participants.support || 0)
+    );
+
+    const visitorParticipants = participants.visitors || 0;
+    const totalParticipants = staffParticipants + visitorParticipants;
+
+    const staffHours = staffParticipants * durationDays * 8; // Assuming 8 hours/day for staff
+    const visitorHours = visitorParticipants * durationHours;
+    const totalParticipantHours = staffHours + visitorHours;
     
     const participantFactor = totalParticipantHours * ucsFactors.participants;
 
@@ -119,15 +140,32 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               )}
             />
             
+            <Separator />
+            <p className="font-medium">{t('participants.title')}</p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              <FormField control={form.control} name="participants.organizers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><UserCog />{t('participants.organizers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.assemblers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Wrench />{t('participants.assemblers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.suppliers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Briefcase />{t('participants.suppliers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.exhibitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Building2 />{t('participants.exhibitors')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.supportTeam" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Headset />{t('participants.supportTeam')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.attendants" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><User />{t('participants.attendants')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.support" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Handshake />{t('participants.support')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.visitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Users />{t('participants.visitors')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+            </div>
+
+            <Separator />
+            <p className="font-medium">{t('durationTitle')}</p>
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
+               <FormField
                 control={form.control}
-                name="visitors"
+                name="durationDays"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center"><Users className="w-4 h-4 mr-2" />{t('visitors.label')}</FormLabel>
+                    <FormLabel className="flex items-center"><CalendarDays className="w-4 h-4 mr-2" />{t('durationDays.label')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="100" {...field} />
+                      <Input type="number" placeholder="3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -141,34 +179,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                     <FormLabel className="flex items-center"><Clock className="w-4 h-4 mr-2" />{t('durationHours.label')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="8" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="operators"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center"><Users className="w-4 h-4 mr-2" />{t('operators.label')}</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="20" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="durationDays"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center"><CalendarDays className="w-4 h-4 mr-2" />{t('durationDays.label')}</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="3" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
