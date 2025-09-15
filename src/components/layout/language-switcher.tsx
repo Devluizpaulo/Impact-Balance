@@ -9,8 +9,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Languages } from 'lucide-react';
 import { locales } from '@/config';
+import { BrazilFlag, SpainFlag, UsaFlag } from '@/components/icons/flags';
+
+const flagComponents: { [key: string]: React.ReactNode } = {
+  pt: <BrazilFlag className="w-5 h-5" />,
+  en: <UsaFlag className="w-5 h-5" />,
+  es: <SpainFlag className="w-5 h-5" />,
+};
 
 export default function LanguageSwitcher() {
   const t = useTranslations('Header.languages');
@@ -24,14 +30,23 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="flex items-center gap-2">
-      <Languages className="h-5 w-5 text-muted-foreground" />
       <Select onValueChange={onSelectChange} defaultValue={locale}>
-        <SelectTrigger className="w-[120px]">
-          <SelectValue placeholder={t(locale as 'pt' | 'en' | 'es')} />
+        <SelectTrigger className="w-auto p-2">
+          <SelectValue asChild>
+            <div className="flex items-center gap-2">
+              {flagComponents[locale]}
+              <span className="hidden md:inline">{t(locale as 'pt' | 'en' | 'es')}</span>
+            </div>
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {(locales as (keyof ReturnType<typeof t>)[]).map((cur) => (
-            <SelectItem key={cur} value={cur}>{t(cur)}</SelectItem>
+            <SelectItem key={cur} value={cur}>
+              <div className="flex items-center gap-2">
+                {flagComponents[cur]}
+                <span>{t(cur)}</span>
+              </div>
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
