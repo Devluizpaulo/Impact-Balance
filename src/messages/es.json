@@ -8,7 +8,8 @@
     }
   },
   "Footer": {
-    "copyright": "Balance de Impacto. Todos los Derechos Reservados."
+    "copyright": "Balance de Impacto. Todos los Derechos Reservados.",
+    "parametersLink": "Parámetros del Sistema"
   },
   "HomePage": {
     "heroTitle": "Balance de Impacto",
@@ -113,6 +114,28 @@
     "inDevelopment": {
       "title": "Exportar a {format}",
       "description": "Esta función se encuentra actualmente en desarrollo."
+    }
+  },
+  "ParametersPage": {
+    "title": "Parámetros del Sistema",
+    "description": "Los valores utilizados para el cálculo de impacto.",
+    "backButton": "Volver a la Calculadora",
+    "impactFactors": "Factores de Impacto UCS",
+    "otherConstants": "Otras Constantes",
+    "costPerUcs": "Costo por Unidad UCS",
+    "gdpBrazil": "PIB per Cápita (Brasil)",
+    "table": {
+      "parameter": "Parámetro",
+      "value": "Valor"
+    },
+    "categories": {
+      "participants": "Participantes (por hora)",
+      "durationDays": "Duración (por día)",
+      "venueSizeSqm": "Tamaño del Lugar (por m²)",
+      "travelKm": "Viaje Promedio (por km)",
+      "wasteKg": "Residuos (por kg)",
+      "waterLiters": "Agua (por litro)",
+      "energyKwh": "Energía (por kWh)"
     }
   }
 }

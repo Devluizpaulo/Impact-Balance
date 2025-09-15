@@ -8,7 +8,8 @@
     }
   },
   "Footer": {
-    "copyright": "Impact Balance. All Rights Reserved."
+    "copyright": "Impact Balance. All Rights Reserved.",
+    "parametersLink": "System Parameters"
   },
   "HomePage": {
     "heroTitle": "Impact Balance",
@@ -113,6 +114,28 @@
     "inDevelopment": {
       "title": "Export to {format}",
       "description": "This feature is currently in development."
+    }
+  },
+  "ParametersPage": {
+    "title": "System Parameters",
+    "description": "The values used for the impact calculation.",
+    "backButton": "Back to Calculator",
+    "impactFactors": "UCS Impact Factors",
+    "otherConstants": "Other Constants",
+    "costPerUcs": "Cost per UCS Unit",
+    "gdpBrazil": "GDP per Capita (Brazil)",
+    "table": {
+      "parameter": "Parameter",
+      "value": "Value"
+    },
+    "categories": {
+      "participants": "Participants (per hour)",
+      "durationDays": "Duration (per day)",
+      "venueSizeSqm": "Venue Size (per m²)",
+      "travelKm": "Average Travel (per km)",
+      "wasteKg": "Waste (per kg)",
+      "waterLiters": "Water (per liter)",
+      "energyKwh": "Energy (per kWh)"
     }
   }
 }

@@ -6,6 +6,7 @@ import {locales} from './config';
 
 export const pathnames = {
   '/': '/',
+  '/parameters': '/parameters',
 } satisfies Pathnames<typeof locales>;
 
 export const {Link, redirect, usePathname, useRouter} =
