@@ -48,7 +48,7 @@
     },
     "participants": {
       "title": "Participantes do Evento",
-      "organizers": "Organizadores",
+      "organizersAndPromoters": "Organizadores e Promotores",
       "assemblers": "Montadores",
       "suppliers": "Fornecedores",
       "exhibitors": "Expositores",
@@ -180,3 +180,5 @@
     }
   }
 }
+
+    

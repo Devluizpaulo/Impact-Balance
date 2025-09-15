@@ -48,7 +48,7 @@
     },
     "participants": {
       "title": "Event Participants",
-      "organizers": "Organizers",
+      "organizersAndPromoters": "Organizers and Promoters",
       "assemblers": "Assemblers",
       "suppliers": "Suppliers",
       "exhibitors": "Exhibitors",
@@ -180,3 +180,5 @@
     }
   }
 }
+
+    

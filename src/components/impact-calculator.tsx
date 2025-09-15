@@ -72,13 +72,16 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       (participants.support || 0);
 
     const visitorParticipants = participants.visitors || 0;
-    const totalParticipants = staffParticipants + visitorParticipants;
     
+    // Logic from the spreadsheet: (Staff Quantity * Days * 8 hours) + (Visitor Quantity * Hours)
     const staffHours = staffParticipants * durationDays * 8; // Staff works 8 hours/day
     const visitorHours = visitorParticipants * durationHours;
     const totalParticipantHours = staffHours + visitorHours;
     
+    // Total participant UCS = Total hours * Hourly UCS consumption factor
     const participantUcs = totalParticipantHours * perCapitaFactors.hourlyUcsConsumption;
+    
+    const totalParticipants = staffParticipants + visitorParticipants;
 
     const breakdown = [
       {
@@ -192,7 +195,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             <p className="font-medium">{t('participants.title')}</p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <FormField control={form.control} name="participants.organizers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><UserCog />{t('participants.organizers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.organizers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><UserCog />{t('participants.organizersAndPromoters')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={form.control} name="participants.assemblers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Wrench />{t('participants.assemblers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={form.control} name="participants.suppliers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Briefcase />{t('participants.suppliers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={form.control} name="participants.exhibitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Building2 />{t('participants.exhibitors')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
