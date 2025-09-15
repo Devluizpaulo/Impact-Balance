@@ -195,7 +195,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 )}
               />
             </div>
-
             <Separator />
             <p className="font-medium">{t('indirectCosts.title')}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -293,8 +292,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               </Button>
               <Button type="submit">{t('calculateButton')}</Button>
             </div>
-          </form>
-        </Form>
+          </form> 
+        </Form> 
       </CardContent>
     </Card>
   );
