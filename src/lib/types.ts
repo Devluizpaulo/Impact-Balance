@@ -1,15 +1,15 @@
 import { z } from 'zod';
 
 type FormTranslations = {
-  eventNameError: string;
-  participantsError: string;
-  durationDaysError: string;
+  'formValidation.eventNameError': string;
+  'formValidation.participantsError': string;
+  'formValidation.durationDaysError': string;
 };
 
 export const formSchema = (t: (key: keyof FormTranslations) => string) => z.object({
-  eventName: z.string().min(3, { message: t('eventNameError') }),
-  participants: z.coerce.number().min(1, { message: t('participantsError') }),
-  durationDays: z.coerce.number().min(1, { message: t('durationDaysError') }),
+  eventName: z.string().min(3, { message: t('formValidation.eventNameError') }),
+  participants: z.coerce.number().min(1, { message: t('formValidation.participantsError') }),
+  durationDays: z.coerce.number().min(1, { message: t('formValidation.durationDaysError') }),
   venueSizeSqm: z.coerce.number().optional(),
   travelKm: z.coerce.number().optional(),
   wasteKg: z.coerce.number().optional(),
