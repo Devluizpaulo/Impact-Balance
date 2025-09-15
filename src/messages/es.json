@@ -64,6 +64,12 @@
     "durationDays": {
       "label": "Duración (días para personal)"
     },
+    "indirectCosts": {
+      "title": "Costos Indirectos",
+      "ownershipRegistration": "Registro de Propiedad",
+      "certificateIssuance": "Emisión de Certificado",
+      "websitePage": "Página del Sitio Web"
+    },
     "optionalDetails": "Opcional: Agregue más detalles para un cálculo preciso.",
     "venueSizeSqm": {
       "label": "Lugar (m²)"
@@ -102,7 +108,10 @@
       "travel": "Viaje",
       "waste": "Residuos",
       "water": "Agua",
-      "energy": "Energía"
+      "energy": "Energía",
+      "ownershipRegistration": "Registro de Propiedad",
+      "certificateIssuance": "Emisión de Certificado",
+      "websitePage": "Página del Sitio Web"
     }
   },
   "AiSuggestions": {
@@ -132,6 +141,7 @@
     "resetButton": "Restaurar Valores Predeterminados",
     "impactFactors": "Factores de Impacto del Evento UCS",
     "perCapitaBasis": "Base de Cálculo Per Cápita",
+    "indirectCosts": "Costos Indirectos por Huella",
     "equivalencesAndCosts": "Equivalencias y Costos",
     "costPerUcs": "Costo por Unidad UCS (Evento)",
     "table": {
@@ -154,6 +164,11 @@
       "annualUcsConsumption": "Consumo Anual de UCS",
       "dailyUcsConsumption": "Consumo Diario de UCS",
       "hourlyUcsConsumption": "Consumo por Hora de UCS"
+    },
+    "indirectCostsLabels": {
+      "ownershipRegistration": "Registro de Propiedad (UCS)",
+      "certificateIssuance": "Emisión de Certificado (UCS)",
+      "websitePage": "Página del Sitio Web (UCS)"
     },
     "equivalences": {
       "ucsQuotationValue": "Valor de Cotización UCS (R$)",

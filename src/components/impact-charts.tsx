@@ -22,6 +22,9 @@ export default function ImpactCharts({ results }: ImpactChartsProps) {
         "Waste": t('categories.waste'),
         "Water": t('categories.water'),
         "Energy": t('categories.energy'),
+        "Ownership Registration": t('categories.ownershipRegistration'),
+        "Certificate Issuance": t('categories.certificateIssuance'),
+        "Website Page": t('categories.websitePage'),
     }
 
     const translatedData = chartData.map(item => ({

@@ -29,6 +29,11 @@ export interface SystemSettings {
       equivalenceValuePerDay: number;
       equivalenceValuePerHour: number;
     };
+    indirectCosts: {
+      ownershipRegistration: number;
+      certificateIssuance: number;
+      websitePage: number;
+    };
     ucsCostPerUnit: number;
 }
 
@@ -58,6 +63,11 @@ const defaultSettings: SystemSettings = {
       gdpPercentage: 4.212,
       equivalenceValuePerDay: 11.51,
       equivalenceValuePerHour: 0.48,
+    },
+    indirectCosts: {
+      ownershipRegistration: 10,
+      certificateIssuance: 5,
+      websitePage: 2,
     },
     ucsCostPerUnit: 15,
 };
@@ -90,6 +100,10 @@ const mergeSettings = (base: SystemSettings, updates: Partial<SystemSettings>): 
         equivalences: {
           ...base.equivalences,
           ...updates.equivalences
+        },
+        indirectCosts: {
+          ...base.indirectCosts,
+          ...updates.indirectCosts
         }
     };
 };

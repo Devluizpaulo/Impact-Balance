@@ -15,10 +15,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formSchema, type FormData, type CalculationResult } from "@/lib/types";
-import { Calculator, Users, Clock, CalendarDays, Maximize, Route, Trash2, Droplets, Zap, User, UserCog, Wrench, Building2, Headset, Briefcase, Handshake } from "lucide-react";
+import { Calculator, Users, Clock, CalendarDays, Maximize, Route, Trash2, Droplets, Zap, User, UserCog, Wrench, Building2, Headset, Briefcase, Handshake, FileText, Globe, Award } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/lib/settings";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ImpactCalculatorProps {
   onCalculate: (data: CalculationResult, formData: FormData) => void;
@@ -51,11 +52,14 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       waterLiters: 5000,
       energyKwh: 1200,
       currentPractices: "",
+      includeOwnershipRegistration: false,
+      includeCertificateIssuance: false,
+      includeWebsitePage: false,
     },
   });
 
   function onSubmit(values: FormData) {
-    const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors } = settings;
+    const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors, indirectCosts } = settings;
     const { participants, durationDays, durationHours } = values;
 
     const staffParticipants =
@@ -113,6 +117,28 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         cost: ((values.energyKwh || 0) * ucsFactors.energyKwh) * ucsCostPerUnit,
       },
     ];
+
+    if (values.includeOwnershipRegistration) {
+      breakdown.push({
+        category: "Ownership Registration",
+        ucs: indirectCosts.ownershipRegistration,
+        cost: indirectCosts.ownershipRegistration * ucsCostPerUnit,
+      });
+    }
+    if (values.includeCertificateIssuance) {
+      breakdown.push({
+        category: "Certificate Issuance",
+        ucs: indirectCosts.certificateIssuance,
+        cost: indirectCosts.certificateIssuance * ucsCostPerUnit,
+      });
+    }
+    if (values.includeWebsitePage) {
+      breakdown.push({
+        category: "Website Page",
+        ucs: indirectCosts.websitePage,
+        cost: indirectCosts.websitePage * ucsCostPerUnit,
+      });
+    }
 
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = totalUCS * ucsCostPerUnit;
@@ -203,6 +229,62 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                       <Input type="number" placeholder="8" {...field} />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <Separator />
+            <p className="font-medium">{t('indirectCosts.title')}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="includeOwnershipRegistration"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="includeCertificateIssuance"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="includeWebsitePage"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
+                    </div>
                   </FormItem>
                 )}
               />

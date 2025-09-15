@@ -28,6 +28,9 @@ export const formSchema = (t: (key: keyof FormTranslations) => string) => z.obje
   waterLiters: z.coerce.number().optional(),
   energyKwh: z.coerce.number().optional(),
   currentPractices: z.string().optional(),
+  includeOwnershipRegistration: z.boolean().optional(),
+  includeCertificateIssuance: z.boolean().optional(),
+  includeWebsitePage: z.boolean().optional(),
 });
 
 export type FormData = z.infer<ReturnType<typeof formSchema>>;

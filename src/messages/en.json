@@ -64,6 +64,12 @@
     "durationDays": {
       "label": "Duration (days for staff)"
     },
+    "indirectCosts": {
+      "title": "Indirect Costs",
+      "ownershipRegistration": "Ownership Registration",
+      "certificateIssuance": "Certificate Issuance",
+      "websitePage": "Website Page"
+    },
     "optionalDetails": "Optional: Add more details for a precise calculation.",
     "venueSizeSqm": {
       "label": "Venue (m²)"
@@ -102,7 +108,10 @@
       "travel": "Travel",
       "waste": "Waste",
       "water": "Water",
-      "energy": "Energy"
+      "energy": "Energy",
+      "ownershipRegistration": "Ownership Registration",
+      "certificateIssuance": "Certificate Issuance",
+      "websitePage": "Website Page"
     }
   },
   "AiSuggestions": {
@@ -132,6 +141,7 @@
     "resetButton": "Reset to Defaults",
     "impactFactors": "UCS Event Impact Factors",
     "perCapitaBasis": "Per Capita Calculation Basis",
+    "indirectCosts": "Indirect Costs per Footprint",
     "equivalencesAndCosts": "Equivalences and Costs",
     "costPerUcs": "Cost per UCS Unit (Event)",
     "table": {
@@ -154,6 +164,11 @@
       "annualUcsConsumption": "Annual UCS Consumption",
       "dailyUcsConsumption": "Daily UCS Consumption",
       "hourlyUcsConsumption": "Hourly UCS Consumption"
+    },
+    "indirectCostsLabels": {
+      "ownershipRegistration": "Ownership Registration (UCS)",
+      "certificateIssuance": "Certificate Issuance (UCS)",
+      "websitePage": "Website Page (UCS)"
     },
     "equivalences": {
       "ucsQuotationValue": "UCS Quotation Value (R$)",

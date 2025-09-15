@@ -61,6 +61,7 @@ export default function ParametersPage() {
   const ucsFactors = Object.entries(settings.ucsFactors);
   const perCapitaFactors = Object.entries(settings.perCapitaFactors);
   const equivalences = Object.entries(settings.equivalences);
+  const indirectCosts = Object.entries(settings.indirectCosts);
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
@@ -115,6 +116,26 @@ export default function ParametersPage() {
                       <TableCell>{t(`perCapitaFactors.${key}` as any)}</TableCell>
                       <TableCell>
                         <Input type="number" name={`perCapitaFactors.${key}`} value={value} onChange={handleNestedChange} className="text-right" />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+          
+          {/* Indirect Costs */}
+          <div>
+            <h3 className="mb-4 text-lg font-semibold">{t('indirectCosts')}</h3>
+            <div className="overflow-hidden rounded-md border">
+              <Table>
+                <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
+                <TableBody>
+                  {indirectCosts.map(([key, value]) => (
+                    <TableRow key={key}>
+                      <TableCell>{t(`indirectCostsLabels.${key}` as any)}</TableCell>
+                      <TableCell>
+                        <Input type="number" name={`indirectCosts.${key}`} value={value} onChange={handleNestedChange} className="text-right" />
                       </TableCell>
                     </TableRow>
                   ))}
