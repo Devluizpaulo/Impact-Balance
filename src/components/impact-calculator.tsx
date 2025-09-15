@@ -70,20 +70,22 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       (participants.supportTeam || 0) + 
       (participants.attendants || 0) + 
       (participants.support || 0);
-
+    
     const visitorParticipants = participants.visitors || 0;
     
-    const participantUcs = (staffParticipants * (durationDays || 0) * 8 * perCapitaFactors.hourlyUcsConsumption) + (visitorParticipants * (durationHours || 0) * perCapitaFactors.hourlyUcsConsumption);
+    const participantUcs = 
+      (staffParticipants * (durationDays || 0) * 8 * perCapitaFactors.hourlyUcsConsumption) + 
+      (visitorParticipants * (durationHours || 0) * perCapitaFactors.hourlyUcsConsumption);
 
-    const breakdown = [
-      { category: "Participants", ucs: participantUcs, cost: participantUcs * ucsCostPerUnit },
-      { category: "Duration", ucs: (values.durationDays || 0) * ucsFactors.durationDays, cost: ((values.durationDays || 0) * ucsFactors.durationDays) * ucsCostPerUnit },
-      { category: "Venue Size", ucs: (values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm, cost: ((values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm) * ucsCostPerUnit },
-      { category: "Travel", ucs: (values.travelKm || 0) * ucsFactors.travelKm, cost: ((values.travelKm || 0) * ucsFactors.travelKm) * ucsCostPerUnit },
-      { category: "Waste", ucs: (values.wasteKg || 0) * ucsFactors.wasteKg, cost: ((values.wasteKg || 0) * ucsFactors.wasteKg) * ucsCostPerUnit },
-      { category: "Water", ucs: (values.waterLiters || 0) * ucsFactors.waterLiters, cost: ((values.waterLiters || 0) * ucsFactors.waterLiters) * ucsCostPerUnit },
-      { category: "Energy", ucs: (values.energyKwh || 0) * ucsFactors.energyKwh, cost: ((values.energyKwh || 0) * ucsFactors.energyKwh) * ucsCostPerUnit },
-    ];
+    const breakdown: { category: string; ucs: number; cost: number; }[] = [];
+
+    breakdown.push({ category: "Participants", ucs: participantUcs, cost: participantUcs * ucsCostPerUnit });
+    breakdown.push({ category: "Duration", ucs: (values.durationDays || 0) * ucsFactors.durationDays, cost: ((values.durationDays || 0) * ucsFactors.durationDays) * ucsCostPerUnit });
+    breakdown.push({ category: "Venue Size", ucs: (values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm, cost: ((values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm) * ucsCostPerUnit });
+    breakdown.push({ category: "Travel", ucs: (values.travelKm || 0) * ucsFactors.travelKm, cost: ((values.travelKm || 0) * ucsFactors.travelKm) * ucsCostPerUnit });
+    breakdown.push({ category: "Waste", ucs: (values.wasteKg || 0) * ucsFactors.wasteKg, cost: ((values.wasteKg || 0) * ucsFactors.wasteKg) * ucsCostPerUnit });
+    breakdown.push({ category: "Water", ucs: (values.waterLiters || 0) * ucsFactors.waterLiters, cost: ((values.waterLiters || 0) * ucsFactors.waterLiters) * ucsCostPerUnit });
+    breakdown.push({ category: "Energy", ucs: (values.energyKwh || 0) * ucsFactors.energyKwh, cost: ((values.energyKwh || 0) * ucsFactors.energyKwh) * ucsCostPerUnit });
 
     if (values.includeOwnershipRegistration) {
       breakdown.push({
@@ -109,7 +111,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = totalUCS * ucsCostPerUnit;
-    const totalEventHours = values.durationDays * 24;
+    const totalEventHours = (values.durationDays || 0) * 24;
     
     const totalParticipants = Object.values(participants).reduce((acc, val) => acc + (val || 0), 0);
 
@@ -120,7 +122,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       costPerParticipant: totalParticipants > 0 ? totalCost / totalParticipants : 0,
       breakdown,
       equivalences: {
-        dailyUCS: totalEventHours > 0 ? totalUCS / values.durationDays : 0,
+        dailyUCS: (values.durationDays || 0) > 0 ? totalUCS / values.durationDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
         gdpPercentage: (totalCost / equivalences.gdpPerCapita) * 100,
       },
@@ -161,14 +163,14 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             <p className="font-medium">{t('participants.title')}</p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              <FormField control={form.control} name="participants.organizers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><UserCog />{t('participants.organizersAndPromoters')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.assemblers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Wrench />{t('participants.assemblers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.suppliers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Briefcase />{t('participants.suppliers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.exhibitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Building2 />{t('participants.exhibitors')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.supportTeam" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Headset />{t('participants.supportTeam')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.attendants" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><User />{t('participants.attendants')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.support" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Handshake />{t('participants.support')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.visitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Users />{t('participants.visitors')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.organizers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><UserCog />{t('participants.organizersAndPromoters')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.assemblers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Wrench />{t('participants.assemblers')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.suppliers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Briefcase />{t('participants.suppliers')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.exhibitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Building2 />{t('participants.exhibitors')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.supportTeam" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Headset />{t('participants.supportTeam')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.attendants" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><User />{t('participants.attendants')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.support" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Handshake />{t('participants.support')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.visitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Users />{t('participants.visitors')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
             </div>
 
             <Separator />
@@ -182,7 +184,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><CalendarDays className="w-4 h-4 mr-2" />{t('durationDays.label')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="3" {...field} />
+                      <Input type="number" placeholder="3" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -195,7 +197,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Clock className="w-4 h-4 mr-2" />{t('durationHours.label')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="8" {...field} />
+                      <Input type="number" placeholder="8" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -264,19 +266,19 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField control={form.control} name="venueSizeSqm" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Maximize className="w-4 h-4 mr-2" />{t('venueSizeSqm.label')}</FormLabel><FormControl><Input type="number" placeholder="500" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Maximize className="w-4 h-4 mr-2" />{t('venueSizeSqm.label')}</FormLabel><FormControl><Input type="number" placeholder="500" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="travelKm" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Route className="w-4 h-4 mr-2" />{t('travelKm.label')}</FormLabel><FormControl><Input type="number" placeholder="250" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Route className="w-4 h-4 mr-2" />{t('travelKm.label')}</FormLabel><FormControl><Input type="number" placeholder="250" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="wasteKg" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Trash2 className="w-4 h-4 mr-2" />{t('wasteKg.label')}</FormLabel><FormControl><Input type="number" placeholder="150" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Trash2 className="w-4 h-4 mr-2" />{t('wasteKg.label')}</FormLabel><FormControl><Input type="number" placeholder="150" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="waterLiters" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Droplets className="w-4 h-4 mr-2" />{t('waterLiters.label')}</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Droplets className="w-4 h-4 mr-2" />{t('waterLiters.label')}</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="energyKwh" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Zap className="w-4 h-4 mr-2" />{t('energyKwh.label')}</FormLabel><FormControl><Input type="number" placeholder="1200" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Zap className="w-4 h-4 mr-2" />{t('energyKwh.label')}</FormLabel><FormControl><Input type="number" placeholder="1200" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
                 )} />
             </div>
             
@@ -306,3 +308,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
