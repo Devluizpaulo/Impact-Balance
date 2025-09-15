@@ -62,49 +62,27 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors, indirectCosts } = settings;
     const { participants, durationDays, durationHours } = values;
 
-    const staffParticipants = (participants.organizers || 0) + (participants.assemblers || 0) + (participants.suppliers || 0) + (participants.exhibitors || 0) + (participants.supportTeam || 0) + (participants.attendants || 0) + (participants.support || 0);
-    const visitorParticipants = participants.visitors || 0;
+    const staffParticipants = 
+      (participants.organizers || 0) + 
+      (participants.assemblers || 0) + 
+      (participants.suppliers || 0) + 
+      (participants.exhibitors || 0) + 
+      (participants.supportTeam || 0) + 
+      (participants.attendants || 0) + 
+      (participants.support || 0);
 
-    const staffUcs = staffParticipants * (durationDays || 0) * 8 * perCapitaFactors.hourlyUcsConsumption;
-    const visitorUcs = visitorParticipants * (durationHours || 0) * perCapitaFactors.hourlyUcsConsumption;
-    const participantUcs = staffUcs + visitorUcs;
+    const visitorParticipants = participants.visitors || 0;
+    
+    const participantUcs = (staffParticipants * (durationDays || 0) * 8 * perCapitaFactors.hourlyUcsConsumption) + (visitorParticipants * (durationHours || 0) * perCapitaFactors.hourlyUcsConsumption);
 
     const breakdown = [
-      {
-        category: "Participants",
-        ucs: participantUcs,
-        cost: participantUcs * ucsCostPerUnit,
-      },
-      {
-        category: "Duration",
-        ucs: (values.durationDays || 0) * ucsFactors.durationDays,
-        cost: ((values.durationDays || 0) * ucsFactors.durationDays) * ucsCostPerUnit,
-      },
-      {
-        category: "Venue Size",
-        ucs: (values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm,
-        cost: ((values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm) * ucsCostPerUnit,
-      },
-      {
-        category: "Travel",
-        ucs: (values.travelKm || 0) * ucsFactors.travelKm,
-        cost: ((values.travelKm || 0) * ucsFactors.travelKm) * ucsCostPerUnit,
-      },
-      {
-        category: "Waste",
-        ucs: (values.wasteKg || 0) * ucsFactors.wasteKg,
-        cost: ((values.wasteKg || 0) * ucsFactors.wasteKg) * ucsCostPerUnit,
-      },
-      {
-        category: "Water",
-        ucs: (values.waterLiters || 0) * ucsFactors.waterLiters,
-        cost: ((values.waterLiters || 0) * ucsFactors.waterLiters) * ucsCostPerUnit,
-      },
-      {
-        category: "Energy",
-        ucs: (values.energyKwh || 0) * ucsFactors.energyKwh,
-        cost: ((values.energyKwh || 0) * ucsFactors.energyKwh) * ucsCostPerUnit,
-      },
+      { category: "Participants", ucs: participantUcs, cost: participantUcs * ucsCostPerUnit },
+      { category: "Duration", ucs: (values.durationDays || 0) * ucsFactors.durationDays, cost: ((values.durationDays || 0) * ucsFactors.durationDays) * ucsCostPerUnit },
+      { category: "Venue Size", ucs: (values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm, cost: ((values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm) * ucsCostPerUnit },
+      { category: "Travel", ucs: (values.travelKm || 0) * ucsFactors.travelKm, cost: ((values.travelKm || 0) * ucsFactors.travelKm) * ucsCostPerUnit },
+      { category: "Waste", ucs: (values.wasteKg || 0) * ucsFactors.wasteKg, cost: ((values.wasteKg || 0) * ucsFactors.wasteKg) * ucsCostPerUnit },
+      { category: "Water", ucs: (values.waterLiters || 0) * ucsFactors.waterLiters, cost: ((values.waterLiters || 0) * ucsFactors.waterLiters) * ucsCostPerUnit },
+      { category: "Energy", ucs: (values.energyKwh || 0) * ucsFactors.energyKwh, cost: ((values.energyKwh || 0) * ucsFactors.energyKwh) * ucsCostPerUnit },
     ];
 
     if (values.includeOwnershipRegistration) {
@@ -328,5 +306,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-    
