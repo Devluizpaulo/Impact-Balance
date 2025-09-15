@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { Toaster } from '@/components/ui/toaster';
 import '../globals.css';
+import { SettingsProvider } from '@/lib/settings';
 
 export const metadata: Metadata = {
   title: 'Balanço de Impacto',
@@ -29,10 +30,12 @@ export default async function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-          <Toaster />
-        </NextIntlClientProvider>
+        <SettingsProvider>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            {children}
+            <Toaster />
+          </NextIntlClientProvider>
+        </SettingsProvider>
       </body>
     </html>
   );

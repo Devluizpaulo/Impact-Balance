@@ -11,6 +11,10 @@
     "copyright": "Balanço de Impacto. Todos os Direitos Reservados.",
     "parametersLink": "Parâmetros do Sistema"
   },
+  "AppShell": {
+    "calculator": "Calculadora",
+    "parameters": "Parâmetros"
+  },
   "HomePage": {
     "heroTitle": "Balanço de Impacto",
     "heroSubtitle": "Entenda, quantifique e mitigue a pegada socioambiental de seus eventos.",
@@ -118,8 +122,10 @@
   },
   "ParametersPage": {
     "title": "Parâmetros do Sistema",
-    "description": "Os valores utilizados para o cálculo de impacto.",
+    "description": "Os valores utilizados para o cálculo de impacto. As alterações são salvas localmente.",
     "backButton": "Voltar para a Calculadora",
+    "saveButton": "Salvar Alterações",
+    "resetButton": "Restaurar Padrões",
     "impactFactors": "Fatores de Impacto UCS",
     "otherConstants": "Outras Constantes",
     "costPerUcs": "Custo por Unidade UCS",

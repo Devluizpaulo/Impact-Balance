@@ -11,6 +11,10 @@
     "copyright": "Impact Balance. All Rights Reserved.",
     "parametersLink": "System Parameters"
   },
+  "AppShell": {
+    "calculator": "Calculator",
+    "parameters": "Parameters"
+  },
   "HomePage": {
     "heroTitle": "Impact Balance",
     "heroSubtitle": "Understand, quantify, and mitigate the socio-environmental footprint of your events.",
@@ -118,8 +122,10 @@
   },
   "ParametersPage": {
     "title": "System Parameters",
-    "description": "The values used for the impact calculation.",
+    "description": "The values used for the impact calculation. Changes are saved locally.",
     "backButton": "Back to Calculator",
+    "saveButton": "Save Changes",
+    "resetButton": "Reset to Defaults",
     "impactFactors": "UCS Impact Factors",
     "otherConstants": "Other Constants",
     "costPerUcs": "Cost per UCS Unit",

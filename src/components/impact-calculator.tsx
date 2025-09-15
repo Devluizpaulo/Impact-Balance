@@ -15,10 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formSchema, type FormData, type CalculationResult } from "@/lib/types";
-import { UCS_FACTORS, UCS_COST_PER_UNIT, GDP_PER_CAPITA_BRAZIL } from "@/lib/constants";
 import { Calculator, Users, Clock, CalendarDays, Maximize, Route, Trash2, Droplets, Zap } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
+import { useSettings } from "@/lib/settings";
 
 interface ImpactCalculatorProps {
   onCalculate: (data: CalculationResult, formData: FormData) => void;
@@ -27,6 +27,8 @@ interface ImpactCalculatorProps {
 
 export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalculatorProps) {
   const t = useTranslations('ImpactCalculator');
+  const { settings } = useSettings();
+  
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema(t)),
     defaultValues: {
@@ -45,33 +47,32 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
   function onSubmit(values: FormData) {
+    const { ucsFactors, ucsCostPerUnit, gdpPerCapita } = settings;
     const totalParticipants = values.visitors + values.operators;
     
-    // Impact is proportional to the time spent. Visitors stay for hours, operators for days.
-    // We can normalize this by converting days to hours (assuming 8h/day for operators)
     const operatorHours = values.operators * values.durationDays * 8;
     const visitorHours = values.visitors * values.durationHours;
     const totalParticipantHours = operatorHours + visitorHours;
     
-    const participantFactor = totalParticipantHours * UCS_FACTORS.participants;
+    const participantFactor = totalParticipantHours * ucsFactors.participants;
 
     const breakdown = [
-      { category: "Participants", value: participantFactor, factor: 1 }, // Already factored in
-      { category: "Duration", value: values.durationDays, factor: UCS_FACTORS.durationDays },
-      { category: "Venue Size", value: values.venueSizeSqm, factor: UCS_FACTORS.venueSizeSqm },
-      { category: "Travel", value: values.travelKm, factor: UCS_FACTORS.travelKm },
-      { category: "Waste", value: values.wasteKg, factor: UCS_FACTORS.wasteKg },
-      { category: "Water", value: values.waterLiters, factor: UCS_FACTORS.waterLiters },
-      { category: "Energy", value: values.energyKwh, factor: UCS_FACTORS.energyKwh },
+      { category: "Participants", value: participantFactor, factor: 1 },
+      { category: "Duration", value: values.durationDays, factor: ucsFactors.durationDays },
+      { category: "Venue Size", value: values.venueSizeSqm, factor: ucsFactors.venueSizeSqm },
+      { category: "Travel", value: values.travelKm, factor: ucsFactors.travelKm },
+      { category: "Waste", value: values.wasteKg, factor: ucsFactors.wasteKg },
+      { category: "Water", value: values.waterLiters, factor: ucsFactors.waterLiters },
+      { category: "Energy", value: values.energyKwh, factor: ucsFactors.energyKwh },
     ]
       .map(item => ({
         category: item.category,
         ucs: (item.value || 0) * item.factor,
-        cost: (item.value || 0) * item.factor * UCS_COST_PER_UNIT,
+        cost: (item.value || 0) * item.factor * ucsCostPerUnit,
       }));
 
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
-    const totalCost = totalUCS * UCS_COST_PER_UNIT;
+    const totalCost = totalUCS * ucsCostPerUnit;
     const totalEventHours = values.durationDays * 24;
 
     const results: CalculationResult = {
@@ -83,7 +84,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       equivalences: {
         dailyUCS: totalEventHours > 0 ? totalUCS / values.durationDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
-        gdpPercentage: (totalCost / GDP_PER_CAPITA_BRAZIL) * 100,
+        gdpPercentage: (totalCost / gdpPerCapita) * 100,
       },
     };
 
