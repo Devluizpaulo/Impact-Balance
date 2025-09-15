@@ -55,42 +55,64 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
   function onSubmit(values: FormData) {
-    const { ucsFactors, ucsCostPerUnit, gdpPerCapita } = settings;
+    const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors } = settings;
     const { participants, durationDays, durationHours } = values;
 
-    const staffParticipants = (
+    const staffParticipants =
       (participants.organizers || 0) +
       (participants.assemblers || 0) +
       (participants.suppliers || 0) +
       (participants.exhibitors || 0) +
       (participants.supportTeam || 0) +
       (participants.attendants || 0) +
-      (participants.support || 0)
-    );
+      (participants.support || 0);
 
     const visitorParticipants = participants.visitors || 0;
     const totalParticipants = staffParticipants + visitorParticipants;
-
-    const staffHours = staffParticipants * durationDays * 8; // Assuming 8 hours/day for staff
+    
+    const staffHours = staffParticipants * durationDays * 8; // Staff works 8 hours/day
     const visitorHours = visitorParticipants * durationHours;
     const totalParticipantHours = staffHours + visitorHours;
     
-    const participantFactor = totalParticipantHours * ucsFactors.participants;
+    const participantUcs = totalParticipantHours * perCapitaFactors.hourlyUcsConsumption;
 
     const breakdown = [
-      { category: "Participants", value: participantFactor, factor: 1 },
-      { category: "Duration", value: values.durationDays, factor: ucsFactors.durationDays },
-      { category: "Venue Size", value: values.venueSizeSqm, factor: ucsFactors.venueSizeSqm },
-      { category: "Travel", value: values.travelKm, factor: ucsFactors.travelKm },
-      { category: "Waste", value: values.wasteKg, factor: ucsFactors.wasteKg },
-      { category: "Water", value: values.waterLiters, factor: ucsFactors.waterLiters },
-      { category: "Energy", value: values.energyKwh, factor: ucsFactors.energyKwh },
-    ]
-      .map(item => ({
-        category: item.category,
-        ucs: (item.value || 0) * item.factor,
-        cost: (item.value || 0) * item.factor * ucsCostPerUnit,
-      }));
+      {
+        category: "Participants",
+        ucs: participantUcs,
+        cost: participantUcs * ucsCostPerUnit,
+      },
+      {
+        category: "Duration",
+        ucs: (values.durationDays || 0) * ucsFactors.durationDays,
+        cost: ((values.durationDays || 0) * ucsFactors.durationDays) * ucsCostPerUnit,
+      },
+      {
+        category: "Venue Size",
+        ucs: (values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm,
+        cost: ((values.venueSizeSqm || 0) * ucsFactors.venueSizeSqm) * ucsCostPerUnit,
+      },
+      {
+        category: "Travel",
+        ucs: (values.travelKm || 0) * ucsFactors.travelKm,
+        cost: ((values.travelKm || 0) * ucsFactors.travelKm) * ucsCostPerUnit,
+      },
+      {
+        category: "Waste",
+        ucs: (values.wasteKg || 0) * ucsFactors.wasteKg,
+        cost: ((values.wasteKg || 0) * ucsFactors.wasteKg) * ucsCostPerUnit,
+      },
+      {
+        category: "Water",
+        ucs: (values.waterLiters || 0) * ucsFactors.waterLiters,
+        cost: ((values.waterLiters || 0) * ucsFactors.waterLiters) * ucsCostPerUnit,
+      },
+      {
+        category: "Energy",
+        ucs: (values.energyKwh || 0) * ucsFactors.energyKwh,
+        cost: ((values.energyKwh || 0) * ucsFactors.energyKwh) * ucsCostPerUnit,
+      },
+    ];
 
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = totalUCS * ucsCostPerUnit;
@@ -105,7 +127,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       equivalences: {
         dailyUCS: totalEventHours > 0 ? totalUCS / values.durationDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
-        gdpPercentage: (totalCost / gdpPerCapita) * 100,
+        gdpPercentage: (totalCost / equivalences.gdpPerCapita) * 100,
       },
     };
 
@@ -148,10 +170,10 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               <FormField control={form.control} name="participants.assemblers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Wrench />{t('participants.assemblers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={form.control} name="participants.suppliers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Briefcase />{t('participants.suppliers')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={form.control} name="participants.exhibitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Building2 />{t('participants.exhibitors')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.supportTeam" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Headset />{t('participants.supportTeam')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.attendants" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><User />{t('participants.attendants')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.support" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Handshake />{t('participants.support')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.visitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Users />{t('participants.visitors')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.supportTeam" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Headset />{t('participants.supportTeam')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.attendants" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><User />{t('participants.attendants')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.support" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Handshake />{t('participants.support')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="participants.visitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Users />{t('participants.visitors')}</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormMessage /></FormItem>)} />
             </div>
 
             <Separator />
