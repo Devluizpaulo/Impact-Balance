@@ -18,6 +18,7 @@ import { formSchema, type FormData, type CalculationResult } from "@/lib/types";
 import { UCS_FACTORS, UCS_COST_PER_UNIT, GDP_PER_CAPITA_BRAZIL } from "@/lib/constants";
 import { Calculator, Users, CalendarDays, Maximize, Route, Trash2, Droplets, Zap } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "next-intl";
 
 interface ImpactCalculatorProps {
   onCalculate: (data: CalculationResult, formData: FormData) => void;
@@ -25,13 +26,14 @@ interface ImpactCalculatorProps {
 }
 
 export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalculatorProps) {
+  const t = useTranslations('ImpactCalculator');
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema(t)),
     defaultValues: {
       eventName: "",
       participants: 100,
       durationDays: 1,
-      currentPractices: "No specific sustainability practices are currently in place.",
+      currentPractices: t('currentPractices.placeholder'),
     },
   });
 
@@ -78,8 +80,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-headline flex items-center"><Calculator className="mr-2" /> Impact Calculator</CardTitle>
-        <CardDescription>Enter your event details to quantify its impact.</CardDescription>
+        <CardTitle className="font-headline flex items-center"><Calculator className="mr-2" /> {t('title')}</CardTitle>
+        <CardDescription>{t('description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -89,9 +91,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               name="eventName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Event Name</FormLabel>
+                  <FormLabel>{t('eventName.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Annual Tech Conference" {...field} />
+                    <Input placeholder={t('eventName.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,7 +106,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 name="participants"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center"><Users className="w-4 h-4 mr-2" />Participants</FormLabel>
+                    <FormLabel className="flex items-center"><Users className="w-4 h-4 mr-2" />{t('participants.label')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="100" {...field} />
                     </FormControl>
@@ -117,7 +119,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 name="durationDays"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center"><CalendarDays className="w-4 h-4 mr-2" />Duration (days)</FormLabel>
+                    <FormLabel className="flex items-center"><CalendarDays className="w-4 h-4 mr-2" />{t('durationDays.label')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="3" {...field} />
                     </FormControl>
@@ -128,23 +130,23 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             </div>
 
             <Separator />
-            <p className="text-sm text-muted-foreground">Optional: Add more details for a precise calculation.</p>
+            <p className="text-sm text-muted-foreground">{t('optionalDetails')}</p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField control={form.control} name="venueSizeSqm" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Maximize className="w-4 h-4 mr-2" />Venue (m²)</FormLabel><FormControl><Input type="number" placeholder="500" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Maximize className="w-4 h-4 mr-2" />{t('venueSizeSqm.label')}</FormLabel><FormControl><Input type="number" placeholder="500" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="travelKm" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Route className="w-4 h-4 mr-2" />Avg. Travel (km)</FormLabel><FormControl><Input type="number" placeholder="250" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Route className="w-4 h-4 mr-2" />{t('travelKm.label')}</FormLabel><FormControl><Input type="number" placeholder="250" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="wasteKg" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Trash2 className="w-4 h-4 mr-2" />Waste (kg)</FormLabel><FormControl><Input type="number" placeholder="150" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Trash2 className="w-4 h-4 mr-2" />{t('wasteKg.label')}</FormLabel><FormControl><Input type="number" placeholder="150" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="waterLiters" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Droplets className="w-4 h-4 mr-2" />Water (liters)</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Droplets className="w-4 h-4 mr-2" />{t('waterLiters.label')}</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="energyKwh" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Zap className="w-4 h-4 mr-2" />Energy (kWh)</FormLabel><FormControl><Input type="number" placeholder="1200" {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel className="flex items-center"><Zap className="w-4 h-4 mr-2" />{t('energyKwh.label')}</FormLabel><FormControl><Input type="number" placeholder="1200" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
             </div>
             
@@ -153,9 +155,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               name="currentPractices"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Current Sustainability Practices</FormLabel>
+                  <FormLabel>{t('currentPractices.label')}</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Describe any eco-friendly measures you're taking..." {...field} />
+                    <Textarea placeholder={t('currentPractices.placeholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -164,9 +166,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             
             <div className="flex gap-2 justify-end">
               <Button type="button" variant="outline" onClick={handleResetClick}>
-                Reset
+                {t('resetButton')}
               </Button>
-              <Button type="submit">Calculate Impact</Button>
+              <Button type="submit">{t('calculateButton')}</Button>
             </div>
           </form>
         </Form>

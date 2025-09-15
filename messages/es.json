@@ -1,0 +1,111 @@
+
+{
+  "Header": {
+    "title": "Balance de Impacto",
+    "languages": {
+      "pt": "Portugués",
+      "en": "Inglés",
+      "es": "Español"
+    }
+  },
+  "Footer": {
+    "copyright": "Balance de Impacto. Todos los Derechos Reservados."
+  },
+  "HomePage": {
+    "heroTitle": "Balance de Impacto",
+    "heroSubtitle": "Comprenda, cuantifique y mitigue la huella socioambiental de sus eventos.",
+    "tabs": {
+      "summary": "Resumen",
+      "charts": "Gráficos",
+      "aiSuggestions": "Sugerencias de IA"
+    },
+    "summary": {
+      "title": "Resumen de Impacto",
+      "totalUCS": "UCS Total",
+      "totalCost": "Costo Total",
+      "ucsPerParticipant": "UCS por Participante",
+      "costPerParticipant": "Costo por Participante",
+      "equivalencesTitle": "Equivalencias",
+      "dailyUCS": "Consumo Diario de UCS",
+      "hourlyUCS": "Consumo Horario de UCS",
+      "gdpPercentage": "% del PIB per Cápita (ej. Brasil)"
+    },
+    "awaitingData": {
+      "title": "Esperando Datos",
+      "description": "Complete el formulario para calcular el impacto de su evento."
+    }
+  },
+  "ImpactCalculator": {
+    "title": "Calculadora de Impacto",
+    "description": "Ingrese los detalles de su evento para cuantificar su impacto.",
+    "eventName": {
+      "label": "Nombre del Evento",
+      "placeholder": "ej: Conferencia Anual de Tecnología"
+    },
+    "participants": {
+      "label": "Participantes"
+    },
+    "durationDays": {
+      "label": "Duración (días)"
+    },
+    "optionalDetails": "Opcional: Agregue más detalles para un cálculo preciso.",
+    "venueSizeSqm": {
+      "label": "Lugar (m²)"
+    },
+    "travelKm": {
+      "label": "Viaje Promedio (km)"
+    },
+    "wasteKg": {
+      "label": "Residuos (kg)"
+    },
+    "waterLiters": {
+      "label": "Agua (litros)"
+    },
+    "energyKwh": {
+      "label": "Energía (kWh)"
+    },
+    "currentPractices": {
+      "label": "Prácticas de Sostenibilidad Actuales",
+      "placeholder": "Describa cualquier medida ecológica que esté tomando..."
+    },
+    "resetButton": "Restablecer",
+    "calculateButton": "Calcular Impacto",
+    "formValidation": {
+      "eventNameError": "El nombre del evento debe tener al menos 3 caracteres.",
+      "participantsError": "Se requiere al menos 1 participante.",
+      "durationDaysError": "La duración debe ser de al menos 1 día."
+    }
+  },
+  "ImpactCharts": {
+    "title": "Desglose del Impacto",
+    "description": "Contribución de cada categoría al UCS total.",
+    "categories": {
+        "participants": "Participantes",
+        "duration": "Duración",
+        "venueSize": "Lugar",
+        "travel": "Viaje",
+        "waste": "Residuos",
+        "water": "Agua",
+        "energy": "Energía"
+    }
+  },
+  "AiSuggestions": {
+    "title": "Sugerencias Impulsadas por IA",
+    "description": "Ideas accionables para reducir la huella ambiental de su evento.",
+    "loading": "Generando ideas con IA...",
+    "error": {
+      "title": "Error de IA",
+      "description": "No se pudieron obtener sugerencias. Por favor, inténtelo de nuevo más tarde.",
+      "loadFail": "Error al cargar las sugerencias de IA. Verifique su conexión o intente nuevamente más tarde."
+    }
+  },
+  "ExportButtons": {
+    "export": "Exportar",
+    "toPdf": "Exportar a PDF",
+    "toExcel": "Exportar a Excel",
+    "inDevelopment": {
+      "title": "Exportar a {format}",
+      "description": "Esta función se encuentra actualmente en desarrollo."
+    }
+  }
+}

@@ -1,0 +1,111 @@
+
+{
+  "Header": {
+    "title": "Impact Balance",
+    "languages": {
+      "pt": "Portuguese",
+      "en": "English",
+      "es": "Spanish"
+    }
+  },
+  "Footer": {
+    "copyright": "Impact Balance. All Rights Reserved."
+  },
+  "HomePage": {
+    "heroTitle": "Impact Balance",
+    "heroSubtitle": "Understand, quantify, and mitigate the socio-environmental footprint of your events.",
+    "tabs": {
+      "summary": "Summary",
+      "charts": "Charts",
+      "aiSuggestions": "AI Suggestions"
+    },
+    "summary": {
+      "title": "Impact Summary",
+      "totalUCS": "Total UCS",
+      "totalCost": "Total Cost",
+      "ucsPerParticipant": "UCS per Participant",
+      "costPerParticipant": "Cost per Participant",
+      "equivalencesTitle": "Equivalences",
+      "dailyUCS": "Daily UCS Consumption",
+      "hourlyUCS": "Hourly UCS Consumption",
+      "gdpPercentage": "% of GDP per Capita (e.g. Brazil)"
+    },
+    "awaitingData": {
+      "title": "Awaiting Data",
+      "description": "Fill out the form to calculate your event's impact."
+    }
+  },
+  "ImpactCalculator": {
+    "title": "Impact Calculator",
+    "description": "Enter your event details to quantify its impact.",
+    "eventName": {
+      "label": "Event Name",
+      "placeholder": "e.g. Annual Tech Conference"
+    },
+    "participants": {
+      "label": "Participants"
+    },
+    "durationDays": {
+      "label": "Duration (days)"
+    },
+    "optionalDetails": "Optional: Add more details for a precise calculation.",
+    "venueSizeSqm": {
+      "label": "Venue (m²)"
+    },
+    "travelKm": {
+      "label": "Avg. Travel (km)"
+    },
+    "wasteKg": {
+      "label": "Waste (kg)"
+    },
+    "waterLiters": {
+      "label": "Water (liters)"
+    },
+    "energyKwh": {
+      "label": "Energy (kWh)"
+    },
+    "currentPractices": {
+      "label": "Current Sustainability Practices",
+      "placeholder": "Describe any eco-friendly measures you're taking..."
+    },
+    "resetButton": "Reset",
+    "calculateButton": "Calculate Impact",
+    "formValidation": {
+      "eventNameError": "Event name must be at least 3 characters.",
+      "participantsError": "At least 1 participant is required.",
+      "durationDaysError": "Duration must be at least 1 day."
+    }
+  },
+  "ImpactCharts": {
+    "title": "Impact Breakdown",
+    "description": "Contribution of each category to the total UCS.",
+    "categories": {
+        "participants": "Participants",
+        "duration": "Duration",
+        "venueSize": "Venue Size",
+        "travel": "Travel",
+        "waste": "Waste",
+        "water": "Water",
+        "energy": "Energy"
+    }
+  },
+  "AiSuggestions": {
+    "title": "AI-Powered Suggestions",
+    "description": "Actionable ideas to reduce your event's environmental footprint.",
+    "loading": "Generating AI-powered insights...",
+    "error": {
+      "title": "AI Error",
+      "description": "Could not fetch suggestions. Please try again later.",
+      "loadFail": "Failed to load AI suggestions. Please check your connection or try again later."
+    }
+  },
+  "ExportButtons": {
+    "export": "Export",
+    "toPdf": "Export to PDF",
+    "toExcel": "Export to Excel",
+    "inDevelopment": {
+      "title": "Export to {format}",
+      "description": "This feature is currently in development."
+    }
+  }
+}

@@ -7,6 +7,7 @@ import type { FormData } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslations } from "next-intl";
 
 interface AiSuggestionsProps {
     formData: FormData;
@@ -16,6 +17,7 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
     const [suggestions, setSuggestions] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const { toast } = useToast();
+    const t = useTranslations('AiSuggestions');
 
     useEffect(() => {
         const fetchSuggestions = async () => {
@@ -45,8 +47,8 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
                 console.error("Error fetching AI suggestions:", error);
                 toast({
                   variant: "destructive",
-                  title: "AI Error",
-                  description: "Could not fetch suggestions. Please try again later.",
+                  title: t('error.title'),
+                  description: t('error.description'),
                 });
             } finally {
                 setIsLoading(false);
@@ -56,13 +58,13 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
         if (formData) {
             fetchSuggestions();
         }
-    }, [formData, toast]);
+    }, [formData, toast, t]);
     
     if (isLoading) {
         return (
             <div className="flex items-center justify-center p-8 min-h-[300px]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="ml-4 text-muted-foreground">Generating AI-powered insights...</p>
+                <p className="ml-4 text-muted-foreground">{t('loading')}</p>
             </div>
         );
     }
@@ -70,9 +72,9 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
     if (!suggestions) {
         return (
              <Alert variant="destructive">
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>{t('error.title')}</AlertTitle>
                 <AlertDescription>
-                Failed to load AI suggestions. Please check your connection or try again later.
+                {t('error.loadFail')}
                 </AlertDescription>
             </Alert>
         );
@@ -81,8 +83,8 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="font-headline flex items-center"><Lightbulb className="mr-2 text-primary" /> AI-Powered Suggestions</CardTitle>
-                <CardDescription>Actionable ideas to reduce your event's environmental footprint.</CardDescription>
+                <CardTitle className="font-headline flex items-center"><Lightbulb className="mr-2 text-primary" /> {t('title')}</CardTitle>
+                <CardDescription>{t('description')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="space-y-3 text-sm">

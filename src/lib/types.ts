@@ -1,9 +1,15 @@
 import { z } from 'zod';
 
-export const formSchema = z.object({
-  eventName: z.string().min(3, { message: "Event name must be at least 3 characters." }),
-  participants: z.coerce.number().min(1, { message: "At least 1 participant is required." }),
-  durationDays: z.coerce.number().min(1, { message: "Duration must be at least 1 day." }),
+type FormTranslations = {
+  eventNameError: string;
+  participantsError: string;
+  durationDaysError: string;
+};
+
+export const formSchema = (t: (key: keyof FormTranslations) => string) => z.object({
+  eventName: z.string().min(3, { message: t('eventNameError') }),
+  participants: z.coerce.number().min(1, { message: t('participantsError') }),
+  durationDays: z.coerce.number().min(1, { message: t('durationDaysError') }),
   venueSizeSqm: z.coerce.number().optional(),
   travelKm: z.coerce.number().optional(),
   wasteKg: z.coerce.number().optional(),
@@ -12,7 +18,7 @@ export const formSchema = z.object({
   currentPractices: z.string().optional(),
 });
 
-export type FormData = z.infer<typeof formSchema>;
+export type FormData = z.infer<ReturnType<typeof formSchema>>;
 
 export type CalculationResult = {
   totalUCS: number;
