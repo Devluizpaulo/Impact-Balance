@@ -1,5 +1,5 @@
 import { Leaf } from 'lucide-react';
-import { Link } from '../../../navigation';
+import { Link } from '@/navigation';
 import { useTranslations } from 'next-intl';
 import LanguageSwitcher from './language-switcher';
 
