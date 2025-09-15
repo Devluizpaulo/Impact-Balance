@@ -73,12 +73,10 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     const visitorParticipants = participants.visitors || 0;
     
-    // Logic from the spreadsheet: (Staff Quantity * Days * 8 hours) + (Visitor Quantity * Hours)
     const staffHours = staffParticipants * durationDays * 8; // Staff works 8 hours/day
     const visitorHours = visitorParticipants * durationHours;
     const totalParticipantHours = staffHours + visitorHours;
     
-    // Total participant UCS = Total hours * Hourly UCS consumption factor
     const participantUcs = totalParticipantHours * perCapitaFactors.hourlyUcsConsumption;
     
     const totalParticipants = staffParticipants + visitorParticipants;
