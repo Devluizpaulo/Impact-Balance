@@ -5,7 +5,6 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 // Define the shape of your settings
 export interface SystemSettings {
     ucsFactors: {
-        participants: number;
         durationDays: number;
         venueSizeSqm: number;
         travelKm: number;
@@ -40,7 +39,6 @@ export interface SystemSettings {
 // Define the default settings
 const defaultSettings: SystemSettings = {
     ucsFactors: {
-        participants: 0.5,
         durationDays: 10,
         venueSizeSqm: 0.1,
         travelKm: 0.2,
@@ -161,3 +159,5 @@ export const useSettings = () => {
     }
     return context;
 };
+
+    

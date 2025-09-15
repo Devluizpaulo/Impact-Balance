@@ -62,24 +62,12 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors, indirectCosts } = settings;
     const { participants, durationDays, durationHours } = values;
 
-    const staffParticipants =
-      (participants.organizers || 0) +
-      (participants.assemblers || 0) +
-      (participants.suppliers || 0) +
-      (participants.exhibitors || 0) +
-      (participants.supportTeam || 0) +
-      (participants.attendants || 0) +
-      (participants.support || 0);
-
+    const staffParticipants = (participants.organizers || 0) + (participants.assemblers || 0) + (participants.suppliers || 0) + (participants.exhibitors || 0) + (participants.supportTeam || 0) + (participants.attendants || 0) + (participants.support || 0);
     const visitorParticipants = participants.visitors || 0;
-    
-    const staffHours = staffParticipants * durationDays * 8; // Staff works 8 hours/day
-    const visitorHours = visitorParticipants * durationHours;
-    const totalParticipantHours = staffHours + visitorHours;
-    
-    const participantUcs = totalParticipantHours * perCapitaFactors.hourlyUcsConsumption;
-    
-    const totalParticipants = staffParticipants + visitorParticipants;
+
+    const staffUcs = staffParticipants * (durationDays || 0) * 8 * perCapitaFactors.hourlyUcsConsumption;
+    const visitorUcs = visitorParticipants * (durationHours || 0) * perCapitaFactors.hourlyUcsConsumption;
+    const participantUcs = staffUcs + visitorUcs;
 
     const breakdown = [
       {
@@ -144,6 +132,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = totalUCS * ucsCostPerUnit;
     const totalEventHours = values.durationDays * 24;
+    
+    const totalParticipants = Object.values(participants).reduce((acc, val) => acc + (val || 0), 0);
 
     const results: CalculationResult = {
       totalUCS,
@@ -338,3 +328,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
