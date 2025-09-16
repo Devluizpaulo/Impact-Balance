@@ -14,7 +14,8 @@
   "AppShell": {
     "calculator": "Calculator",
     "parameters": "Parameters",
-    "equivalenceCalculator": "Equivalence Calculator"
+    "equivalenceCalculator": "Equivalence Calculator",
+    "documentation": "Documentation"
   },
   "HomePage": {
     "heroTitle": "Impact Balance",
@@ -228,5 +229,9 @@
         "description": "Parameters have been reset to their default values."
       }
     }
+  },
+  "DocumentationPage": {
+    "title": "Documentation",
+    "description": "Project documentation and methodology."
   }
 }

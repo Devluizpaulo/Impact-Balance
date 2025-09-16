@@ -12,7 +12,7 @@ import {
   SidebarTrigger,
   SidebarInset,
 } from "@/components/ui/sidebar"
-import { Calculator, Settings } from "lucide-react"
+import { Calculator, Settings, BookText } from "lucide-react"
 import { usePathname } from "@/navigation"
 import Header from "./header"
 import { useTranslations } from "next-intl"
@@ -53,6 +53,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 <Link href="/parameters">
                   <Settings />
                   <span>{t('parameters')}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === "/documentation"}
+                tooltip={t('documentation')}
+              >
+                <Link href="/documentation">
+                  <BookText />
+                  <span>{t('documentation')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

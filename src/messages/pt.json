@@ -14,7 +14,8 @@
   "AppShell": {
     "calculator": "Calculadora",
     "parameters": "Parâmetros",
-    "equivalenceCalculator": "Calculadora de Equivalência"
+    "equivalenceCalculator": "Calculadora de Equivalência",
+    "documentation": "Documentação"
   },
   "HomePage": {
     "heroTitle": "Balanço de Impacto",
@@ -228,5 +229,9 @@
         "description": "Os parâmetros foram redefinidos para os valores padrão."
       }
     }
+  },
+  "DocumentationPage": {
+    "title": "Documentação",
+    "description": "Documentação do projeto e metodologia."
   }
 }
