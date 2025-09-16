@@ -1,6 +1,6 @@
 "use client"
 
-import { BookText, Calculator, Globe, Map, Settings, Leaf, PanelLeft, ChevronDown } from "lucide-react";
+import { BookText, Calculator, Map, Settings, PanelLeft } from "lucide-react";
 import { Link, usePathname } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -13,6 +13,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { BmvLogo } from "../icons/bmv-logo";
+import { Globe } from "lucide-react";
 
 const navItemsConfig = [
   { 
@@ -116,9 +118,8 @@ function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="flex flex-col p-0">
          <div className="flex h-16 items-center border-b px-6">
-          <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
-            <Leaf className="h-6 w-6" />
-            <span>Impact Balance</span>
+          <Link href="/" className="flex items-center gap-2 font-bold">
+             <BmvLogo className="h-6 w-auto text-foreground" />
           </Link>
         </div>
         <SidebarNav />
@@ -136,9 +137,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <div className="hidden border-r bg-muted/40 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-16 items-center border-b px-6">
-            <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
-              <Leaf className="h-6 w-6" />
-              <span className="font-headline">{t('title')}</span>
+            <Link href="/" className="flex items-center gap-2 font-bold">
+               <BmvLogo className="h-6 w-auto text-foreground" />
             </Link>
           </div>
           <div className="flex-1">
@@ -148,7 +148,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <div className="flex flex-col">
         <Header mobileNav={<MobileNav />} />
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 bg-background">
           {children}
         </main>
       </div>
