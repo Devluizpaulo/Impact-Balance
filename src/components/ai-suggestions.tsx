@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { getImpactSuggestions, type ImpactSuggestionsInput } from '@/ai/flows/ai-impact-suggestions';
+// Temporarily disabled AI functionality
+// import { getImpactSuggestions, type ImpactSuggestionsInput } from '@/ai/flows/ai-impact-suggestions';
 import type { FormData } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, Loader2 } from "lucide-react";
@@ -31,16 +32,21 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
                 Duration: ${formData.durationDays} days
             `.trim().replace(/^\s+/gm, '');
 
-            const input: ImpactSuggestionsInput = {
-                eventData,
-                currentPractices: "No specific sustainability practices are currently in place.",
-            };
-
+            // Temporarily using static suggestions instead of AI
             try {
-                const result = await getImpactSuggestions(input);
-                setSuggestions(result.suggestions);
+                // Simulate AI suggestions with static content
+                const staticSuggestions = `* Considere usar materiais recicláveis para decoração e sinalização
+* Implemente um sistema de coleta seletiva durante o evento
+* Ofereça opções de transporte sustentável para os participantes
+* Use energia renovável sempre que possível
+* Reduza o uso de papel através de soluções digitais
+* Escolha fornecedores locais para reduzir a pegada de carbono
+* Implemente medidas de economia de água
+* Considere compensação de carbono para o evento`;
+                
+                setSuggestions(staticSuggestions);
             } catch (error) {
-                console.error("Error fetching AI suggestions:", error);
+                console.error("Error generating suggestions:", error);
                 toast({
                   variant: "destructive",
                   title: t('error.title'),

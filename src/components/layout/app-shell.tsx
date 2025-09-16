@@ -1,109 +1,16 @@
 "use client"
 
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarFooter,
-  SidebarTrigger,
-  SidebarInset,
-} from "@/components/ui/sidebar"
-import { Calculator, Settings, BookText, Globe, Map } from "lucide-react"
-import { usePathname } from "@/navigation"
 import Header from "./header"
-import { useTranslations } from "next-intl"
-import Link from "next/link"
+import { MobileNav } from "./horizontal-nav"
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  const t = useTranslations("AppShell")
-
   return (
-    <SidebarProvider defaultOpen={false}>
-      <Sidebar>
-        <SidebarHeader>
-          <div className="flex items-center gap-2">
-            <SidebarTrigger />
-          </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/"}
-                tooltip={t('calculator')}
-              >
-                <Link href="/">
-                  <Calculator />
-                  <span>{t('calculator')}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/parameters"}
-                tooltip={t('parameters')}
-              >
-                <Link href="/parameters">
-                  <Settings />
-                  <span>{t('parameters')}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/data-figures"}
-                tooltip={t('dataFigures')}
-              >
-                <Link href="/data-figures">
-                  <Globe />
-                  <span>{t('dataFigures')}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/country-results"}
-                tooltip={t('countryResults')}
-              >
-                <Link href="/country-results">
-                  <Map />
-                  <span>{t('countryResults')}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/documentation"}
-                tooltip={t('documentation')}
-              >
-                <Link href="/documentation">
-                  <BookText />
-                  <span>{t('documentation')}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter>
-            {/* Can add footer items here */}
-        </SidebarFooter>
-      </Sidebar>
-      <SidebarInset>
-        <Header />
-        <main className="flex-1">
-          {children}
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        {children}
+      </main>
+      <MobileNav />
+    </div>
   )
 }

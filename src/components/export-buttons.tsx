@@ -12,8 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTranslations } from "next-intl";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+// Dynamic imports for client-side only libraries
+const loadPdfLibraries = async () => {
+  const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+    import('jspdf'),
+    import('html2canvas')
+  ]);
+  return { jsPDF, html2canvas };
+};
 
 
 interface ExportButtonsProps {
@@ -40,6 +46,8 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         }
 
         try {
+            const { jsPDF, html2canvas } = await loadPdfLibraries();
+            
             const canvas = await html2canvas(reportElement, {
               scale: 2, 
               useCORS: true, 
