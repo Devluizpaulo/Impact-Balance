@@ -17,6 +17,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
     const t = useTranslations("HomePage");
 
     return (
+      <div id="executive-report">
         <Tabs defaultValue="summary">
             <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
                 <TabsList>
@@ -70,5 +71,6 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                 <AiSuggestions formData={formData} />
             </TabsContent>
         </Tabs>
+      </div>
     );
 }

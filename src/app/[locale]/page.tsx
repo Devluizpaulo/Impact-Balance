@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import ImpactCalculator from "@/components/impact-calculator";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import type { CalculationResult, FormData } from "@/lib/types";
@@ -14,6 +14,7 @@ export default function Home() {
   const [results, setResults] = useState<CalculationResult | null>(null);
   const [formData, setFormData] = useState<FormData | null>(null);
   const t = useTranslations("HomePage");
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const heroImage = PlaceHolderImages.find((img) => img.id === "hero-background");
 
@@ -58,7 +59,7 @@ export default function Home() {
                 <ImpactCalculator onCalculate={handleCalculation} onReset={handleReset} />
               </div>
               <div className="lg:col-span-1">
-                <Card className="h-full min-h-[600px] sticky top-24">
+                <Card className="h-full min-h-[600px] sticky top-24" id="report-content">
                   <CardContent className="p-6">
                     {results && formData ? (
                       <ExecutiveReport results={results} formData={formData} />

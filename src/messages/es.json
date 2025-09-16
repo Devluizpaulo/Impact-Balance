@@ -132,6 +132,10 @@
     "inDevelopment": {
       "title": "Exportar a {format}",
       "description": "Esta función se encuentra actualmente en desarrollo."
+    },
+    "pdfError": {
+      "title": "Error al Exportar PDF",
+      "description": "Ocurrió un error inesperado al generar el PDF."
     }
   },
   "EquivalenceCalculator": {
