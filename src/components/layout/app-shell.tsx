@@ -47,18 +47,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                isActive={pathname === "/equivalence-calculator"}
-                tooltip={t('equivalenceCalculator')}
-              >
-                <Link href="/equivalence-calculator">
-                  <Calculator />
-                  <span>{t('equivalenceCalculator')}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
                 isActive={pathname === "/parameters"}
                 tooltip={t('parameters')}
               >

@@ -299,7 +299,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             </div>
 
             <Separator />
-            <p className="text-sm text-muted-foreground">{t('optionalDetails')}</p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField control={form.control} name="venueSizeSqm" render={({ field }) => (

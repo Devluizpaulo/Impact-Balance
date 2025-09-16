@@ -15,7 +15,6 @@
   "AppShell": {
     "calculator": "Calculadora",
     "parameters": "Parámetros",
-    "equivalenceCalculator": "Calculadora de Equivalencia",
     "dataFigures": "Datos Mundiales",
     "countryResults": "Resultados por País",
     "documentation": "Documentación"
@@ -76,7 +75,6 @@
       "certificateIssuance": "Emisión de Certificado",
       "websitePage": "Página del Sitio Web"
     },
-    "optionalDetails": "Opcional: Agregue más detalles para un cálculo preciso.",
     "venueSizeSqm": {
       "label": "Lugar (m²)"
     },
@@ -142,38 +140,6 @@
       "title": "Error al Exportar PDF",
       "description": "Ocurrió un error inesperado al generar el PDF."
     }
-  },
-  "EquivalenceCalculator": {
-    "title": "Calculadora de Equivalencia Per Cápita - Evento",
-    "description": "Calcule el impacto de un evento en UCS y sus equivalencias monetarias y per cápita.",
-    "inputsTitle": "Entradas",
-    "resultsTitle": "Resultados del Cálculo",
-    "totalUcs": "UCS Total",
-    "avgUcsPerHectare": "Promedio de UCS por hectárea",
-    "perCapitaConsumptionHa": "Consumo per cápita en hectáreas (73 años)",
-    "ucsQuotation": "Cotización actual de UCS (R$)",
-    "gdpPerCapita": "PIB anual per cápita (R$)",
-    "participants": "Número de participantes/clientes",
-    "calculateButton": "Calcular",
-    "perCapitaEquivalence": "Equivalencia Per Cápita",
-    "ucsConsumptionPerLife": "Consumo de UCS por vida (73 años)",
-    "annualUcsConsumption": "Consumo anual de UCS",
-    "dailyUcsConsumption": "Consumo diario de UCS",
-    "hourlyUcsConsumption": "Consumo de UCS por hora",
-    "annualMonetaryEquivalence": "Equivalencia monetaria anual (R$)",
-    "gdpEquivalencePercentage": "Porcentaje de equivalencia en relación con el PIB per cápita",
-    "dailyEquivalence": "Equivalencia diaria (R$)",
-    "hourlyEquivalence": "Equivalencia por hora (R$)",
-    "eventTotals": "Totales del Evento",
-    "creditAndInventoryValue": "Valor del crédito y del inventario",
-    "totalEquivalence": "Equivalencia total (R$)",
-    "ownershipRegistration": "Registro de Propiedad",
-    "certificateIssuance": "Emisión de Certificado (valor fijo)",
-    "totalEventCompensation": "Compensación Total del Evento (R$)",
-    "compensationPerCustomerDay": "Compensación por cliente/día",
-    "compensationPerCustomerHour": "Compensación por cliente/hora",
-    "summary": "Resumen",
-    "totalCompensation": "Compensación Total del Evento (R$)"
   },
   "ParametersPage": {
     "title": "Parámetros del Sistema",
