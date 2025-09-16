@@ -24,8 +24,7 @@
     "heroSubtitle": "Understand, quantify, and mitigate the socio-environmental footprint of your events.",
     "tabs": {
       "summary": "Summary",
-      "charts": "Charts",
-      "aiSuggestions": "AI Suggestions"
+      "charts": "Charts"
     },
     "summary": {
       "title": "Impact Summary",
@@ -107,16 +106,6 @@
       "attendants": "Attendants",
       "support": "Support",
       "visitors": "Visitors"
-    }
-  },
-  "AiSuggestions": {
-    "title": "AI-Powered Suggestions",
-    "description": "Actionable ideas to reduce your event's environmental footprint.",
-    "loading": "Generating AI-powered insights...",
-    "error": {
-      "title": "AI Error",
-      "description": "Could not fetch suggestions. Please try again later.",
-      "loadFail": "Failed to load AI suggestions. Please check your connection or try again later."
     }
   },
   "ExportButtons": {

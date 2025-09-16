@@ -24,8 +24,7 @@
     "heroSubtitle": "Comprenda, cuantifique y mitigue la huella socioambiental de sus eventos.",
     "tabs": {
       "summary": "Resumen",
-      "charts": "Gráficos",
-      "aiSuggestions": "Sugerencias de IA"
+      "charts": "Gráficos"
     },
     "summary": {
       "title": "Resumen de Impacto",
@@ -107,16 +106,6 @@
       "attendants": "Asistentes",
       "support": "Apoyo",
       "visitors": "Visitantes"
-    }
-  },
-  "AiSuggestions": {
-    "title": "Sugerencias Impulsadas por IA",
-    "description": "Ideas accionables para reducir la huella ambiental de su evento.",
-    "loading": "Generando ideas con IA...",
-    "error": {
-      "title": "Error de IA",
-      "description": "No se pudieron obtener sugerencias. Por favor, inténtelo de nuevo más tarde.",
-      "loadFail": "Error al cargar las sugerencias de IA. Verifique su conexión o intente nuevamente más tarde."
     }
   },
   "ExportButtons": {

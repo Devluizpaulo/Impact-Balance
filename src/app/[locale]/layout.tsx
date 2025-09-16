@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import '../globals.css';
 import { SettingsProvider } from '@/lib/settings';
 import CookieConsent from '@/components/cookie-consent';
-import { Inter } from 'next/font/google';
+import { Inter, Roboto_Mono } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -15,7 +15,15 @@ export const metadata: Metadata = {
   description: 'Calcule e equilibre o impacto ambiental de seus eventos.',
 };
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+const inter = Inter({ 
+  subsets: ['latin'], 
+  variable: '--font-sans' 
+});
+
+const robotoMono = Roboto_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+});
 
 export default async function RootLayout({
   children,
@@ -30,7 +38,8 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          inter.variable
+          inter.variable,
+          robotoMono.variable
         )}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SettingsProvider>

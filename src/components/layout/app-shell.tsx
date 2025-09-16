@@ -1,41 +1,106 @@
 "use client"
 
-import { BookText, Calculator, Globe, Map, Settings, Leaf, PanelLeft } from "lucide-react";
+import { BookText, Calculator, Globe, Map, Settings, Leaf, PanelLeft, ChevronDown } from "lucide-react";
 import { Link, usePathname } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-
 import Header from "./header"
 import { cn } from "@/lib/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const navItemsConfig = [
-  { href: "/", icon: <Calculator className="h-5 w-5" />, translationKey: 'calculator' },
-  { href: "/parameters", icon: <Settings className="h-5 w-5" />, translationKey: 'parameters' },
-  { href: "/data-figures", icon: <Globe className="h-5 w-5" />, translationKey: 'dataFigures' },
-  { href: "/country-results", icon: <Map className="h-5 w-5" />, translationKey: 'countryResults' },
-  { href: "/documentation", icon: <BookText className="h-5 w-5" />, translationKey: 'documentation' },
+  { 
+    href: "/", 
+    icon: <Calculator className="h-5 w-5" />, 
+    translationKey: 'calculator' 
+  },
+  { 
+    href: "/parameters", 
+    icon: <Settings className="h-5 w-5" />, 
+    translationKey: 'parameters' 
+  },
+  {
+    href: "/documentation",
+    icon: <BookText className="h-5 w-5" />,
+    translationKey: 'documentation',
+    subItems: [
+      { 
+        href: "/data-figures", 
+        icon: <Globe className="h-5 w-5" />, 
+        translationKey: 'dataFigures' 
+      },
+      { 
+        href: "/country-results", 
+        icon: <Map className="h-5 w-5" />, 
+        translationKey: 'countryResults' 
+      },
+    ]
+  },
 ];
 
 function SidebarNav() {
   const pathname = usePathname();
   const t = useTranslations("AppShell");
 
+  // Determine which accordion item should be open by default
+  const defaultAccordionValue = navItemsConfig.find(item => 
+    item.subItems?.some(sub => pathname.startsWith(sub.href))
+  )?.href;
+
   return (
-    <nav className="flex flex-col gap-2 px-4 py-6">
-      {navItemsConfig.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-            pathname === item.href && "bg-muted text-primary"
-          )}
-        >
-          {item.icon}
-          {t(item.translationKey as any)}
-        </Link>
-      ))}
+    <nav className="flex flex-col gap-1 px-4 py-6">
+      <Accordion type="single" collapsible defaultValue={defaultAccordionValue}>
+        {navItemsConfig.map((item) => (
+          item.subItems ? (
+            <AccordionItem key={item.href} value={item.href} className="border-b-0">
+              <AccordionTrigger className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:no-underline",
+                pathname.startsWith(item.href) && "text-primary"
+              )}>
+                <div className="flex items-center gap-3">
+                  {item.icon}
+                  {t(item.translationKey as any)}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pl-8">
+                <nav className="flex flex-col gap-1">
+                  {item.subItems.map((subItem) => (
+                    <Link
+                      key={subItem.href}
+                      href={subItem.href}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                        pathname === subItem.href && "bg-muted text-primary"
+                      )}
+                    >
+                      {subItem.icon}
+                      {t(subItem.translationKey as any)}
+                    </Link>
+                  ))}
+                </nav>
+              </AccordionContent>
+            </AccordionItem>
+          ) : (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                pathname === item.href && "bg-muted text-primary"
+              )}
+            >
+              {item.icon}
+              {t(item.translationKey as any)}
+            </Link>
+          )
+        ))}
+      </Accordion>
     </nav>
   );
 }

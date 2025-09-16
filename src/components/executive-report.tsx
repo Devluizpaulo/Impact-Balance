@@ -2,9 +2,8 @@
 
 import type { CalculationResult, FormData } from "@/lib/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart, HandHelping, ListTree } from "lucide-react";
-import ImpactCharts from "@/components/impact-charts";
-import AiSuggestions from "@/components/ai-suggestions";
+import { BarChart, ListTree } from "lucide-react";
+import ImpactCharts from "./impact-charts";
 import ExportButtons from "@/components/export-buttons";
 import { useTranslations } from "next-intl";
 import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from "@/components/ui/table";
@@ -42,14 +41,13 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
     };
 
     return (
-      <div id="executive-report">
-        <div id="report-content-for-export">
+      <div id="executive-report" className="bg-gray-900 text-gray-100 p-6 rounded-lg h-full border border-gray-700 flex flex-col">
+        <div id="report-content-for-export" className="flex-grow">
             <Tabs defaultValue="summary">
                 <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
                     <TabsList className="bg-gray-800/60 text-gray-300 border-gray-700">
                         <TabsTrigger value="summary" className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"><ListTree className="mr-2 h-4 w-4" />{t('tabs.summary')}</TabsTrigger>
                         <TabsTrigger value="charts" className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"><BarChart className="mr-2 h-4 w-4" />{t('tabs.charts')}</TabsTrigger>
-                        <TabsTrigger value="ai-suggestions" className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"><HandHelping className="mr-2 h-4 w-4" />{t('tabs.aiSuggestions')}</TabsTrigger>
                     </TabsList>
                     <ExportButtons results={results} formData={formData} />
                 </div>
@@ -76,7 +74,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                                         <TableCell className="font-sans font-medium text-gray-300">{participantCategories[item.category] || item.category}</TableCell>
                                         <TableCell className="text-right text-gray-300">{item.quantity}</TableCell>
                                         <TableCell className="text-right text-gray-300">{item.duration} <span className="text-xs text-gray-500">{t_calc(`participants.${item.durationUnit}` as any)}</span></TableCell>
-                                        <TableCell className="text-right text-amber-400">{item.ucs.toFixed(2)}</TableCell>
+                                        <TableCell className="text-right text-amber-400">{item.ucs.toFixed(0)}</TableCell>
                                         <TableCell className="text-right text-emerald-400">{formatCurrency(item.cost)}</TableCell>
                                     </TableRow>
                                 ))}
@@ -111,7 +109,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                             <div className="space-y-2 text-right">
                                  <div className="flex justify-between items-baseline">
                                     <span className="text-gray-400 text-base">{t_report('totals.totalToCompensate')}</span>
-                                    <span className="font-mono font-bold text-lg text-amber-400">{results.totalUCS.toFixed(2)} UCS</span>
+                                    <span className="font-mono font-bold text-lg text-amber-400">{results.totalUCS.toFixed(0)} UCS</span>
                                 </div>
                                  <div className="flex justify-between items-baseline">
                                     <span className="text-gray-400 text-base">{t_report('totals.totalBudget')}</span>
@@ -123,9 +121,6 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                 </TabsContent>
                 <TabsContent value="charts" id="charts-content">
                     <ImpactCharts results={results} />
-                </TabsContent>
-                <TabsContent value="ai-suggestions" id="ai-suggestions-content">
-                    <AiSuggestions formData={formData} />
                 </TabsContent>
             </Tabs>
         </div>

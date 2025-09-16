@@ -24,8 +24,7 @@
     "heroSubtitle": "Entenda, quantifique e mitigue a pegada socioambiental de seus eventos.",
     "tabs": {
       "summary": "Resumo",
-      "charts": "Gráficos",
-      "aiSuggestions": "Sugestões de IA"
+      "charts": "Gráficos"
     },
     "summary": {
       "title": "Resumo do Impacto",
@@ -107,16 +106,6 @@
       "attendants": "Atendentes",
       "support": "Apoio",
       "visitors": "Visitantes"
-    }
-  },
-  "AiSuggestions": {
-    "title": "Sugestões Potencializadas por IA",
-    "description": "Ideias acionáveis para reduzir a pegada ambiental do seu evento.",
-    "loading": "Gerando insights com IA...",
-    "error": {
-      "title": "Erro de IA",
-      "description": "Não foi possível buscar sugestões. Por favor, tente novamente mais tarde.",
-      "loadFail": "Falha ao carregar as sugestões da IA. Verifique sua conexão ou tente novamente mais tarde."
     }
   },
   "ExportButtons": {
