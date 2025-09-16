@@ -30,12 +30,12 @@ export default async function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <SettingsProvider>
-          <NextIntlClientProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <SettingsProvider>
             {children}
             <Toaster />
-          </NextIntlClientProvider>
-        </SettingsProvider>
+          </SettingsProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

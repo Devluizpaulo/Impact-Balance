@@ -135,8 +135,7 @@
   },
   "ParametersPage": {
     "title": "Parâmetros do Sistema",
-    "description": "Os valores utilizados para o cálculo de impacto. As alterações são salvas localmente.",
-    "backButton": "Voltar para a Calculadora",
+    "description": "Os valores utilizados para o cálculo de impacto. As alterações são salvas localmente no seu navegador.",
     "saveButton": "Salvar Alterações",
     "resetButton": "Restaurar Padrões",
     "impactFactors": "Fatores de Impacto do Evento UCS",
@@ -176,6 +175,20 @@
       "gdpPercentage": "% da Equivalência ao do PIB",
       "equivalenceValuePerDay": "Valor de Equivalência por dia (R$)",
       "equivalenceValuePerHour": "Valor de Equivalência por hora (R$)"
+    },
+    "toasts": {
+      "saveSuccess": {
+        "title": "Configurações Salvas",
+        "description": "Seus parâmetros personalizados foram salvos."
+      },
+      "saveError": {
+        "title": "Falha ao Salvar",
+        "description": "Não foi possível salvar suas configurações. Tente novamente."
+      },
+      "resetSuccess": {
+        "title": "Configurações Redefinidas",
+        "description": "Os parâmetros foram redefinidos para os valores padrão."
+      }
     }
   }
 }

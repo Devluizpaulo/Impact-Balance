@@ -1,6 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from 'next-intl';
 
 // Define the shape of your settings
 export interface SystemSettings {
@@ -111,6 +113,9 @@ const mergeSettings = (base: SystemSettings, updates: Partial<SystemSettings>): 
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     const [settings, setSettings] = useState<SystemSettings>(defaultSettings);
     const [isClient, setIsClient] = useState(false);
+    const { toast } = useToast();
+    const t = useTranslations("ParametersPage.toasts" as any);
+
 
     // Ensure code only runs on the client
     useEffect(() => {
@@ -131,17 +136,27 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     const saveSettings = () => {
         try {
             localStorage.setItem('systemSettings', JSON.stringify(settings));
-            alert('Settings saved!'); // Replace with a toast notification later
+            toast({
+                title: t('saveSuccess.title'),
+                description: t('saveSuccess.description'),
+            });
         } catch (error) {
             console.error("Failed to save settings to localStorage", error);
-            alert('Failed to save settings.');
+             toast({
+                variant: 'destructive',
+                title: t('saveError.title'),
+                description: t('saveError.description'),
+            });
         }
     };
 
     const resetSettings = () => {
         localStorage.removeItem('systemSettings');
         setSettings(defaultSettings);
-        alert('Settings have been reset to default.');
+        toast({
+            title: t('resetSuccess.title'),
+            description: t('resetSuccess.description'),
+        });
     };
 
     return (
@@ -159,5 +174,3 @@ export const useSettings = () => {
     }
     return context;
 };
-
-    

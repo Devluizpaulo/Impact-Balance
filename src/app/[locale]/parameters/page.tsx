@@ -10,11 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { RefreshCcw, Save } from "lucide-react";
 import AppShell from "@/components/layout/app-shell";
 
-type NestedKey<T> = {
-  [K in keyof T]: T[K] extends object ? `${K & string}.${keyof T[K] & string}` : never
-}[keyof T];
-
-
 export default function ParametersPage() {
   const t = useTranslations("ParametersPage");
   const { settings, setSettings, saveSettings, resetSettings, isClient } = useSettings();
@@ -47,7 +42,7 @@ export default function ParametersPage() {
   if (!isClient) {
     return (
       <AppShell>
-        <div className="p-4 md:p-8">
+        <div className="container mx-auto px-4 py-8 md:py-12">
           <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
             <div className="space-y-2">
               <Skeleton className="h-8 w-64" />
@@ -59,10 +54,10 @@ export default function ParametersPage() {
             </div>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Skeleton className="h-96 w-full" />
-            <Skeleton className="h-96 w-full" />
-            <Skeleton className="h-96 w-full" />
-            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full rounded-lg" />
+            <Skeleton className="h-96 w-full rounded-lg" />
+            <Skeleton className="h-96 w-full rounded-lg" />
+            <Skeleton className="h-96 w-full rounded-lg" />
           </div>
         </div>
       </AppShell>
@@ -84,10 +79,10 @@ export default function ParametersPage() {
             </div>
             <div className="flex gap-2">
               <Button onClick={resetSettings} variant="outline">
-                <RefreshCcw className="mr-2" /> {t('resetButton')}
+                <RefreshCcw /> {t('resetButton')}
               </Button>
               <Button onClick={saveSettings}>
-                <Save className="mr-2" /> {t('saveButton')}
+                <Save /> {t('saveButton')}
               </Button>
             </div>
           </div>

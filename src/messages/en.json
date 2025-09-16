@@ -135,8 +135,7 @@
   },
   "ParametersPage": {
     "title": "System Parameters",
-    "description": "The values used for the impact calculation. Changes are saved locally.",
-    "backButton": "Back to Calculator",
+    "description": "The values used for the impact calculation. Changes are saved locally to your browser.",
     "saveButton": "Save Changes",
     "resetButton": "Reset to Defaults",
     "impactFactors": "UCS Event Impact Factors",
@@ -176,6 +175,20 @@
       "gdpPercentage": "Equivalence to GDP (%)",
       "equivalenceValuePerDay": "Equivalence Value per Day (R$)",
       "equivalenceValuePerHour": "Equivalence Value per Hour (R$)"
+    },
+    "toasts": {
+      "saveSuccess": {
+        "title": "Settings Saved",
+        "description": "Your custom parameters have been saved."
+      },
+      "saveError": {
+        "title": "Save Failed",
+        "description": "Could not save your settings. Please try again."
+      },
+      "resetSuccess": {
+        "title": "Settings Reset",
+        "description": "Parameters have been reset to their default values."
+      }
     }
   }
 }
