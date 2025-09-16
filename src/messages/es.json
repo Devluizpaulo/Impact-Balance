@@ -15,6 +15,7 @@
     "calculator": "Calculadora",
     "parameters": "Parámetros",
     "equivalenceCalculator": "Calculadora de Equivalencia",
+    "dataFigures": "Datos Mundiales",
     "documentation": "Documentación"
   },
   "HomePage": {
@@ -233,5 +234,9 @@
   "DocumentationPage": {
     "title": "Documentación",
     "description": "Documentación del proyecto y metodología."
+  },
+  "DataFiguresPage": {
+    "title": "Datos y Cifras Mundiales (2022)",
+    "description": "Datos de referencia para los cálculos de la huella."
   }
 }

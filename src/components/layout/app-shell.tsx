@@ -12,7 +12,7 @@ import {
   SidebarTrigger,
   SidebarInset,
 } from "@/components/ui/sidebar"
-import { Calculator, Settings, BookText } from "lucide-react"
+import { Calculator, Settings, BookText, Globe } from "lucide-react"
 import { usePathname } from "@/navigation"
 import Header from "./header"
 import { useTranslations } from "next-intl"
@@ -47,12 +47,36 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
+                isActive={pathname === "/equivalence-calculator"}
+                tooltip={t('equivalenceCalculator')}
+              >
+                <Link href="/equivalence-calculator">
+                  <Calculator />
+                  <span>{t('equivalenceCalculator')}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
                 isActive={pathname === "/parameters"}
                 tooltip={t('parameters')}
               >
                 <Link href="/parameters">
                   <Settings />
                   <span>{t('parameters')}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === "/data-figures"}
+                tooltip={t('dataFigures')}
+              >
+                <Link href="/data-figures">
+                  <Globe />
+                  <span>{t('dataFigures')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

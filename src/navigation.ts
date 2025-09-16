@@ -7,6 +7,8 @@ import {locales} from './config';
 export const pathnames = {
   '/': '/',
   '/parameters': '/parameters',
+  '/equivalence-calculator': '/equivalence-calculator',
+  '/data-figures': '/data-figures',
   '/documentation': '/documentation',
 } satisfies Pathnames<typeof locales>;
 

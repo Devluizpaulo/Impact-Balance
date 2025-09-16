@@ -15,6 +15,7 @@
     "calculator": "Calculadora",
     "parameters": "Parâmetros",
     "equivalenceCalculator": "Calculadora de Equivalência",
+    "dataFigures": "Dados Mundiais",
     "documentation": "Documentação"
   },
   "HomePage": {
@@ -233,5 +234,9 @@
   "DocumentationPage": {
     "title": "Documentação",
     "description": "Documentação do projeto e metodologia."
+  },
+  "DataFiguresPage": {
+    "title": "Dados e Figuras Mundiais (2022)",
+    "description": "Dados de referência para os cálculos da pegada."
   }
 }

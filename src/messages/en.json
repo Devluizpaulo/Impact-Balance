@@ -15,6 +15,7 @@
     "calculator": "Calculator",
     "parameters": "Parameters",
     "equivalenceCalculator": "Equivalence Calculator",
+    "dataFigures": "World Data",
     "documentation": "Documentation"
   },
   "HomePage": {
@@ -233,5 +234,9 @@
   "DocumentationPage": {
     "title": "Documentation",
     "description": "Project documentation and methodology."
+  },
+  "DataFiguresPage": {
+    "title": "World Data and Figures (2022)",
+    "description": "Reference data for footprint calculations."
   }
 }
