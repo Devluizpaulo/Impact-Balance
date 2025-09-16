@@ -149,7 +149,6 @@
       "value": "Valor"
     },
     "ucsFactors": {
-      "participants": "Participantes (por hora)",
       "durationDays": "Duración (por día)",
       "venueSizeSqm": "Tamaño del Lugar (por m²)",
       "travelKm": "Viaje Promedio (por km)",

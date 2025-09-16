@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useSettings, type SystemSettings } from "@/lib/settings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RefreshCcw, Save } from "lucide-react";
+import AppShell from "@/components/layout/app-shell";
 
 type NestedKey<T> = {
   [K in keyof T]: T[K] extends object ? `${K & string}.${keyof T[K] & string}` : never
@@ -18,7 +19,6 @@ export default function ParametersPage() {
   const t = useTranslations("ParametersPage");
   const { settings, setSettings, saveSettings, resetSettings, isClient } = useSettings();
 
-  // Generic handler for nested settings
   const handleNestedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const [group, key] = name.split('.') as [keyof SystemSettings, string];
@@ -46,15 +46,26 @@ export default function ParametersPage() {
 
   if (!isClient) {
     return (
-      <div className="p-8">
-        <Skeleton className="h-10 w-1/3 mb-4" />
-        <Skeleton className="h-8 w-1/2 mb-8" />
-        <div className="space-y-4">
-          <Skeleton className="h-64 w-full" />
-          <Skeleton className="h-64 w-full" />
-          <Skeleton className="h-64 w-full" />
+      <AppShell>
+        <div className="p-4 md:p-8">
+          <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-64" />
+              <Skeleton className="h-5 w-96" />
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-10 w-40" />
+              <Skeleton className="h-10 w-40" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full" />
+          </div>
         </div>
-      </div>
+      </AppShell>
     );
   }
 
@@ -64,13 +75,12 @@ export default function ParametersPage() {
   const indirectCosts = Object.entries(settings.indirectCosts);
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
-      <Card>
-        <CardHeader>
-          <div className="flex flex-wrap justify-between items-center gap-4">
+    <AppShell>
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
             <div>
-              <CardTitle>{t('title')}</CardTitle>
-              <CardDescription>{t('description')}</CardDescription>
+              <h1 className="text-3xl font-bold font-headline">{t('title')}</h1>
+              <p className="text-muted-foreground">{t('description')}</p>
             </div>
             <div className="flex gap-2">
               <Button onClick={resetSettings} variant="outline">
@@ -81,13 +91,13 @@ export default function ParametersPage() {
               </Button>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-8">
-          
-          {/* UCS Impact Factors */}
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">{t('impactFactors')}</h3>
-            <div className="overflow-hidden rounded-md border">
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('impactFactors')}</CardTitle>
+            </CardHeader>
+            <CardContent>
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
@@ -101,13 +111,14 @@ export default function ParametersPage() {
                   ))}
                 </TableBody>
               </Table>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Per Capita Calculation Basis */}
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">{t('perCapitaBasis')}</h3>
-            <div className="overflow-hidden rounded-md border">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('perCapitaBasis')}</CardTitle>
+            </CardHeader>
+            <CardContent>
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
@@ -121,13 +132,14 @@ export default function ParametersPage() {
                   ))}
                 </TableBody>
               </Table>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
           
-          {/* Indirect Costs */}
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">{t('indirectCosts')}</h3>
-            <div className="overflow-hidden rounded-md border">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('indirectCosts')}</CardTitle>
+            </CardHeader>
+            <CardContent>
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
@@ -141,13 +153,14 @@ export default function ParametersPage() {
                   ))}
                 </TableBody>
               </Table>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Equivalences and Costs */}
-          <div>
-            <h3 className="mb-4 text-lg font-semibold">{t('equivalencesAndCosts')}</h3>
-            <div className="overflow-hidden rounded-md border">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('equivalencesAndCosts')}</CardTitle>
+            </CardHeader>
+            <CardContent>
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
@@ -167,11 +180,10 @@ export default function ParametersPage() {
                   </TableRow>
                 </TableBody>
               </Table>
-            </div>
-          </div>
-
-        </CardContent>
-      </Card>
-    </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </AppShell>
   );
 }
