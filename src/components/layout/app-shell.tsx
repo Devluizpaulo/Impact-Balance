@@ -41,7 +41,6 @@ const navItemsConfig: NavItem[] = [
     href: "/documentation",
     icon: <BookText className="h-5 w-5" />,
     translationKey: 'documentation',
-    isProtected: true,
     subItems: [
       { 
         href: "/data-figures", 
@@ -63,7 +62,7 @@ function NavLink({ item, isSubItem = false }: { item: NavItem, isSubItem?: boole
   const pathname = usePathname();
   const t = useTranslations("AppShell");
   
-  const isActive = isSubItem ? pathname === item.href : pathname.startsWith(item.href);
+  const isActive = pathname === item.href;
 
   const handleClick = (e: React.MouseEvent) => {
     if (item.isProtected && !isAdmin) {
@@ -105,24 +104,25 @@ function SidebarNav() {
   const t = useTranslations("AppShell");
   const { isAdmin, logout } = useAuth();
 
-  const defaultAccordionValue = navItemsConfig.find(item => 
-    item.subItems?.some(sub => pathname.startsWith(sub.href))
-  )?.href;
+  const getAccordionTriggerClass = (item: NavItem) => {
+    return cn(
+        "flex items-center w-full justify-between rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:no-underline",
+        item.subItems?.some(sub => pathname === sub.href) && "text-primary"
+    );
+  }
 
   return (
     <nav className="flex flex-col h-full">
       <div className="flex-1">
-        <Accordion type="single" collapsible defaultValue={defaultAccordionValue} className="w-full">
+        <Accordion type="single" collapsible className="w-full">
           {navItemsConfig.map((item) => (
             item.subItems ? (
               <AccordionItem key={item.href} value={item.href} className="border-b-0">
-                <AccordionTrigger 
-                  className={cn(
-                    "flex items-center w-full justify-between rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:no-underline",
-                    pathname.startsWith(item.href) && "text-primary"
-                  )}
-                >
-                  <NavLink item={item} />
+                <AccordionTrigger className={getAccordionTriggerClass(item)}>
+                   <div className="flex items-center gap-3">
+                    {item.icon}
+                    {t(item.translationKey as any)}
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent className="pl-8">
                   <nav className="flex flex-col gap-1">
@@ -162,7 +162,7 @@ function MobileNav() {
       <SheetContent side="left" className="flex flex-col p-0">
          <div className="flex h-16 items-center border-b px-6">
           <Link href="/" className="flex items-center gap-2 font-bold">
-             <Image src="/logo.png" alt="BMV Logo" width={80} height={27} priority />
+             <Image src="/logo.png" alt="BMV Logo" width={100} height={34} priority />
           </Link>
         </div>
         <div className="flex-1 overflow-y-auto py-6 px-4">
@@ -181,7 +181,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-16 items-center border-b px-6">
             <Link href="/" className="flex items-center gap-2 font-bold">
-               <Image src="/logo.png" alt="BMV Logo" width={80} height={27} priority />
+               <Image src="/logo.png" alt="BMV Logo" width={100} height={34} priority />
             </Link>
           </div>
           <div className="flex-1">
