@@ -12,10 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formSchema, type FormData, type CalculationResult } from "@/lib/types";
-import { Calculator, Users, Clock, CalendarDays, Maximize, Route, Trash2, Droplets, Zap, User, UserCog, Wrench, Building2, Headset, Briefcase, Handshake, FileText, Globe, Award } from "lucide-react";
+import { Calculator, Users, Clock, CalendarDays, UserCog, Wrench, Briefcase, Building2, Headset, User, Handshake, FileText, Award, Globe } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/lib/settings";
@@ -45,12 +44,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       visitors: 4500,
       durationHours: 3,
       durationDays: 20,
-      venueSizeSqm: 500,
-      travelKm: 250,
-      wasteKg: 150,
-      waterLiters: 5000,
-      energyKwh: 1200,
-      currentPractices: "",
       indirectCosts: {
         ownershipRegistration: settings.indirectCosts.ownershipRegistration,
         certificateIssuance: settings.indirectCosts.certificateIssuance,
@@ -60,7 +53,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
   function onSubmit(values: FormData) {
-    const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors } = settings;
+    const { ucsCostPerUnit, equivalences, perCapitaFactors } = settings;
     const { participants, durationDays, durationHours, visitors } = values;
 
     const breakdown: { category: string; ucs: number; cost: number }[] = [];
@@ -79,26 +72,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         cost: participantUcs * ucsCostPerUnit,
       });
     }
-
-    const directFactors = [
-      { key: "Duration", value: values.durationDays || 0, factor: ucsFactors.durationDays },
-      { key: "Venue Size", value: values.venueSizeSqm || 0, factor: ucsFactors.venueSizeSqm },
-      { key: "Travel", value: values.travelKm || 0, factor: ucsFactors.travelKm },
-      { key: "Waste", value: values.wasteKg || 0, factor: ucsFactors.wasteKg },
-      { key: "Water", value: values.waterLiters || 0, factor: ucsFactors.waterLiters },
-      { key: "Energy", value: values.energyKwh || 0, factor: ucsFactors.energyKwh }
-    ];
-    
-    directFactors.forEach(item => {
-      if (item.value > 0) {
-        const ucs = item.value * item.factor;
-        breakdown.push({
-          category: item.key,
-          ucs: ucs,
-          cost: ucs * ucsCostPerUnit
-        });
-      }
-    });
 
     const indirectCostsInReais = values.indirectCosts;
     if (indirectCostsInReais) {
@@ -156,12 +129,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       visitors: 4500,
       durationHours: 3,
       durationDays: 20,
-      venueSizeSqm: 500,
-      travelKm: 250,
-      wasteKg: 150,
-      waterLiters: 5000,
-      energyKwh: 1200,
-      currentPractices: "",
       indirectCosts: {
         ownershipRegistration: settings.indirectCosts.ownershipRegistration,
         certificateIssuance: settings.indirectCosts.certificateIssuance,
@@ -297,40 +264,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 )}
               />
             </div>
-
-            <Separator />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField control={form.control} name="venueSizeSqm" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Maximize className="w-4 h-4 mr-2" />{t('venueSizeSqm.label')}</FormLabel><FormControl><Input type="number" placeholder="500" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="travelKm" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Route className="w-4 h-4 mr-2" />{t('travelKm.label')}</FormLabel><FormControl><Input type="number" placeholder="250" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="wasteKg" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Trash2 className="w-4 h-4 mr-2" />{t('wasteKg.label')}</FormLabel><FormControl><Input type="number" placeholder="150" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="waterLiters" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Droplets className="w-4 h-4 mr-2" />{t('waterLiters.label')}</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="energyKwh" render={({ field }) => (
-                    <FormItem><FormLabel className="flex items-center"><Zap className="w-4 h-4 mr-2" />{t('energyKwh.label')}</FormLabel><FormControl><Input type="number" placeholder="1200" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>
-                )} />
-            </div>
-            
-            <FormField
-              control={form.control}
-              name="currentPractices"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('currentPractices.label')}</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder={t('currentPractices.placeholder')} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             
             <div className="flex gap-2 justify-end">
               <Button type="button" variant="outline" onClick={handleResetClick}>

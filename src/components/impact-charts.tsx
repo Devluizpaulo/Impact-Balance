@@ -16,12 +16,6 @@ export default function ImpactCharts({ results }: ImpactChartsProps) {
 
     const categoryTranslations: {[key: string]: string} = {
         "Participants": t('categories.participants'),
-        "Duration": t('categories.duration'),
-        "Venue Size": t('categories.venueSize'),
-        "Travel": t('categories.travel'),
-        "Waste": t('categories.waste'),
-        "Water": t('categories.water'),
-        "Energy": t('categories.energy'),
         "Ownership Registration": t('categories.ownershipRegistration'),
         "Certificate Issuance": t('categories.certificateIssuance'),
         "Website Page": t('categories.websitePage'),

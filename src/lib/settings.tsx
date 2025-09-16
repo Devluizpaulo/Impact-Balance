@@ -6,14 +6,6 @@ import { useTranslations } from 'next-intl';
 
 // Define the shape of your settings
 export interface SystemSettings {
-    ucsFactors: {
-        durationDays: number;
-        venueSizeSqm: number;
-        travelKm: number;
-        wasteKg: number;
-        waterLiters: number;
-        energyKwh: number;
-    };
     perCapitaFactors: {
       averageUcsPerHectare: number;
       perCapitaConsumptionHa: number;
@@ -40,14 +32,6 @@ export interface SystemSettings {
 
 // Define the default settings
 const defaultSettings: SystemSettings = {
-    ucsFactors: {
-        durationDays: 10,
-        venueSizeSqm: 0.1,
-        travelKm: 0.2,
-        wasteKg: 0.8,
-        waterLiters: 0.01,
-        energyKwh: 0.3,
-    },
     perCapitaFactors: {
       averageUcsPerHectare: 760,
       perCapitaConsumptionHa: 2.389,
@@ -90,10 +74,6 @@ const mergeSettings = (base: SystemSettings, updates: Partial<SystemSettings>): 
     return {
         ...base,
         ...safeUpdates,
-        ucsFactors: {
-            ...base.ucsFactors,
-            ...safeUpdates.ucsFactors,
-        },
         perCapitaFactors: {
           ...base.perCapitaFactors,
           ...safeUpdates.perCapitaFactors,

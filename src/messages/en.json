@@ -75,25 +75,6 @@
       "certificateIssuance": "Certificate Issuance",
       "websitePage": "Website Page"
     },
-    "venueSizeSqm": {
-      "label": "Venue (m²)"
-    },
-    "travelKm": {
-      "label": "Avg. Travel (km)"
-    },
-    "wasteKg": {
-      "label": "Waste (kg)"
-    },
-    "waterLiters": {
-      "label": "Water (liters)"
-    },
-    "energyKwh": {
-      "label": "Energy (kWh)"
-    },
-    "currentPractices": {
-      "label": "Current Sustainability Practices",
-      "placeholder": "Describe any eco-friendly measures you're taking..."
-    },
     "resetButton": "Reset",
     "calculateButton": "Calculate Impact",
     "formValidation": {
@@ -107,12 +88,6 @@
     "description": "Contribution of each category to the total UCS.",
     "categories": {
       "participants": "Participants",
-      "duration": "Duration",
-      "venueSize": "Venue Size",
-      "travel": "Travel",
-      "waste": "Waste",
-      "water": "Water",
-      "energy": "Energy",
       "ownershipRegistration": "Ownership Registration",
       "certificateIssuance": "Certificate Issuance",
       "websitePage": "Website Page"
@@ -154,14 +129,6 @@
     "table": {
       "parameter": "Parameter",
       "value": "Value"
-    },
-    "ucsFactors": {
-      "durationDays": "Duration (per day)",
-      "venueSizeSqm": "Venue Size (per m²)",
-      "travelKm": "Average Travel (per km)",
-      "wasteKg": "Waste (per kg)",
-      "waterLiters": "Water (per liter)",
-      "energyKwh": "Energy (per kWh)"
     },
     "perCapitaFactors": {
       "averageUcsPerHectare": "Average UCS per Hectare",

@@ -75,25 +75,6 @@
       "certificateIssuance": "Emissão de Certificado",
       "websitePage": "Página do Site"
     },
-    "venueSizeSqm": {
-      "label": "Local (m²)"
-    },
-    "travelKm": {
-      "label": "Viagem Média (km)"
-    },
-    "wasteKg": {
-      "label": "Resíduos (kg)"
-    },
-    "waterLiters": {
-      "label": "Água (litros)"
-    },
-    "energyKwh": {
-      "label": "Energia (kWh)"
-    },
-    "currentPractices": {
-      "label": "Práticas de Sustentabilidade Atuais",
-      "placeholder": "Descreva quaisquer medidas ecológicas que você está tomando..."
-    },
     "resetButton": "Redefinir",
     "calculateButton": "Calcular Impacto",
     "formValidation": {
@@ -107,12 +88,6 @@
     "description": "Contribuição de cada categoria para o UCS total.",
     "categories": {
       "participants": "Participantes",
-      "duration": "Duração",
-      "venueSize": "Local",
-      "travel": "Viagem",
-      "waste": "Resíduos",
-      "water": "Água",
-      "energy": "Energia",
       "ownershipRegistration": "Registro de Titularidade",
       "certificateIssuance": "Emissão de Certificado",
       "websitePage": "Página do Site"
@@ -146,7 +121,6 @@
     "description": "Os valores utilizados para o cálculo de impacto. As alterações são salvas localmente no seu navegador.",
     "saveButton": "Salvar Alterações",
     "resetButton": "Restaurar Padrões",
-    "impactFactors": "Fatores de Impacto do Evento UCS",
     "perCapitaBasis": "Base de Cálculo Per Capita",
     "indirectCosts": "Custos Indiretos (R$)",
     "equivalencesAndCosts": "Equivalências e Custos",
@@ -154,14 +128,6 @@
     "table": {
       "parameter": "Parâmetro",
       "value": "Valor"
-    },
-    "ucsFactors": {
-      "durationDays": "Duração (por dia)",
-      "venueSizeSqm": "Tamanho do Local (por m²)",
-      "travelKm": "Viagem Média (por km)",
-      "wasteKg": "Resíduos (por kg)",
-      "waterLiters": "Água (por litro)",
-      "energyKwh": "Energia (por kWh)"
     },
     "perCapitaFactors": {
       "averageUcsPerHectare": "Média UCS Por Hectare",

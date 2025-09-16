@@ -28,12 +28,6 @@ export const formSchema = (t: (key: keyof FormTranslations) => string) => z.obje
   visitors: z.coerce.number().min(0).optional(),
   durationHours: z.coerce.number().min(1, { message: t('formValidation.durationHoursError') }),
   durationDays: z.coerce.number().min(1, { message: t('formValidation.durationDaysError') }),
-  venueSizeSqm: z.coerce.number().optional(),
-  travelKm: z.coerce.number().optional(),
-  wasteKg: z.coerce.number().optional(),
-  waterLiters: z.coerce.number().optional(),
-  energyKwh: z.coerce.number().optional(),
-  currentPractices: z.string().optional(),
   indirectCosts: indirectCostsSchema.optional(),
 });
 

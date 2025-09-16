@@ -57,14 +57,12 @@ export default function ParametersPage() {
             <Skeleton className="h-96 w-full rounded-lg" />
             <Skeleton className="h-96 w-full rounded-lg" />
             <Skeleton className="h-96 w-full rounded-lg" />
-            <Skeleton className="h-96 w-full rounded-lg" />
           </div>
         </div>
       </AppShell>
     );
   }
 
-  const ucsFactors = Object.entries(settings.ucsFactors);
   const perCapitaFactors = Object.entries(settings.perCapitaFactors);
   const equivalences = Object.entries(settings.equivalences);
   const indirectCosts = Object.entries(settings.indirectCosts);
@@ -88,27 +86,6 @@ export default function ParametersPage() {
           </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('impactFactors')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
-                <TableBody>
-                  {ucsFactors.map(([key, value]) => (
-                    <TableRow key={key}>
-                      <TableCell>{t(`ucsFactors.${key}` as any)}</TableCell>
-                      <TableCell>
-                        <Input type="number" name={`ucsFactors.${key}`} value={value} onChange={handleNestedChange} className="text-right" />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-
           <Card>
             <CardHeader>
               <CardTitle>{t('perCapitaBasis')}</CardTitle>

@@ -26,18 +26,14 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
 
             const eventData = `
                 Event: ${formData.eventName}
-                Participants: ${formData.participants}
+                Participants: ${JSON.stringify(formData.participants)}
+                Visitors: ${formData.visitors}
                 Duration: ${formData.durationDays} days
-                ${formData.venueSizeSqm ? `Venue Size: ${formData.venueSizeSqm} m²` : ''}
-                ${formData.travelKm ? `Average Travel: ${formData.travelKm} km per participant` : ''}
-                ${formData.wasteKg ? `Estimated Waste: ${formData.wasteKg} kg` : ''}
-                ${formData.waterLiters ? `Estimated Water Usage: ${formData.waterLiters} liters` : ''}
-                ${formData.energyKwh ? `Estimated Energy Usage: ${formData.energyKwh} kWh` : ''}
             `.trim().replace(/^\s+/gm, '');
 
             const input: ImpactSuggestionsInput = {
                 eventData,
-                currentPractices: formData.currentPractices || "No specific sustainability practices are currently in place.",
+                currentPractices: "No specific sustainability practices are currently in place.",
             };
 
             try {

@@ -75,25 +75,6 @@
       "certificateIssuance": "Emisión de Certificado",
       "websitePage": "Página del Sitio Web"
     },
-    "venueSizeSqm": {
-      "label": "Lugar (m²)"
-    },
-    "travelKm": {
-      "label": "Viaje Promedio (km)"
-    },
-    "wasteKg": {
-      "label": "Residuos (kg)"
-    },
-    "waterLiters": {
-      "label": "Agua (litros)"
-    },
-    "energyKwh": {
-      "label": "Energía (kWh)"
-    },
-    "currentPractices": {
-      "label": "Prácticas de Sostenibilidad Actuales",
-      "placeholder": "Describa cualquier medida ecológica que esté tomando..."
-    },
     "resetButton": "Restablecer",
     "calculateButton": "Calcular Impacto",
     "formValidation": {
@@ -107,12 +88,6 @@
     "description": "Contribución de cada categoría al UCS total.",
     "categories": {
       "participants": "Participantes",
-      "duration": "Duración",
-      "venueSize": "Lugar",
-      "travel": "Viaje",
-      "waste": "Residuos",
-      "water": "Agua",
-      "energy": "Energía",
       "ownershipRegistration": "Registro de Propiedad",
       "certificateIssuance": "Emisión de Certificado",
       "websitePage": "Página del Sitio Web"
@@ -146,7 +121,6 @@
     "description": "Los valores utilizados para el cálculo de impacto. Los cambios se guardan localmente en su navegador.",
     "saveButton": "Guardar Cambios",
     "resetButton": "Restaurar Valores Predeterminados",
-    "impactFactors": "Factores de Impacto del Evento UCS",
     "perCapitaBasis": "Base de Cálculo Per Cápita",
     "indirectCosts": "Costos Indirectos (R$)",
     "equivalencesAndCosts": "Equivalencias y Costos",
@@ -154,14 +128,6 @@
     "table": {
       "parameter": "Parámetro",
       "value": "Valor"
-    },
-    "ucsFactors": {
-      "durationDays": "Duración (por día)",
-      "venueSizeSqm": "Tamaño del Lugar (por m²)",
-      "travelKm": "Viaje Promedio (por km)",
-      "wasteKg": "Residuos (por kg)",
-      "waterLiters": "Agua (por litro)",
-      "energyKwh": "Energía (por kWh)"
     },
     "perCapitaFactors": {
       "averageUcsPerHectare": "Promedio UCS por Hectárea",
