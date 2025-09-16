@@ -10,8 +10,8 @@ type FormTranslations = {
 };
 
 const participantDetailSchema = z.object({
-  count: z.coerce.number().min(0, { message: 'formValidation.participantCountError'}),
-  days: z.coerce.number().min(0, { message: 'formValidation.participantDaysError'}),
+  count: z.coerce.number().min(0, { message: 'formValidation.participantCountError'}).optional(),
+  days: z.coerce.number().min(0, { message: 'formValidation.participantDaysError'}).optional(),
 });
 
 const participantSchema = z.object({
@@ -25,10 +25,10 @@ const participantSchema = z.object({
 });
 
 const visitorsSchema = z.object({
-    count: z.coerce.number().min(0, { message: 'formValidation.visitorCountError'}),
+    count: z.coerce.number().min(0, { message: 'formValidation.visitorCountError'}).optional(),
     unit: z.enum(['hours', 'days']),
-    hours: z.coerce.number().min(0, { message: 'formValidation.visitorHoursError'}),
-    days: z.coerce.number().min(0, { message: 'formValidation.visitorDaysError'}),
+    hours: z.coerce.number().min(0, { message: 'formValidation.visitorHoursError'}).optional(),
+    days: z.coerce.number().min(0, { message: 'formValidation.visitorDaysError'}).optional(),
 });
 
 const indirectCostsSchema = z.object({

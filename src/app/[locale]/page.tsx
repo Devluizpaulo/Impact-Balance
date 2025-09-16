@@ -33,16 +33,16 @@ export default function Home() {
 
   return (
     <AppShell>
-       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+       <div className="space-y-4">
           <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight">{t('heroTitle')}</h2>
+            <h2 className="text-3xl font-bold tracking-tight font-headline">{t('heroTitle')}</h2>
           </div>
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
           <div className="xl:col-span-1">
             <ImpactCalculator onCalculate={handleCalculation} onReset={handleReset} />
           </div>
           <div className="xl:col-span-1 sticky top-8">
-            <Card className="h-full min-h-[600px]" id="report-content">
+            <Card className="h-full min-h-[600px] bg-card/50 backdrop-blur-sm" id="report-content">
               <CardContent className="p-6 h-full">
                 {results && formData ? (
                   <ExecutiveReport results={results} formData={formData} />

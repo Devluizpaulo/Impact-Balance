@@ -29,6 +29,7 @@
     },
     "summary": {
       "title": "Resumo do Impacto",
+      "forEvent": "para o evento",
       "totalUCS": "UCS Total",
       "totalCost": "Custo Total",
       "ucsPerParticipant": "UCS por Participante",
@@ -36,7 +37,9 @@
       "equivalencesTitle": "Equivalências",
       "dailyUCS": "Consumo Diário de UCS",
       "hourlyUCS": "Consumo Horário de UCS",
-      "gdpPercentage": "% do PIB per Capita (ex. Brasil)"
+      "gdpPercentage": "% do PIB per Capita (ex. Brasil)",
+      "calculationDetails": "Detalhes do Cálculo",
+      "eventDuration": "Duração do Evento"
     },
     "awaitingData": {
       "title": "Aguardando Dados",
@@ -67,7 +70,7 @@
       "durationUnit": "Unidade de Duração"
     },
     "indirectCosts": {
-      "title": "Custos Indiretos (R$)",
+      "title": "Custos Indiretos",
       "ownershipRegistration": "Registro de Titularidade",
       "certificateIssuance": "Emissão de Certificado",
       "websitePage": "Página do Site"
@@ -122,7 +125,7 @@
     "saveButton": "Salvar Alterações",
     "resetButton": "Restaurar Padrões",
     "perCapitaBasis": "Base de Cálculo Per Capita",
-    "indirectCosts": "Custos Indiretos (R$)",
+    "indirectCosts": "Custos Indiretos",
     "equivalencesAndCosts": "Equivalências e Custos",
     "costPerUcs": "Custo por Unidade UCS (Evento)",
     "table": {
@@ -138,17 +141,17 @@
       "hourlyUcsConsumption": "Consumo Por hora de UC"
     },
     "indirectCostsLabels": {
-      "ownershipRegistration": "Registro de Titularidade (R$)",
-      "certificateIssuance": "Emissão de Certificado (R$)",
-      "websitePage": "Página do Site (R$)"
+      "ownershipRegistration": "Registro de Titularidade",
+      "certificateIssuance": "Emissão de Certificado",
+      "websitePage": "Página do Site"
     },
     "equivalences": {
-      "ucsQuotationValue": "Valor de Cotação da UCS (R$)",
-      "gdpPerCapita": "PIB Per Capita (R$)",
-      "equivalenceValuePerYear": "Valor de Equivalência por ano (R$)",
+      "ucsQuotationValue": "Valor de Cotação da UCS",
+      "gdpPerCapita": "PIB Per Capita",
+      "equivalenceValuePerYear": "Valor de Equivalência por ano",
       "gdpPercentage": "% da Equivalência ao do PIB",
-      "equivalenceValuePerDay": "Valor de Equivalência por dia (R$)",
-      "equivalenceValuePerHour": "Valor de Equivalência por hora (R$)"
+      "equivalenceValuePerDay": "Valor de Equivalência por dia",
+      "equivalenceValuePerHour": "Valor de Equivalência por hora"
     },
     "toasts": {
       "saveSuccess": {

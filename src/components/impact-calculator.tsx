@@ -37,24 +37,24 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     defaultValues: {
       eventName: "",
       participants: {
-        organizers: { count: 0, days: 0 },
-        assemblers: { count: 0, days: 0 },
-        suppliers: { count: 0, days: 0 },
-        exhibitors: { count: 0, days: 0 },
-        supportTeam: { count: 0, days: 0 },
-        attendants: { count: 0, days: 0 },
-        support: { count: 0, days: 0 },
+        organizers: { count: undefined, days: undefined },
+        assemblers: { count: undefined, days: undefined },
+        suppliers: { count: undefined, days: undefined },
+        exhibitors: { count: undefined, days: undefined },
+        supportTeam: { count: undefined, days: undefined },
+        attendants: { count: undefined, days: undefined },
+        support: { count: undefined, days: undefined },
       },
       visitors: {
-        count: 0,
+        count: undefined,
         unit: 'hours',
-        hours: 0,
-        days: 0,
+        hours: undefined,
+        days: undefined,
       },
       indirectCosts: {
-        ownershipRegistration: 0,
-        certificateIssuance: 0,
-        websitePage: 0,
+        ownershipRegistration: undefined,
+        certificateIssuance: undefined,
+        websitePage: undefined,
       }
     },
   });
@@ -99,17 +99,17 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     if (indirectCosts) {
       if ((indirectCosts.ownershipRegistration || 0) > 0) {
         const cost = indirectCosts.ownershipRegistration!;
-        const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+        const ucs = cost / ucsCostPerUnit;
         breakdown.push({ category: "Ownership Registration", ucs, cost });
       }
       if ((indirectCosts.certificateIssuance || 0) > 0) {
         const cost = indirectCosts.certificateIssuance!;
-        const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+        const ucs = cost / ucsCostPerUnit;
         breakdown.push({ category: "Certificate Issuance", ucs, cost });
       }
       if ((indirectCosts.websitePage || 0) > 0) {
         const cost = indirectCosts.websitePage!;
-        const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+        const ucs = cost / ucsCostPerUnit;
         breakdown.push({ category: "Website Page", ucs, cost });
       }
     }
@@ -119,7 +119,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     
     const maxDays = Math.max(
       ...Object.values(participants).map(p => p?.days || 0),
-      (visitors?.unit === 'days' ? visitors.days : (visitors?.hours || 0) / 8) || 0
+      (visitors?.unit === 'days' ? (visitors.days || 0) : (visitors?.hours || 0) / 8)
     );
     const totalEventHours = maxDays > 0 ? maxDays * 24 : 0;
 
@@ -143,24 +143,24 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     form.reset({
       eventName: "",
       participants: {
-        organizers: { count: 0, days: 0 },
-        assemblers: { count: 0, days: 0 },
-        suppliers: { count: 0, days: 0 },
-        exhibitors: { count: 0, days: 0 },
-        supportTeam: { count: 0, days: 0 },
-        attendants: { count: 0, days: 0 },
-        support: { count: 0, days: 0 },
+        organizers: { count: undefined, days: undefined },
+        assemblers: { count: undefined, days: undefined },
+        suppliers: { count: undefined, days: undefined },
+        exhibitors: { count: undefined, days: undefined },
+        supportTeam: { count: undefined, days: undefined },
+        attendants: { count: undefined, days: undefined },
+        support: { count: undefined, days: undefined },
       },
       visitors: {
-        count: 0,
+        count: undefined,
         unit: 'hours',
-        hours: 0,
-        days: 0,
+        hours: undefined,
+        days: undefined,
       },
       indirectCosts: {
-        ownershipRegistration: 0,
-        certificateIssuance: 0,
-        websitePage: 0,
+        ownershipRegistration: undefined,
+        certificateIssuance: undefined,
+        websitePage: undefined,
       }
     });
     setVisitorUnit('hours');
@@ -184,7 +184,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="no-spinner" />
+                <Input type="number" placeholder={t('participants.quantity')} {...field} className="no-spinner" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -196,7 +196,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="no-spinner" />
+                <Input type="number" placeholder={t('participants.days')} {...field} className="no-spinner" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -240,13 +240,13 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               </div>
 
               <div className="space-y-3">
-                  <ParticipantField name="organizers" icon={<UserCog />} label={t('participants.organizersAndPromoters')} />
-                  <ParticipantField name="assemblers" icon={<Wrench />} label={t('participants.assemblers')} />
-                  <ParticipantField name="suppliers" icon={<Briefcase />} label={t('participants.suppliers')} />
-                  <ParticipantField name="exhibitors" icon={<Building2 />} label={t('participants.exhibitors')} />
-                  <ParticipantField name="supportTeam" icon={<Headset />} label={t('participants.supportTeam')} />
-                  <ParticipantField name="attendants" icon={<User />} label={t('participants.attendants')} />
-                  <ParticipantField name="support" icon={<Handshake />} label={t('participants.support')} />
+                  <ParticipantField name="organizers" icon={<UserCog className="w-5 h-5"/>} label={t('participants.organizersAndPromoters')} />
+                  <ParticipantField name="assemblers" icon={<Wrench className="w-5 h-5"/>} label={t('participants.assemblers')} />
+                  <ParticipantField name="suppliers" icon={<Briefcase className="w-5 h-5"/>} label={t('participants.suppliers')} />
+                  <ParticipantField name="exhibitors" icon={<Building2 className="w-5 h-5"/>} label={t('participants.exhibitors')} />
+                  <ParticipantField name="supportTeam" icon={<Headset className="w-5 h-5"/>} label={t('participants.supportTeam')} />
+                  <ParticipantField name="attendants" icon={<User className="w-5 h-5"/>} label={t('participants.attendants')} />
+                  <ParticipantField name="support" icon={<Handshake className="w-5 h-5"/>} label={t('participants.support')} />
               </div>
             </div>
             
@@ -258,9 +258,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 name="visitors.count"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2"><Users />{t('participants.quantity')}</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><Users className="w-5 h-5"/>{t('participants.quantity')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="no-spinner" />
+                      <Input type="number" placeholder={t('participants.quantity')} {...field} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -271,8 +271,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 <FormLabel>{t('participants.durationUnit')}</FormLabel>
                 <Tabs defaultValue={visitorUnit} className="w-auto">
                     <TabsList className="grid w-full grid-cols-2 h-10">
-                        <TabsTrigger value="hours" onClick={() => handleUnitChange('hours')}><Clock className="mr-2"/> {t('participants.hours')}</TabsTrigger>
-                        <TabsTrigger value="days" onClick={() => handleUnitChange('days')}><CalendarDays className="mr-2"/> {t('participants.days')}</TabsTrigger>
+                        <TabsTrigger value="hours" onClick={() => handleUnitChange('hours')}><Clock className="mr-2 w-5 h-5"/> {t('participants.hours')}</TabsTrigger>
+                        <TabsTrigger value="days" onClick={() => handleUnitChange('days')}><CalendarDays className="mr-2 w-5 h-5"/> {t('participants.days')}</TabsTrigger>
                     </TabsList>
                 </Tabs>
               </div>
@@ -284,9 +284,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 name="visitors.hours"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2"><Clock />{t('participants.hours')}</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><Clock className="w-5 h-5"/>{t('participants.hours')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.hours')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="no-spinner" />
+                      <Input type="number" placeholder={t('participants.hours')} {...field} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -300,9 +300,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 name="visitors.days"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2"><CalendarDays />{t('participants.days')}</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><CalendarDays className="w-5 h-5"/>{t('participants.days')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="no-spinner" />
+                      <Input type="number" placeholder={t('participants.days')} {...field} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -321,7 +321,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="0,00" {...field} className="no-spinner" onChange={e => field.onChange(e.target.value === '' ? '' : Number(e.target.value))} />
+                      <Input type="number" placeholder="0.00" {...field} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -334,7 +334,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
                     <FormControl>
-                       <Input type="number" placeholder="0,00" {...field} className="no-spinner" onChange={e => field.onChange(e.target.value === '' ? '' : Number(e.target.value))} />
+                       <Input type="number" placeholder="0.00" {...field} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -347,7 +347,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
                      <FormControl>
-                       <Input type="number" placeholder="0,00" {...field} className="no-spinner" onChange={e => field.onChange(e.target.value === '' ? '' : Number(e.target.value))} />
+                       <Input type="number" placeholder="0.00" {...field} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -29,6 +29,7 @@
     },
     "summary": {
       "title": "Impact Summary",
+      "forEvent": "for event",
       "totalUCS": "Total UCS",
       "totalCost": "Total Cost",
       "ucsPerParticipant": "UCS per Participant",
@@ -36,7 +37,9 @@
       "equivalencesTitle": "Equivalences",
       "dailyUCS": "Daily UCS Consumption",
       "hourlyUCS": "Hourly UCS Consumption",
-      "gdpPercentage": "% of GDP per Capita (e.g. Brazil)"
+      "gdpPercentage": "% of GDP per Capita (e.g. Brazil)",
+      "calculationDetails": "Calculation Details",
+      "eventDuration": "Event Duration"
     },
     "awaitingData": {
       "title": "Awaiting Data",
@@ -67,7 +70,7 @@
       "durationUnit": "Duration Unit"
     },
     "indirectCosts": {
-      "title": "Indirect Costs (R$)",
+      "title": "Indirect Costs",
       "ownershipRegistration": "Ownership Registration",
       "certificateIssuance": "Certificate Issuance",
       "websitePage": "Website Page"
@@ -122,7 +125,7 @@
     "saveButton": "Save Changes",
     "resetButton": "Reset to Defaults",
     "perCapitaBasis": "Per Capita Calculation Basis",
-    "indirectCosts": "Indirect Costs (R$)",
+    "indirectCosts": "Indirect Costs",
     "equivalencesAndCosts": "Equivalences and Costs",
     "costPerUcs": "Cost per UCS Unit (Event)",
     "table": {
@@ -138,17 +141,17 @@
       "hourlyUcsConsumption": "Hourly UCS Consumption"
     },
     "indirectCostsLabels": {
-      "ownershipRegistration": "Ownership Registration (R$)",
-      "certificateIssuance": "Certificate Issuance (R$)",
-      "websitePage": "Website Page (R$)"
+      "ownershipRegistration": "Ownership Registration",
+      "certificateIssuance": "Certificate Issuance",
+      "websitePage": "Website Page"
     },
     "equivalences": {
-      "ucsQuotationValue": "UCS Quotation Value (R$)",
-      "gdpPerCapita": "GDP per Capita (R$)",
-      "equivalenceValuePerYear": "Equivalence Value per Year (R$)",
+      "ucsQuotationValue": "UCS Quotation Value",
+      "gdpPerCapita": "GDP per Capita",
+      "equivalenceValuePerYear": "Equivalence Value per Year",
       "gdpPercentage": "Equivalence to GDP (%)",
-      "equivalenceValuePerDay": "Equivalence Value per Day (R$)",
-      "equivalenceValuePerHour": "Equivalence Value per Hour (R$)"
+      "equivalenceValuePerDay": "Equivalence Value per Day",
+      "equivalenceValuePerHour": "Equivalence Value per Hour"
     },
     "toasts": {
       "saveSuccess": {

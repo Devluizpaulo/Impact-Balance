@@ -10,11 +10,11 @@ import Header from "./header"
 import { cn } from "@/lib/utils";
 
 const navItemsConfig = [
-  { href: "/", icon: <Calculator />, translationKey: 'calculator' },
-  { href: "/parameters", icon: <Settings />, translationKey: 'parameters' },
-  { href: "/data-figures", icon: <Globe />, translationKey: 'dataFigures' },
-  { href: "/country-results", icon: <Map />, translationKey: 'countryResults' },
-  { href: "/documentation", icon: <BookText />, translationKey: 'documentation' },
+  { href: "/", icon: <Calculator className="h-5 w-5" />, translationKey: 'calculator' },
+  { href: "/parameters", icon: <Settings className="h-5 w-5" />, translationKey: 'parameters' },
+  { href: "/data-figures", icon: <Globe className="h-5 w-5" />, translationKey: 'dataFigures' },
+  { href: "/country-results", icon: <Map className="h-5 w-5" />, translationKey: 'countryResults' },
+  { href: "/documentation", icon: <BookText className="h-5 w-5" />, translationKey: 'documentation' },
 ];
 
 function SidebarNav() {
@@ -73,7 +73,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex h-16 items-center border-b px-6">
             <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
               <Leaf className="h-6 w-6" />
-              <span>{t('title')}</span>
+              <span className="font-headline">{t('title')}</span>
             </Link>
           </div>
           <div className="flex-1">
@@ -83,7 +83,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <div className="flex flex-col">
         <Header mobileNav={<MobileNav />} />
-        <main className="flex flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-8">
+        <main className="flex flex-1 flex-col gap-4 bg-background p-4 md:gap-8 md:p-8">
           {children}
         </main>
       </div>
