@@ -63,7 +63,8 @@
       "visitors": "Visitors",
       "quantity": "Quantity",
       "days": "Days",
-      "hours": "Hours"
+      "hours": "Hours",
+      "durationUnit": "Duration Unit"
     },
     "durationTitle": "Event Duration",
     "durationHours": {
@@ -85,7 +86,8 @@
       "participantCountError": "Must be 0 or more.",
       "participantDaysError": "Must be 0 or more.",
       "visitorCountError": "Must be 0 or more.",
-      "visitorHoursError": "Must be 0 or more."
+      "visitorHoursError": "Must be 0 or more.",
+      "visitorDaysError": "Must be 0 or more."
     }
   },
   "ImpactCharts": {

@@ -14,10 +14,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formSchema, type FormData, type CalculationResult } from "@/lib/types";
-import { Calculator, Users, Clock, UserCog, Wrench, Briefcase, Building2, Headset, User, Handshake, FileText, Award, Globe } from "lucide-react";
+import { Calculator, Users, Clock, UserCog, Wrench, Briefcase, Building2, Headset, User, Handshake, FileText, Award, Globe, CalendarDays } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/lib/settings";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
 
 interface ImpactCalculatorProps {
   onCalculate: (data: CalculationResult, formData: FormData) => void;
@@ -27,6 +29,7 @@ interface ImpactCalculatorProps {
 export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalculatorProps) {
   const t = useTranslations('ImpactCalculator');
   const { settings } = useSettings();
+  const [visitorUnit, setVisitorUnit] = useState<'hours' | 'days'>('hours');
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema(t)),
@@ -43,7 +46,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       },
       visitors: {
         count: 4500,
-        hours: 3
+        unit: 'hours',
+        hours: 3,
+        days: 0,
       },
       indirectCosts: {
         ownershipRegistration: settings.indirectCosts.ownershipRegistration,
@@ -61,7 +66,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     
     let totalParticipantsCount = 0;
     
-    // Calculate staff impact using daily consumption factor
     const staffUcs = Object.values(participants).reduce((total, p) => {
       const count = p?.count || 0;
       const days = p?.days || 0;
@@ -69,11 +73,17 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       return total + (count * days * perCapitaFactors.dailyUcsConsumption);
     }, 0);
 
-    // Calculate visitor impact using hourly consumption factor (derived from daily)
+    let visitorUcs = 0;
     const visitorCount = visitors?.count || 0;
-    const visitorHours = visitors?.hours || 0;
     totalParticipantsCount += visitorCount;
-    const visitorUcs = visitorCount * visitorHours * (perCapitaFactors.dailyUcsConsumption / 8);
+
+    if (visitors?.unit === 'days') {
+        const visitorDays = visitors?.days || 0;
+        visitorUcs = visitorCount * visitorDays * perCapitaFactors.dailyUcsConsumption;
+    } else {
+        const visitorHours = visitors?.hours || 0;
+        visitorUcs = visitorCount * visitorHours * (perCapitaFactors.dailyUcsConsumption / 8);
+    }
 
     const participantUcs = staffUcs + visitorUcs;
 
@@ -139,7 +149,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       },
       visitors: {
         count: 4500,
-        hours: 3
+        unit: 'hours',
+        hours: 3,
+        days: 0,
       },
       indirectCosts: {
         ownershipRegistration: settings.indirectCosts.ownershipRegistration,
@@ -147,7 +159,13 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         websitePage: settings.indirectCosts.websitePage,
       }
     });
+    setVisitorUnit('hours');
     onReset();
+  }
+
+  const handleUnitChange = (unit: 'hours' | 'days') => {
+    setVisitorUnit(unit);
+    form.setValue('visitors.unit', unit);
   }
   
   const ParticipantField = ({ name, icon, label }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string }) => (
@@ -219,7 +237,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             
             <Separator />
             <p className="font-medium">{t('participants.visitorsTitle')}</p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-[1fr_auto] gap-4 items-end">
               <FormField
                 control={form.control}
                 name="visitors.count"
@@ -233,6 +251,19 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   </FormItem>
                 )}
               />
+
+              <div className="space-y-2">
+                <FormLabel>{t('participants.durationUnit')}</FormLabel>
+                <Tabs defaultValue={visitorUnit} className="w-auto">
+                    <TabsList className="grid w-full grid-cols-2 h-10">
+                        <TabsTrigger value="hours" onClick={() => handleUnitChange('hours')}><Clock className="mr-2"/> {t('participants.hours')}</TabsTrigger>
+                        <TabsTrigger value="days" onClick={() => handleUnitChange('days')}><CalendarDays className="mr-2"/> {t('participants.days')}</TabsTrigger>
+                    </TabsList>
+                </Tabs>
+              </div>
+            </div>
+
+            {visitorUnit === 'hours' && (
               <FormField
                 control={form.control}
                 name="visitors.hours"
@@ -246,7 +277,24 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   </FormItem>
                 )}
               />
-            </div>
+            )}
+
+            {visitorUnit === 'days' && (
+              <FormField
+                control={form.control}
+                name="visitors.days"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><CalendarDays />{t('participants.days')}</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
 
             <Separator />
             <p className="font-medium">{t('indirectCosts.title')}</p>
