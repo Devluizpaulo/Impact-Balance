@@ -63,7 +63,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const margin = 14;
 
             // Add logo
-            doc.addImage(img, 'PNG', margin, 15, 30, 10);
+            doc.addImage(img, 'PNG', margin, 20, 30, 10);
 
             // Add title next to the logo
             doc.setFontSize(16);
