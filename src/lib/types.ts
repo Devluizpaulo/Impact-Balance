@@ -2,18 +2,30 @@ import { z } from 'zod';
 
 type FormTranslations = {
   'formValidation.eventNameError': string;
-  'formValidation.durationHoursError': string;
-  'formValidation.durationDaysError': string;
+  'formValidation.participantCountError': string;
+  'formValidation.participantDaysError': string;
+  'formValidation.visitorCountError': string;
+  'formValidation.visitorHoursError': string;
 };
 
+const participantDetailSchema = z.object({
+  count: z.coerce.number().min(0, { message: 'formValidation.participantCountError'}),
+  days: z.coerce.number().min(0, { message: 'formValidation.participantDaysError'}),
+});
+
 const participantSchema = z.object({
-  organizers: z.coerce.number().min(0).optional(),
-  assemblers: z.coerce.number().min(0).optional(),
-  suppliers: z.coerce.number().min(0).optional(),
-  exhibitors: z.coerce.number().min(0).optional(),
-  supportTeam: z.coerce.number().min(0).optional(),
-  attendants: z.coerce.number().min(0).optional(),
-  support: z.coerce.number().min(0).optional(),
+  organizers: participantDetailSchema.optional(),
+  assemblers: participantDetailSchema.optional(),
+  suppliers: participantDetailSchema.optional(),
+  exhibitors: participantDetailSchema.optional(),
+  supportTeam: participantDetailSchema.optional(),
+  attendants: participantDetailSchema.optional(),
+  support: participantDetailSchema.optional(),
+});
+
+const visitorsSchema = z.object({
+    count: z.coerce.number().min(0, { message: 'formValidation.visitorCountError'}),
+    hours: z.coerce.number().min(0, { message: 'formValidation.visitorHoursError'}),
 });
 
 const indirectCostsSchema = z.object({
@@ -25,9 +37,7 @@ const indirectCostsSchema = z.object({
 export const formSchema = (t: (key: keyof FormTranslations) => string) => z.object({
   eventName: z.string().min(3, { message: t('formValidation.eventNameError') }),
   participants: participantSchema,
-  visitors: z.coerce.number().min(0).optional(),
-  durationHours: z.coerce.number().min(1, { message: t('formValidation.durationHoursError') }),
-  durationDays: z.coerce.number().min(1, { message: t('formValidation.durationDaysError') }),
+  visitors: visitorsSchema.optional(),
   indirectCosts: indirectCostsSchema.optional(),
 });
 

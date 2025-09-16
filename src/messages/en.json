@@ -60,7 +60,10 @@
       "supportTeam": "Support Team",
       "attendants": "Attendants",
       "support": "Support Staff",
-      "visitors": "Visitors"
+      "visitors": "Visitors",
+      "quantity": "Quantity",
+      "days": "Days",
+      "hours": "Hours"
     },
     "durationTitle": "Event Duration",
     "durationHours": {
@@ -79,8 +82,10 @@
     "calculateButton": "Calculate Impact",
     "formValidation": {
       "eventNameError": "Event name must be at least 3 characters.",
-      "durationHoursError": "Duration for visitors must be at least 1 hour.",
-      "durationDaysError": "Duration for staff must be at least 1 day."
+      "participantCountError": "Must be 0 or more.",
+      "participantDaysError": "Must be 0 or more.",
+      "visitorCountError": "Must be 0 or more.",
+      "visitorHoursError": "Must be 0 or more."
     }
   },
   "ImpactCharts": {
