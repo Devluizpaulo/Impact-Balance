@@ -17,6 +17,7 @@
     "parameters": "Parâmetros",
     "equivalenceCalculator": "Calculadora de Equivalência",
     "dataFigures": "Dados Mundiais",
+    "countryResults": "Resultados por País",
     "documentation": "Documentação"
   },
   "HomePage": {
@@ -257,7 +258,14 @@
       "footprint": "Pegada Ecológica",
       "biocapacity": "Biocapacidade"
     }
+  },
+  "CountryResultsPage": {
+    "title": "Resultados por País",
+    "description": "Veja dados detalhados de pegada e biocapacidade por país.",
+    "placeholder": {
+      "title": "Dados do País",
+      "awaitingData": "Aguardando Dados",
+      "description": "Por favor, forneça dados para preencher esta visualização."
+    }
   }
 }
-
-    

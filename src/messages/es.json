@@ -17,6 +17,7 @@
     "parameters": "Parámetros",
     "equivalenceCalculator": "Calculadora de Equivalencia",
     "dataFigures": "Datos Mundiales",
+    "countryResults": "Resultados por País",
     "documentation": "Documentación"
   },
   "HomePage": {
@@ -257,7 +258,14 @@
       "footprint": "Huella Ecológica",
       "biocapacity": "Biocapacidad"
     }
+  },
+  "CountryResultsPage": {
+    "title": "Resultados por País",
+    "description": "Vea datos detallados de huella y biocapacidad por país.",
+    "placeholder": {
+      "title": "Datos del País",
+      "awaitingData": "Esperando Datos",
+      "description": "Por favor, proporcione datos para poblar esta vista."
+    }
   }
 }
-
-    

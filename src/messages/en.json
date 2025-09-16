@@ -17,6 +17,7 @@
     "parameters": "Parameters",
     "equivalenceCalculator": "Equivalence Calculator",
     "dataFigures": "World Data",
+    "countryResults": "Country Results",
     "documentation": "Documentation"
   },
   "HomePage": {
@@ -257,7 +258,14 @@
       "footprint": "Ecological Footprint",
       "biocapacity": "Biocapacity"
     }
+  },
+  "CountryResultsPage": {
+    "title": "Country Results",
+    "description": "View detailed footprint and biocapacity data by country.",
+    "placeholder": {
+      "title": "Country Data",
+      "awaitingData": "Awaiting Data",
+      "description": "Please provide data to populate this view."
+    }
   }
 }
-
-    

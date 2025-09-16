@@ -9,6 +9,7 @@ export const pathnames = {
   '/parameters': '/parameters',
   '/equivalence-calculator': '/equivalence-calculator',
   '/data-figures': '/data-figures',
+  '/country-results': '/country-results',
   '/documentation': '/documentation',
 } satisfies Pathnames<typeof locales>;
 
