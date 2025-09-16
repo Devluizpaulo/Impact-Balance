@@ -53,31 +53,42 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         try {
             const doc = new jsPDF() as jsPDFWithAutoTable;
             
-            // Add logo
+            // --- PDF Header ---
             const img = new Image();
             img.src = '/logo.png';
-            await new Promise(resolve => {
-                img.onload = resolve;
-            });
-            doc.addImage(img, 'PNG', 14, 15, 30, 10);
+            await new Promise(resolve => { img.onload = resolve; });
 
+            const pageHeight = doc.internal.pageSize.height;
+            const pageWidth = doc.internal.pageSize.width;
+            const margin = 14;
 
-            // Header
-            doc.setFontSize(20);
-            doc.text(t_report('title'), 14, 40);
-            doc.setFontSize(11);
-            doc.setTextColor(100);
-            doc.text(`${t_report('forEvent')} ${formData.eventName}`, 14, 47);
+            // Add logo
+            doc.addImage(img, 'PNG', margin, 15, 30, 10);
 
+            // Add title next to the logo
+            doc.setFontSize(16);
+            doc.setTextColor(30, 30, 30);
+            doc.text(t_report('title'), margin + 35, 22);
+
+            // Event Name - Highlighted
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            doc.text(formData.eventName, margin, 40);
+            
+            // Reset font style
+            doc.setFont('helvetica', 'normal');
+            
             // Introduction Text
             doc.setFontSize(10);
-            const introText = doc.splitTextToSize(t_report('introduction'), 180);
-            doc.text(introText, 14, 60);
+            doc.setTextColor(100);
+            const introText = doc.splitTextToSize(t_report('introduction'), pageWidth - (margin * 2));
+            doc.text(introText, margin, 50);
 
-            let finalY = 60 + (introText.length * 5) + 5;
+            let finalY = 50 + (introText.length * 5) + 5;
 
 
-            // Breakdown Table
+            // --- Breakdown Table ---
             const tableData = results.breakdown.map(item => [
                 participantCategories[item.category] || item.category,
                 item.quantity,
@@ -92,16 +103,16 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 body: tableData,
                 theme: 'striped',
                 headStyles: { fillColor: [4, 120, 87] }, // Primary color
+                margin: { left: margin, right: margin }
             });
             
             finalY = (doc as any).lastAutoTable.finalY || 100;
 
-            // Summary section
+            // --- Summary section ---
             finalY += 10;
             doc.setFontSize(14);
-            doc.text(t_report('summaryTitle'), 14, finalY);
-            doc.setFontSize(10);
             doc.setTextColor(0);
+            doc.text(t_report('summaryTitle'), margin, finalY);
             
             finalY += 7;
 
@@ -123,18 +134,20 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 theme: 'plain',
                 styles: { fontSize: 10 },
                 columnStyles: { 0: { cellWidth: 70 }, 1: { halign: 'right' } },
-                tableWidth: 100
+                tableWidth: 100,
+                margin: { left: margin }
             });
             
             let lastY = (doc as any).lastAutoTable.finalY;
 
-            doc.autoTable({
+             doc.autoTable({
                 startY: lastY,
                 body: totalsItems,
                 theme: 'plain',
                 styles: { fontSize: 12, fontStyle: 'bold' },
-                columnStyles: { 0: { cellWidth: 70 }, 1: { halign: 'right' } },
-                tableWidth: 100
+                columnStyles: { 0: { cellWidth: 70, fontStyle: 'bold' }, 1: { halign: 'right', fontStyle: 'bold' } },
+                tableWidth: 100,
+                margin: { left: margin }
             });
 
 
