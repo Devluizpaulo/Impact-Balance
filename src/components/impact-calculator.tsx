@@ -89,20 +89,23 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     });
     
     if (values.includeOwnershipRegistration) {
-        const ucs = indirectCosts.ownershipRegistration;
-        breakdown.push({ category: "Ownership Registration", ucs: ucs, cost: ucs * ucsCostPerUnit });
+        const cost = indirectCosts.ownershipRegistration;
+        const ucs = cost / ucsCostPerUnit;
+        breakdown.push({ category: "Ownership Registration", ucs: ucs, cost: cost });
     }
     if (values.includeCertificateIssuance) {
-        const ucs = indirectCosts.certificateIssuance;
-        breakdown.push({ category: "Certificate Issuance", ucs: ucs, cost: ucs * ucsCostPerUnit });
+        const cost = indirectCosts.certificateIssuance;
+        const ucs = cost / ucsCostPerUnit;
+        breakdown.push({ category: "Certificate Issuance", ucs: ucs, cost: cost });
     }
     if (values.includeWebsitePage) {
-        const ucs = indirectCosts.websitePage;
-        breakdown.push({ category: "Website Page", ucs: ucs, cost: ucs * ucsCostPerUnit });
+        const cost = indirectCosts.websitePage;
+        const ucs = cost / ucsCostPerUnit;
+        breakdown.push({ category: "Website Page", ucs: ucs, cost: cost });
     }
 
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
-    const totalCost = totalUCS * ucsCostPerUnit;
+    const totalCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     const totalEventHours = (values.durationDays || 0) * 24;
 
     const results: CalculationResult = {
@@ -297,5 +300,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-    

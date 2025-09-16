@@ -141,7 +141,7 @@
     "resetButton": "Restaurar Padrões",
     "impactFactors": "Fatores de Impacto do Evento UCS",
     "perCapitaBasis": "Base de Cálculo Per Capita",
-    "indirectCosts": "Custos Indiretos por Pegada",
+    "indirectCosts": "Custos Indiretos (R$)",
     "equivalencesAndCosts": "Equivalências e Custos",
     "costPerUcs": "Custo por Unidade UCS (Evento)",
     "table": {
@@ -166,9 +166,9 @@
       "hourlyUcsConsumption": "Consumo Por hora de UC"
     },
     "indirectCostsLabels": {
-      "ownershipRegistration": "Registro de Titularidade (UCS)",
-      "certificateIssuance": "Emissão de Certificado (UCS)",
-      "websitePage": "Página do Site (UCS)"
+      "ownershipRegistration": "Registro de Titularidade (R$)",
+      "certificateIssuance": "Emissão de Certificado (R$)",
+      "websitePage": "Página do Site (R$)"
     },
     "equivalences": {
       "ucsQuotationValue": "Valor de Cotação da UCS (R$)",
@@ -180,5 +180,3 @@
     }
   }
 }
-
-    

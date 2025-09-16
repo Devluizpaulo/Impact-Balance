@@ -141,7 +141,7 @@
     "resetButton": "Reset to Defaults",
     "impactFactors": "UCS Event Impact Factors",
     "perCapitaBasis": "Per Capita Calculation Basis",
-    "indirectCosts": "Indirect Costs per Footprint",
+    "indirectCosts": "Indirect Costs (R$)",
     "equivalencesAndCosts": "Equivalences and Costs",
     "costPerUcs": "Cost per UCS Unit (Event)",
     "table": {
@@ -166,9 +166,9 @@
       "hourlyUcsConsumption": "Hourly UCS Consumption"
     },
     "indirectCostsLabels": {
-      "ownershipRegistration": "Ownership Registration (UCS)",
-      "certificateIssuance": "Certificate Issuance (UCS)",
-      "websitePage": "Website Page (UCS)"
+      "ownershipRegistration": "Ownership Registration (R$)",
+      "certificateIssuance": "Certificate Issuance (R$)",
+      "websitePage": "Website Page (R$)"
     },
     "equivalences": {
       "ucsQuotationValue": "UCS Quotation Value (R$)",
@@ -180,5 +180,3 @@
     }
   }
 }
-
-    
