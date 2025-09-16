@@ -13,9 +13,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { BmvLogo } from "../icons/bmv-logo";
 import { Globe } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import Image from "next/image";
 
 type NavItem = {
   href: string;
@@ -162,7 +162,7 @@ function MobileNav() {
       <SheetContent side="left" className="flex flex-col p-0">
          <div className="flex h-16 items-center border-b px-6">
           <Link href="/" className="flex items-center gap-2 font-bold">
-             <BmvLogo className="h-6 w-auto text-foreground" />
+             <Image src="/logo.png" alt="BMV Logo" width={80} height={27} priority />
           </Link>
         </div>
         <div className="flex-1 overflow-y-auto py-6 px-4">
@@ -181,7 +181,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-16 items-center border-b px-6">
             <Link href="/" className="flex items-center gap-2 font-bold">
-               <BmvLogo className="h-6 w-auto text-foreground" />
+               <Image src="/logo.png" alt="BMV Logo" width={80} height={27} priority />
             </Link>
           </div>
           <div className="flex-1">
