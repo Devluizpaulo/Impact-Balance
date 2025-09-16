@@ -86,24 +86,25 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 // Helper to deep merge settings
 const mergeSettings = (base: SystemSettings, updates: Partial<SystemSettings>): SystemSettings => {
+    const safeUpdates = updates || {};
     return {
         ...base,
-        ...updates,
+        ...safeUpdates,
         ucsFactors: {
             ...base.ucsFactors,
-            ...updates.ucsFactors,
+            ...safeUpdates.ucsFactors,
         },
         perCapitaFactors: {
           ...base.perCapitaFactors,
-          ...updates.perCapitaFactors,
+          ...safeUpdates.perCapitaFactors,
         },
         equivalences: {
           ...base.equivalences,
-          ...updates.equivalences
+          ...safeUpdates.equivalences
         },
         indirectCosts: {
           ...base.indirectCosts,
-          ...updates.indirectCosts
+          ...safeUpdates.indirectCosts
         }
     };
 };
