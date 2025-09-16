@@ -36,24 +36,24 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     defaultValues: {
       eventName: "",
       participants: {
-        organizers: { count: 10, days: 20 },
-        assemblers: { count: 100, days: 20 },
-        suppliers: { count: 100, days: 20 },
-        exhibitors: { count: 150, days: 20 },
-        supportTeam: { count: 1000, days: 20 },
-        attendants: { count: 200, days: 20 },
-        support: { count: 300, days: 20 },
+        organizers: { count: 0, days: 0 },
+        assemblers: { count: 0, days: 0 },
+        suppliers: { count: 0, days: 0 },
+        exhibitors: { count: 0, days: 0 },
+        supportTeam: { count: 0, days: 0 },
+        attendants: { count: 0, days: 0 },
+        support: { count: 0, days: 0 },
       },
       visitors: {
-        count: 4500,
+        count: 0,
         unit: 'hours',
-        hours: 3,
+        hours: 0,
         days: 0,
       },
       indirectCosts: {
-        ownershipRegistration: settings.indirectCosts.ownershipRegistration,
-        certificateIssuance: settings.indirectCosts.certificateIssuance,
-        websitePage: settings.indirectCosts.websitePage,
+        ownershipRegistration: 0,
+        certificateIssuance: 0,
+        websitePage: 0,
       }
     },
   });
@@ -139,24 +139,24 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     form.reset({
       eventName: "",
       participants: {
-        organizers: { count: 10, days: 20 },
-        assemblers: { count: 100, days: 20 },
-        suppliers: { count: 100, days: 20 },
-        exhibitors: { count: 150, days: 20 },
-        supportTeam: { count: 1000, days: 20 },
-        attendants: { count: 200, days: 20 },
-        support: { count: 300, days: 20 },
+        organizers: { count: 0, days: 0 },
+        assemblers: { count: 0, days: 0 },
+        suppliers: { count: 0, days: 0 },
+        exhibitors: { count: 0, days: 0 },
+        supportTeam: { count: 0, days: 0 },
+        attendants: { count: 0, days: 0 },
+        support: { count: 0, days: 0 },
       },
       visitors: {
-        count: 4500,
+        count: 0,
         unit: 'hours',
-        hours: 3,
+        hours: 0,
         days: 0,
       },
       indirectCosts: {
-        ownershipRegistration: settings.indirectCosts.ownershipRegistration,
-        certificateIssuance: settings.indirectCosts.certificateIssuance,
-        websitePage: settings.indirectCosts.websitePage,
+        ownershipRegistration: 0,
+        certificateIssuance: 0,
+        websitePage: 0,
       }
     });
     setVisitorUnit('hours');
@@ -245,7 +245,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><Users />{t('participants.quantity')}</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                      <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -271,7 +271,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><Clock />{t('participants.hours')}</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                      <Input type="number" placeholder={t('participants.hours')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -287,7 +287,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><CalendarDays />{t('participants.days')}</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                      <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -306,7 +306,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
+                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -319,7 +319,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
+                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -332,7 +332,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
                      <FormControl>
-                      <Input type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
+                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

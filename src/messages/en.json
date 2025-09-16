@@ -66,13 +66,6 @@
       "hours": "Hours",
       "durationUnit": "Duration Unit"
     },
-    "durationTitle": "Event Duration",
-    "durationHours": {
-      "label": "Duration (hours for visitors)"
-    },
-    "durationDays": {
-      "label": "Duration (days for staff)"
-    },
     "indirectCosts": {
       "title": "Indirect Costs (R$)",
       "ownershipRegistration": "Ownership Registration",
@@ -128,7 +121,6 @@
     "description": "The values used for the impact calculation. Changes are saved locally to your browser.",
     "saveButton": "Save Changes",
     "resetButton": "Reset to Defaults",
-    "impactFactors": "UCS Event Impact Factors",
     "perCapitaBasis": "Per Capita Calculation Basis",
     "indirectCosts": "Indirect Costs (R$)",
     "equivalencesAndCosts": "Equivalences and Costs",
@@ -207,5 +199,10 @@
       "awaitingData": "Awaiting Data",
       "description": "Please provide data to populate this view."
     }
+  },
+  "CookieConsent": {
+    "title": "We Value Your Privacy",
+    "description": "We use local storage, similar to cookies, to save your parameter settings and improve your experience. We do not collect personal data. By continuing to use this site, you agree to our use of local storage.",
+    "acceptButton": "Accept"
   }
 }

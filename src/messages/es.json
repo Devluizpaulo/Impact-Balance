@@ -66,13 +66,6 @@
       "hours": "Horas",
       "durationUnit": "Unidad de Duración"
     },
-    "durationTitle": "Duración del Evento",
-    "durationHours": {
-      "label": "Duración (horas para visitantes)"
-    },
-    "durationDays": {
-      "label": "Duración (días para personal)"
-    },
     "indirectCosts": {
       "title": "Costos Indirectos (R$)",
       "ownershipRegistration": "Registro de Propiedad",
@@ -206,5 +199,10 @@
       "awaitingData": "Esperando Datos",
       "description": "Por favor, proporcione datos para poblar esta vista."
     }
+  },
+  "CookieConsent": {
+    "title": "Valoramos su Privacidad",
+    "description": "Utilizamos almacenamiento local, similar a las cookies, para guardar la configuración de sus parámetros y mejorar su experiencia. No recopilamos datos personales. Al continuar utilizando este sitio, usted acepta nuestro uso del almacenamiento local.",
+    "acceptButton": "Aceptar"
   }
 }

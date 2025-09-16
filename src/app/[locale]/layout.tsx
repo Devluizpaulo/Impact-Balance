@@ -4,6 +4,7 @@ import { getMessages } from 'next-intl/server';
 import { Toaster } from '@/components/ui/toaster';
 import '../globals.css';
 import { SettingsProvider } from '@/lib/settings';
+import CookieConsent from '@/components/cookie-consent';
 
 export const metadata: Metadata = {
   title: 'Balanço de Impacto',
@@ -34,6 +35,7 @@ export default async function RootLayout({
           <SettingsProvider>
             {children}
             <Toaster />
+            <CookieConsent />
           </SettingsProvider>
         </NextIntlClientProvider>
       </body>

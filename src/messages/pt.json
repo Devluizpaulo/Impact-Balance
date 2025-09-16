@@ -66,13 +66,6 @@
       "hours": "Horas",
       "durationUnit": "Unidade de Duração"
     },
-    "durationTitle": "Duração do Evento",
-    "durationHours": {
-      "label": "Duração (horas para visitantes)"
-    },
-    "durationDays": {
-      "label": "Duração (dias para equipe)"
-    },
     "indirectCosts": {
       "title": "Custos Indiretos (R$)",
       "ownershipRegistration": "Registro de Titularidade",
@@ -206,5 +199,10 @@
       "awaitingData": "Aguardando Dados",
       "description": "Por favor, forneça dados para preencher esta visualização."
     }
+  },
+  "CookieConsent": {
+    "title": "Nós Valorizamos sua Privacidade",
+    "description": "Usamos armazenamento local, semelhante a cookies, para salvar suas configurações de parâmetros e melhorar sua experiência. Não coletamos dados pessoais. Ao continuar a usar este site, você concorda com nosso uso de armazenamento local.",
+    "acceptButton": "Aceitar"
   }
 }
