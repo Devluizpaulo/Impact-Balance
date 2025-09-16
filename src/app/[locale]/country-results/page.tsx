@@ -1,34 +1,62 @@
-"use client";
+"use client"
 
-import AppShell from "@/components/layout/app-shell";
-import { useTranslations } from "next-intl";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { CalculationResult } from '@/lib/types';
+import { ChartTooltip, ChartTooltipContent, ChartContainer } from "@/components/ui/chart";
+import { useTranslations } from 'next-intl';
 
-export default function CountryResultsPage() {
-  const t = useTranslations("CountryResultsPage");
+interface ImpactChartsProps {
+    results: CalculationResult;
+}
 
-  return (
-    <AppShell>
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="space-y-2 mb-8">
-            <h1 className="text-3xl font-bold font-headline">{t('title')}</h1>
-            <p className="text-muted-foreground">{t('description')}</p>
-        </div>
+export default function ImpactCharts({ results }: ImpactChartsProps) {
+    const t = useTranslations('ImpactCharts');
+    const chartData = results.breakdown.filter(item => item.ucs > 0);
+
+    const categoryTranslations: {[key: string]: string} = {
+        "Participants": t('categories.participants'),
+        "Duration": t('categories.duration'),
+        "Venue Size": t('categories.venueSize'),
+        "Travel": t('categories.travel'),
+        "Waste": t('categories.waste'),
+        "Water": t('categories.water'),
+        "Energy": t('categories.energy'),
+        "Ownership Registration": t('categories.ownershipRegistration'),
+        "Certificate Issuance": t('categories.certificateIssuance'),
+        "Website Page": t('categories.websitePage'),
+    }
+
+    const translatedData = chartData.map(item => ({
+        ...item,
+        category: categoryTranslations[item.category] || item.category
+    }));
+
+    return (
         <Card>
             <CardHeader>
-                <CardTitle>{t('placeholder.title')}</CardTitle>
+                <CardTitle className="font-headline">{t('title')}</CardTitle>
+                <CardDescription>{t('description')}</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="flex flex-col items-center justify-center text-center h-[300px]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-muted-foreground opacity-50"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
-                    <h3 className="mt-4 text-xl font-semibold text-muted-foreground">{t('placeholder.awaitingData')}</h3>
-                    <p className="mt-2 text-muted-foreground">
-                        {t('placeholder.description')}
-                    </p>
-                </div>
+                <ChartContainer config={{
+                    ucs: {
+                        label: 'UCS',
+                        color: 'hsl(var(--primary))',
+                    },
+                }} className="h-80 w-full">
+                    <BarChart accessibilityLayer data={translatedData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="category" tickLine={false} axisLine={false} tickMargin={10} />
+                        <YAxis tickLine={false} axisLine={false} tickMargin={10} />
+                        <ChartTooltip
+                          cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
+                          content={<ChartTooltipContent indicator="dot" />}
+                        />
+                        <Bar dataKey="ucs" fill="var(--color-ucs)" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                </ChartContainer>
             </CardContent>
         </Card>
-      </div>
-    </AppShell>
-  );
+    );
 }
