@@ -13,7 +13,8 @@
   },
   "AppShell": {
     "calculator": "Calculator",
-    "parameters": "Parameters"
+    "parameters": "Parameters",
+    "equivalenceCalculator": "Equivalence Calculator"
   },
   "HomePage": {
     "heroTitle": "Impact Balance",
@@ -132,6 +133,38 @@
       "title": "Export to {format}",
       "description": "This feature is currently in development."
     }
+  },
+  "EquivalenceCalculator": {
+    "title": "Per Capita Equivalence Calculator - Event",
+    "description": "Calculate the impact of an event in UCS and its monetary and per capita equivalences.",
+    "inputsTitle": "Inputs",
+    "resultsTitle": "Calculation Results",
+    "totalUcs": "Total UCS",
+    "avgUcsPerHectare": "Average UCS per hectare",
+    "perCapitaConsumptionHa": "Per capita consumption in hectares (73 years)",
+    "ucsQuotation": "Current UCS Quotation (R$)",
+    "gdpPerCapita": "Annual GDP per capita (R$)",
+    "participants": "Number of participants/customers",
+    "calculateButton": "Calculate",
+    "perCapitaEquivalence": "Per Capita Equivalence",
+    "ucsConsumptionPerLife": "UCS consumption per life (73 years)",
+    "annualUcsConsumption": "Annual UCS consumption",
+    "dailyUcsConsumption": "Daily UCS consumption",
+    "hourlyUcsConsumption": "Hourly UCS consumption",
+    "annualMonetaryEquivalence": "Annual monetary equivalence (R$)",
+    "gdpEquivalencePercentage": "Equivalence percentage in relation to GDP per capita",
+    "dailyEquivalence": "Daily equivalence (R$)",
+    "hourlyEquivalence": "Hourly equivalence (R$)",
+    "eventTotals": "Event Totals",
+    "creditAndInventoryValue": "Credit and inventory value",
+    "totalEquivalence": "Total equivalence (R$)",
+    "ownershipRegistration": "Ownership Registration",
+    "certificateIssuance": "Certificate Issuance (fixed value)",
+    "totalEventCompensation": "Total Event Compensation (R$)",
+    "compensationPerCustomerDay": "Compensation per customer/day",
+    "compensationPerCustomerHour": "Compensation per customer/hour",
+    "summary": "Summary",
+    "totalCompensation": "Total Event Compensation (R$)"
   },
   "ParametersPage": {
     "title": "System Parameters",

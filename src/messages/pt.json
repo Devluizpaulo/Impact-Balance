@@ -13,7 +13,8 @@
   },
   "AppShell": {
     "calculator": "Calculadora",
-    "parameters": "Parâmetros"
+    "parameters": "Parâmetros",
+    "equivalenceCalculator": "Calculadora de Equivalência"
   },
   "HomePage": {
     "heroTitle": "Balanço de Impacto",
@@ -132,6 +133,38 @@
       "title": "Exportar para {format}",
       "description": "Este recurso está atualmente em desenvolvimento."
     }
+  },
+  "EquivalenceCalculator": {
+    "title": "Calculadora de Equivalência Per Capita – Evento",
+    "description": "Calcule o impacto de um evento em UCS e suas equivalências monetárias e per capita.",
+    "inputsTitle": "Entradas",
+    "resultsTitle": "Resultados do Cálculo",
+    "totalUcs": "Total de UCS",
+    "avgUcsPerHectare": "Média de UCS por hectare",
+    "perCapitaConsumptionHa": "Consumo per capita em hectares (73 anos)",
+    "ucsQuotation": "Cotação atual da UCS (R$)",
+    "gdpPerCapita": "PIB per capita anual (R$)",
+    "participants": "Número de participantes/clientes",
+    "calculateButton": "Calcular",
+    "perCapitaEquivalence": "Equivalência Per Capita",
+    "ucsConsumptionPerLife": "Consumo de UCS por vida (73 anos)",
+    "annualUcsConsumption": "Consumo anual de UCS",
+    "dailyUcsConsumption": "Consumo diário de UCS",
+    "hourlyUcsConsumption": "Consumo de UCS por hora",
+    "annualMonetaryEquivalence": "Equivalência monetária anual (R$)",
+    "gdpEquivalencePercentage": "Percentual de equivalência em relação ao PIB per capita",
+    "dailyEquivalence": "Equivalência diária (R$)",
+    "hourlyEquivalence": "Equivalência por hora (R$)",
+    "eventTotals": "Totais do Evento",
+    "creditAndInventoryValue": "Valor do crédito e inventário",
+    "totalEquivalence": "Total da equivalência (R$)",
+    "ownershipRegistration": "Registro de titularidade",
+    "certificateIssuance": "Emissão de certificado (valor fixo)",
+    "totalEventCompensation": "Total da Compensação do Evento (R$)",
+    "compensationPerCustomerDay": "Compensação por cliente/dia",
+    "compensationPerCustomerHour": "Compensação por cliente/hora",
+    "summary": "Resumo",
+    "totalCompensation": "Total da Compensação do Evento (R$)"
   },
   "ParametersPage": {
     "title": "Parâmetros do Sistema",
