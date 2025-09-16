@@ -19,7 +19,6 @@ import { Calculator, Users, Clock, CalendarDays, Maximize, Route, Trash2, Drople
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/lib/settings";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface ImpactCalculatorProps {
   onCalculate: (data: CalculationResult, formData: FormData) => void;
@@ -42,8 +41,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         supportTeam: 1000,
         attendants: 200,
         support: 300,
-        visitors: 4500,
       },
+      visitors: 4500,
       durationHours: 3,
       durationDays: 20,
       venueSizeSqm: 500,
@@ -52,23 +51,23 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       waterLiters: 5000,
       energyKwh: 1200,
       currentPractices: "",
-      includeOwnershipRegistration: false,
-      includeCertificateIssuance: false,
-      includeWebsitePage: false,
+      indirectCosts: {
+        ownershipRegistration: settings.indirectCosts.ownershipRegistration,
+        certificateIssuance: settings.indirectCosts.certificateIssuance,
+        websitePage: settings.indirectCosts.websitePage,
+      }
     },
   });
 
   function onSubmit(values: FormData) {
-    const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors, indirectCosts } = settings;
-    const { participants, durationDays, durationHours } = values;
+    const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors } = settings;
+    const { participants, durationDays, durationHours, visitors } = values;
 
     const breakdown: { category: string; ucs: number; cost: number }[] = [];
     
-    // 1. Participant Impact
     const staffParticipants = (participants.organizers || 0) + (participants.assemblers || 0) + (participants.suppliers || 0) + (participants.exhibitors || 0) + (participants.supportTeam || 0) + (participants.attendants || 0) + (participants.support || 0);
-    const visitorParticipants = participants.visitors || 0;
+    const visitorParticipants = visitors || 0;
     
-    // Assuming staff works 8 hours/day for the duration of the event
     const staffHours = staffParticipants * (durationDays || 0) * 8; 
     const visitorHours = visitorParticipants * (durationHours || 0);
     
@@ -81,7 +80,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       });
     }
 
-    // 2. Direct Factors Impact
     const directFactors = [
       { key: "Duration", value: values.durationDays || 0, factor: ucsFactors.durationDays },
       { key: "Venue Size", value: values.venueSizeSqm || 0, factor: ucsFactors.venueSizeSqm },
@@ -102,24 +100,25 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       }
     });
 
-    // 3. Indirect Costs Impact
-    if (values.includeOwnershipRegistration) {
-      const cost = indirectCosts.ownershipRegistration;
-      const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
-      breakdown.push({ category: "Ownership Registration", ucs: ucs, cost: cost });
-    }
-    if (values.includeCertificateIssuance) {
-      const cost = indirectCosts.certificateIssuance;
-      const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
-      breakdown.push({ category: "Certificate Issuance", ucs: ucs, cost: cost });
-    }
-    if (values.includeWebsitePage) {
-      const cost = indirectCosts.websitePage;
-      const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
-      breakdown.push({ category: "Website Page", ucs: ucs, cost: cost });
+    const indirectCostsInReais = values.indirectCosts;
+    if (indirectCostsInReais) {
+      if ((indirectCostsInReais.ownershipRegistration || 0) > 0) {
+        const cost = indirectCostsInReais.ownershipRegistration!;
+        const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+        breakdown.push({ category: "Ownership Registration", ucs, cost });
+      }
+      if ((indirectCostsInReais.certificateIssuance || 0) > 0) {
+        const cost = indirectCostsInReais.certificateIssuance!;
+        const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+        breakdown.push({ category: "Certificate Issuance", ucs, cost });
+      }
+      if ((indirectCostsInReais.websitePage || 0) > 0) {
+        const cost = indirectCostsInReais.websitePage!;
+        const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+        breakdown.push({ category: "Website Page", ucs, cost });
+      }
     }
 
-    // 4. Totals and Equivalences
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     const totalParticipants = staffParticipants + visitorParticipants;
@@ -142,7 +141,33 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   }
 
   const handleResetClick = () => {
-    form.reset();
+    form.reset({
+      ...form.getValues(),
+      eventName: "",
+      participants: {
+        organizers: 10,
+        assemblers: 100,
+        suppliers: 100,
+        exhibitors: 150,
+        supportTeam: 1000,
+        attendants: 200,
+        support: 300,
+      },
+      visitors: 4500,
+      durationHours: 3,
+      durationDays: 20,
+      venueSizeSqm: 500,
+      travelKm: 250,
+      wasteKg: 150,
+      waterLiters: 5000,
+      energyKwh: 1200,
+      currentPractices: "",
+      indirectCosts: {
+        ownershipRegistration: settings.indirectCosts.ownershipRegistration,
+        certificateIssuance: settings.indirectCosts.certificateIssuance,
+        websitePage: settings.indirectCosts.websitePage,
+      }
+    });
     onReset();
   }
 
@@ -170,7 +195,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             />
             
             <Separator />
-            <p className="font-medium">{t('participants.title')}</p>
+            <p className="font-medium">{t('participants.staffTitle')}</p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               <FormField control={form.control} name="participants.organizers" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><UserCog />{t('participants.organizersAndPromoters')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
@@ -180,8 +205,23 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               <FormField control={form.control} name="participants.supportTeam" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Headset />{t('participants.supportTeam')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={form.control} name="participants.attendants" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><User />{t('participants.attendants')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={form.control} name="participants.support" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Handshake />{t('participants.support')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={form.control} name="participants.visitors" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Users />{t('participants.visitors')}</FormLabel><FormControl><Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} /></FormControl><FormMessage /></FormItem>)} />
             </div>
+            
+            <Separator />
+            <p className="font-medium">{t('participants.visitorsTitle')}</p>
+            <FormField
+              control={form.control}
+              name="visitors"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2"><Users />{t('participants.visitors')}</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Separator />
             <p className="font-medium">{t('durationTitle')}</p>
@@ -219,52 +259,40 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
-                name="includeOwnershipRegistration"
+                name="indirectCosts.ownershipRegistration"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+                  <FormItem>
+                    <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
                     <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Input type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
                     </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
-                    </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="includeCertificateIssuance"
+                name="indirectCosts.certificateIssuance"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
+                  <FormItem>
+                    <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
                     <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Input type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
                     </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
-                    </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="includeWebsitePage"
+                name="indirectCosts.websitePage"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                  <FormItem>
+                    <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
+                     <FormControl>
+                      <Input type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
                     </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
-                    </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

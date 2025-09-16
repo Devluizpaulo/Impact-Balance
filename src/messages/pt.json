@@ -48,7 +48,8 @@
       "placeholder": "ex: Conferência Anual de Tecnologia"
     },
     "participants": {
-      "title": "Participantes do Evento",
+      "staffTitle": "Equipe do Evento",
+      "visitorsTitle": "Visitantes do Evento",
       "organizersAndPromoters": "Organizadores e Promotores",
       "assemblers": "Montadores",
       "suppliers": "Fornecedores",
@@ -66,7 +67,7 @@
       "label": "Duração (dias para equipe)"
     },
     "indirectCosts": {
-      "title": "Custos Indiretos",
+      "title": "Custos Indiretos (R$)",
       "ownershipRegistration": "Registro de Titularidade",
       "certificateIssuance": "Emissão de Certificado",
       "websitePage": "Página do Site"

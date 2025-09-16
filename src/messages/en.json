@@ -48,7 +48,8 @@
       "placeholder": "e.g. Annual Tech Conference"
     },
     "participants": {
-      "title": "Event Participants",
+      "staffTitle": "Event Staff",
+      "visitorsTitle": "Event Visitors",
       "organizersAndPromoters": "Organizers and Promoters",
       "assemblers": "Assemblers",
       "suppliers": "Suppliers",
@@ -66,7 +67,7 @@
       "label": "Duration (days for staff)"
     },
     "indirectCosts": {
-      "title": "Indirect Costs",
+      "title": "Indirect Costs (R$)",
       "ownershipRegistration": "Ownership Registration",
       "certificateIssuance": "Certificate Issuance",
       "websitePage": "Website Page"

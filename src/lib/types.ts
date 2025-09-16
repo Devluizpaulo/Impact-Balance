@@ -14,12 +14,18 @@ const participantSchema = z.object({
   supportTeam: z.coerce.number().min(0).optional(),
   attendants: z.coerce.number().min(0).optional(),
   support: z.coerce.number().min(0).optional(),
-  visitors: z.coerce.number().min(0).optional(),
+});
+
+const indirectCostsSchema = z.object({
+  ownershipRegistration: z.coerce.number().min(0).optional(),
+  certificateIssuance: z.coerce.number().min(0).optional(),
+  websitePage: z.coerce.number().min(0).optional(),
 });
 
 export const formSchema = (t: (key: keyof FormTranslations) => string) => z.object({
   eventName: z.string().min(3, { message: t('formValidation.eventNameError') }),
   participants: participantSchema,
+  visitors: z.coerce.number().min(0).optional(),
   durationHours: z.coerce.number().min(1, { message: t('formValidation.durationHoursError') }),
   durationDays: z.coerce.number().min(1, { message: t('formValidation.durationDaysError') }),
   venueSizeSqm: z.coerce.number().optional(),
@@ -28,9 +34,7 @@ export const formSchema = (t: (key: keyof FormTranslations) => string) => z.obje
   waterLiters: z.coerce.number().optional(),
   energyKwh: z.coerce.number().optional(),
   currentPractices: z.string().optional(),
-  includeOwnershipRegistration: z.boolean().optional(),
-  includeCertificateIssuance: z.boolean().optional(),
-  includeWebsitePage: z.boolean().optional(),
+  indirectCosts: indirectCostsSchema.optional(),
 });
 
 export type FormData = z.infer<ReturnType<typeof formSchema>>;
