@@ -59,70 +59,89 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     },
   });
 
-  function onSubmit(values: FormData) {
+ function onSubmit(values: FormData) {
     const { ucsCostPerUnit, perCapitaFactors, equivalences } = settings;
     const { participants, visitors, indirectCosts } = values;
 
-    const breakdown: { category: string; ucs: number; cost: number }[] = [];
-    
+    const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsCount = 0;
-    
+
     // Calculate staff UCS
-    const staffUcs = Object.values(participants).reduce((total, p) => {
+    Object.entries(participants).forEach(([key, p]) => {
       const count = p?.count || 0;
       const days = p?.days || 0;
-      totalParticipantsCount += count;
-      const ucs = count * days * perCapitaFactors.dailyUcsConsumption;
-      return total + ucs;
-    }, 0);
+      if (count > 0 && days > 0) {
+        totalParticipantsCount += count;
+        const ucs = count * days * perCapitaFactors.dailyUcsConsumption;
+        breakdown.push({
+          category: key,
+          ucs,
+          cost: ucs * equivalences.ucsQuotationValue,
+          quantity: count,
+          duration: days,
+          durationUnit: 'days',
+        });
+      }
+    });
 
     // Calculate visitor UCS
-    let visitorUcs = 0;
     const visitorCount = visitors?.count || 0;
-    totalParticipantsCount += visitorCount;
-
-    if (visitors?.unit === 'days') {
+    if (visitorCount > 0) {
+      totalParticipantsCount += visitorCount;
+      if (visitors?.unit === 'days') {
         const visitorDays = visitors?.days || 0;
-        visitorUcs = visitorCount * visitorDays * perCapitaFactors.dailyUcsConsumption;
-    } else {
+        const ucs = visitorCount * visitorDays * perCapitaFactors.dailyUcsConsumption;
+        breakdown.push({
+          category: 'visitors',
+          ucs,
+          cost: ucs * equivalences.ucsQuotationValue,
+          quantity: visitorCount,
+          duration: visitorDays,
+          durationUnit: 'days'
+        });
+      } else {
         const visitorHours = visitors?.hours || 0;
-        visitorUcs = visitorCount * visitorHours * (perCapitaFactors.dailyUcsConsumption / 8); // Assuming 8-hour day
-    }
-
-    // Total Participant UCS
-    const participantUcs = staffUcs + visitorUcs;
-    if (participantUcs > 0) {
-      breakdown.push({
-        category: "Participants",
-        ucs: participantUcs,
-        cost: participantUcs * equivalences.ucsQuotationValue, // Corrected to use ucsQuotationValue
-      });
+        const ucs = visitorCount * visitorHours * (perCapitaFactors.dailyUcsConsumption / 8); // Assuming 8-hour day
+        breakdown.push({
+          category: 'visitors',
+          ucs,
+          cost: ucs * equivalences.ucsQuotationValue,
+          quantity: visitorCount,
+          duration: visitorHours,
+          durationUnit: 'hours'
+        });
+      }
     }
 
     // Indirect Costs
+    const indirectBreakdown: { category: string; ucs: number; cost: number }[] = [];
     if (indirectCosts) {
       if ((indirectCosts.ownershipRegistration || 0) > 0) {
         const cost = indirectCosts.ownershipRegistration!;
         const ucs = cost / ucsCostPerUnit;
-        breakdown.push({ category: "Ownership Registration", ucs, cost });
+        indirectBreakdown.push({ category: "ownershipRegistration", ucs, cost });
       }
       if ((indirectCosts.certificateIssuance || 0) > 0) {
         const cost = indirectCosts.certificateIssuance!;
         const ucs = cost / ucsCostPerUnit;
-        breakdown.push({ category: "Certificate Issuance", ucs, cost });
+        indirectBreakdown.push({ category: "certificateIssuance", ucs, cost });
       }
       if ((indirectCosts.websitePage || 0) > 0) {
         const cost = indirectCosts.websitePage!;
         const ucs = cost / ucsCostPerUnit;
-        breakdown.push({ category: "Website Page", ucs, cost });
+        indirectBreakdown.push({ category: "websitePage", ucs, cost });
       }
     }
-
-    // Final Totals
-    const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
-    const totalCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    // Equivalences
+    const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
+    const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
+    
+    const indirectUcs = indirectBreakdown.reduce((acc, item) => acc + item.ucs, 0);
+    const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
+    
+    const totalUCS = directUcs + indirectUcs;
+    const totalCost = directCost + indirectCost;
+
     const maxDays = Math.max(
       ...Object.values(participants).map(p => p?.days || 0),
       (visitors?.unit === 'days' ? (visitors.days || 0) : (visitors?.hours || 0) / 8)
@@ -132,9 +151,14 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const results: CalculationResult = {
       totalUCS,
       totalCost,
+      directUcs,
+      directCost,
+      indirectUcs,
+      indirectCost,
       ucsPerParticipant: totalParticipantsCount > 0 ? totalUCS / totalParticipantsCount : 0,
       costPerParticipant: totalParticipantsCount > 0 ? totalCost / totalParticipantsCount : 0,
       breakdown,
+      indirectBreakdown,
       equivalences: {
         dailyUCS: maxDays > 0 ? totalUCS / maxDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,

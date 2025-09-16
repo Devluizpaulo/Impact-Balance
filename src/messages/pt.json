@@ -29,21 +29,26 @@
     },
     "summary": {
       "title": "Resumo do Impacto",
-      "forEvent": "para o evento",
-      "totalUCS": "UCS Total",
-      "totalCost": "Custo Total",
-      "ucsPerParticipant": "UCS por Participante",
-      "costPerParticipant": "Custo por Participante",
-      "equivalencesTitle": "Equivalências",
-      "dailyUCS": "Consumo Diário de UCS",
-      "hourlyUCS": "Consumo Horário de UCS",
-      "gdpPercentage": "% do PIB per Capita (ex. Brasil)",
-      "calculationDetails": "Detalhes do Cálculo",
-      "eventDuration": "Duração do Evento"
+      "forEvent": "para o evento"
     },
     "awaitingData": {
       "title": "Aguardando Dados",
       "description": "Preencha o formulário para calcular o impacto do seu evento."
+    }
+  },
+  "ExecutiveReport": {
+    "table": {
+      "participants": "Pessoas Participantes do Evento",
+      "quantity": "Quantidade",
+      "duration": "Duração",
+      "totalUCS": "Total de UCS",
+      "directCost": "Custo Direto de UCS"
+    },
+    "totals": {
+      "directUCScost": "Custo Direto de UCS Por Pegada",
+      "indirectUCScost": "Custo Indireto de UCS Por Pegada",
+      "totalToCompensate": "Total a Compensar com UC",
+      "totalBudget": "Orçamento Total"
     }
   },
   "ImpactCalculator": {
@@ -93,7 +98,15 @@
       "participants": "Participantes",
       "ownershipRegistration": "Registro de Titularidade",
       "certificateIssuance": "Emissão de Certificado",
-      "websitePage": "Página do Site"
+      "websitePage": "Página do Site",
+      "organizers": "Organizadores e Promotores",
+      "assemblers": "Montadores",
+      "suppliers": "Fornecedores",
+      "exhibitors": "Expositores",
+      "supportTeam": "Equipe de Suporte",
+      "attendants": "Atendentes",
+      "support": "Apoio",
+      "visitors": "Visitantes"
     }
   },
   "AiSuggestions": {

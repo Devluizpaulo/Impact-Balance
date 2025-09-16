@@ -49,9 +49,21 @@ export type FormData = z.infer<ReturnType<typeof formSchema>>;
 export type CalculationResult = {
   totalUCS: number;
   totalCost: number;
+  directUcs: number;
+  directCost: number;
+  indirectUcs: number;
+  indirectCost: number;
   ucsPerParticipant: number;
   costPerParticipant: number;
   breakdown: {
+    category: string;
+    ucs: number;
+    cost: number;
+    quantity: number;
+    duration: number;
+    durationUnit: 'days' | 'hours';
+  }[];
+  indirectBreakdown: {
     category: string;
     ucs: number;
     cost: number;

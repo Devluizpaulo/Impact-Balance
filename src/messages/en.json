@@ -29,21 +29,26 @@
     },
     "summary": {
       "title": "Impact Summary",
-      "forEvent": "for event",
-      "totalUCS": "Total UCS",
-      "totalCost": "Total Cost",
-      "ucsPerParticipant": "UCS per Participant",
-      "costPerParticipant": "Cost per Participant",
-      "equivalencesTitle": "Equivalences",
-      "dailyUCS": "Daily UCS Consumption",
-      "hourlyUCS": "Hourly UCS Consumption",
-      "gdpPercentage": "% of GDP per Capita (e.g. Brazil)",
-      "calculationDetails": "Calculation Details",
-      "eventDuration": "Event Duration"
+      "forEvent": "for event"
     },
     "awaitingData": {
       "title": "Awaiting Data",
       "description": "Fill out the form to calculate your event's impact."
+    }
+  },
+    "ExecutiveReport": {
+    "table": {
+      "participants": "Event Participants",
+      "quantity": "Quantity",
+      "duration": "Duration",
+      "totalUCS": "Total UCS",
+      "directCost": "Direct Cost (UCS)"
+    },
+    "totals": {
+      "directUCScost": "Direct UCS Cost (Footprint)",
+      "indirectUCScost": "Indirect UCS Cost (Footprint)",
+      "totalToCompensate": "Total to Compensate",
+      "totalBudget": "Total Budget"
     }
   },
   "ImpactCalculator": {
@@ -93,7 +98,15 @@
       "participants": "Participants",
       "ownershipRegistration": "Ownership Registration",
       "certificateIssuance": "Certificate Issuance",
-      "websitePage": "Website Page"
+      "websitePage": "Website Page",
+      "organizers": "Organizers",
+      "assemblers": "Assemblers",
+      "suppliers": "Suppliers",
+      "exhibitors": "Exhibitors",
+      "supportTeam": "Support Team",
+      "attendants": "Attendants",
+      "support": "Support",
+      "visitors": "Visitors"
     }
   },
   "AiSuggestions": {
