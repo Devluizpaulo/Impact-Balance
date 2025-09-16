@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react";
@@ -51,18 +52,30 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         setIsExporting(true);
         try {
             const doc = new jsPDF() as jsPDFWithAutoTable;
+            
+            // Add logo
+            const img = new Image();
+            img.src = '/logo.png';
+            await new Promise(resolve => {
+                img.onload = resolve;
+            });
+            doc.addImage(img, 'PNG', 14, 15, 30, 10);
+
 
             // Header
             doc.setFontSize(20);
-            doc.text(t_report('title'), 14, 22);
+            doc.text(t_report('title'), 14, 40);
             doc.setFontSize(11);
             doc.setTextColor(100);
-            doc.text(`${t_report('forEvent')} ${formData.eventName}`, 14, 29);
+            doc.text(`${t_report('forEvent')} ${formData.eventName}`, 14, 47);
 
             // Introduction Text
             doc.setFontSize(10);
             const introText = doc.splitTextToSize(t_report('introduction'), 180);
-            doc.text(introText, 14, 40);
+            doc.text(introText, 14, 60);
+
+            let finalY = 60 + (introText.length * 5) + 5;
+
 
             // Breakdown Table
             const tableData = results.breakdown.map(item => [
@@ -74,14 +87,14 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             ]);
 
             doc.autoTable({
-                startY: 55,
+                startY: finalY,
                 head: [[t_report('table.participants'), t_report('table.quantity'), t_report('table.duration'), t_report('table.totalUCS'), t_report('table.directCost')]],
                 body: tableData,
                 theme: 'striped',
                 headStyles: { fillColor: [4, 120, 87] }, // Primary color
             });
             
-            let finalY = (doc as any).lastAutoTable.finalY || 100;
+            finalY = (doc as any).lastAutoTable.finalY || 100;
 
             // Summary section
             finalY += 10;
@@ -89,6 +102,8 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             doc.text(t_report('summaryTitle'), 14, finalY);
             doc.setFontSize(10);
             doc.setTextColor(0);
+            
+            finalY += 7;
 
             const summaryItems = [
               [t_report('totals.directUCScost'), formatCurrency(results.directCost)],
@@ -103,18 +118,23 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             ];
 
             doc.autoTable({
-                startY: finalY + 5,
+                startY: finalY,
                 body: summaryItems,
                 theme: 'plain',
                 styles: { fontSize: 10 },
+                columnStyles: { 0: { cellWidth: 70 }, 1: { halign: 'right' } },
+                tableWidth: 100
             });
-            finalY = (doc as any).lastAutoTable.finalY;
+            
+            let lastY = (doc as any).lastAutoTable.finalY;
 
             doc.autoTable({
-                startY: finalY,
+                startY: lastY,
                 body: totalsItems,
                 theme: 'plain',
                 styles: { fontSize: 12, fontStyle: 'bold' },
+                columnStyles: { 0: { cellWidth: 70 }, 1: { halign: 'right' } },
+                tableWidth: 100
             });
 
 

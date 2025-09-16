@@ -42,8 +42,8 @@
       "directCost": "Direct Cost (USD)"
     },
     "totals": {
-      "directUCScost": "Direct SCU Cost (Footprint)",
-      "indirectUCScost": "Indirect Costs (Budget)",
+      "directUCScost": "Direct SCU Cost per Footprint",
+      "indirectUCScost": "Indirect SCU Costs per Footprint",
       "totalToCompensate": "Total to Compensate with SCU",
       "totalBudget": "Total Budget",
       "costPerParticipantDay": "Compensation per Participant-Day",

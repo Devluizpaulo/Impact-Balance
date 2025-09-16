@@ -42,8 +42,8 @@
       "directCost": "Costo Directo (R$)"
     },
     "totals": {
-      "directUCScost": "Costo Directo UCS (Huella)",
-      "indirectUCScost": "Costos Indirectos (Presupuesto)",
+      "directUCScost": "Costo Directo de UCS por Huella",
+      "indirectUCScost": "Costos Indirectos de UCS por Huella",
       "totalToCompensate": "Total a Compensar con UC",
       "totalBudget": "Presupuesto Total",
       "costPerParticipantDay": "Compensación por Participante-Día",
