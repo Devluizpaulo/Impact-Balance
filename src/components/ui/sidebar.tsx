@@ -57,7 +57,7 @@ const SidebarProvider = React.forwardRef<
 >(
   (
     {
-      defaultOpen = true,
+      defaultOpen = false, // Always start collapsed
       open: openProp,
       onOpenChange: setOpenProp,
       className,
