@@ -17,7 +17,8 @@
     "parameters": "Parámetros",
     "dataFigures": "Datos Mundiales",
     "countryResults": "Resultados por País",
-    "documentation": "Documentación"
+    "documentation": "Documentación",
+    "logout": "Cerrar Sesión"
   },
   "HomePage": {
     "heroTitle": "Balance de Impacto",
@@ -112,13 +113,27 @@
     "export": "Exportar",
     "toPdf": "Exportar a PDF",
     "toExcel": "Exportar a Excel",
-    "inDevelopment": {
-      "title": "Exportar a {format}",
-      "description": "Esta función se encuentra actualmente en desarrollo."
+    "excel": {
+      "summarySheet": "Resumen",
+      "detailsSheet": "Detalles",
+      "eventName": "Nombre del Evento",
+      "totalUCSToCompensate": "Total UCS a Compensar",
+      "totalDirectCost": "Costo Directo Total",
+      "totalIndirectCost": "Costo Indirecto Total",
+      "totalBudget": "Presupuesto Total",
+      "category": "Categoría",
+      "quantity": "Cantidad",
+      "duration": "Duración",
+      "ucs": "UCS",
+      "cost": "Costo (BRL)"
     },
     "pdfError": {
       "title": "Error al Exportar PDF",
       "description": "Ocurrió un error inesperado al generar el PDF."
+    },
+    "excelError": {
+      "title": "Error al Exportar Excel",
+      "description": "Ocurrió un error inesperado al generar el archivo Excel."
     }
   },
   "ParametersPage": {
@@ -176,38 +191,36 @@
   },
   "DataFiguresPage": {
     "title": "Datos y Cifras Mundiales",
-    "description": "Datos de referencia para los cálculos de la huella, de las Cuentas Nacionales de Huella y Biocapacidad.",
-    "table": {
-      "title": "Datos de la Huella Mundial (1961-2024)",
-      "year": "Año",
-      "footprint_prod_capita": "Huella de Producción (gha/cápita)",
-      "footprint_consum_capita": "Huella de Consumo (gha/cápita)",
-      "biocapacity_capita": "Biocapacidad (gha/cápita)",
-      "footprint_prod_total": "Huella Total de Producción (gha)",
-      "footprint_consum_total": "Huella Total de Consumo (gha)",
-      "biocapacity_total": "Biocapacidad Total (gha)",
-      "preliminary": "Estimaciones Preliminares"
-    },
-    "chart": {
-      "title": "Huella Ecológica Mundial vs. Biocapacidad (Per Cápita)",
-      "description": "Este gráfico muestra la evolución de la demanda humana (Huella Ecológica) en comparación con la capacidad de regeneración de la naturaleza (Biocapacidad) por cápita.",
-      "yAxisLabel": "Hectáreas Globales (gha) por Cápita",
-      "footprint": "Huella Ecológica",
-      "biocapacity": "Biocapacidad"
-    }
+    "description": "Datos de referencia para los cálculos de la huella, de las Cuentas Nacionales de Huella y Biocapacidad."
   },
   "CountryResultsPage": {
     "title": "Resultados por País",
-    "description": "Vea datos detallados de huella y biocapacidad por país.",
-    "placeholder": {
-      "title": "Datos del País",
-      "awaitingData": "Esperando Datos",
-      "description": "Por favor, proporcione datos para poblar esta vista."
-    }
+    "description": "Vea datos detallados de huella y biocapacidad por país."
   },
   "CookieConsent": {
     "title": "Valoramos su Privacidad",
     "description": "Utilizamos almacenamiento local, similar a las cookies, para guardar la configuración de sus parámetros y mejorar su experiencia. No recopilamos datos personales. Al continuar utilizando este sitio, usted acepta nuestro uso del almacenamiento local.",
     "acceptButton": "Aceptar"
+  },
+  "Auth": {
+    "modal": {
+      "title": "Acceso de Administrador Requerido",
+      "description": "Por favor, ingrese la contraseña de administrador para acceder a esta sección.",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Ingrese la contraseña...",
+      "cancel": "Cancelar",
+      "login": "Iniciar Sesión"
+    },
+    "loginSuccess": {
+      "title": "Inicio de Sesión Exitoso",
+      "description": "Ahora ha iniciado sesión como administrador."
+    },
+    "loginError": {
+      "title": "Error de Inicio de Sesión",
+      "description": "La contraseña que ingresó es incorrecta."
+    },
+    "logoutSuccess": {
+      "title": "Cierre de Sesión Exitoso"
+    }
   }
 }

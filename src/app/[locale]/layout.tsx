@@ -4,6 +4,7 @@ import { getMessages } from 'next-intl/server';
 import { Toaster } from '@/components/ui/toaster';
 import '../globals.css';
 import { SettingsProvider } from '@/lib/settings';
+import { AuthProvider } from '@/lib/auth';
 import CookieConsent from '@/components/cookie-consent';
 import { Inter, Roboto_Mono } from 'next/font/google';
 import { cn } from '@/lib/utils';
@@ -42,13 +43,15 @@ export default async function RootLayout({
           robotoMono.variable
         )}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <SettingsProvider>
-            <TooltipProvider>
-              {children}
-            </TooltipProvider>
-            <Toaster />
-            <CookieConsent />
-          </SettingsProvider>
+          <AuthProvider>
+            <SettingsProvider>
+              <TooltipProvider>
+                {children}
+              </TooltipProvider>
+              <Toaster />
+              <CookieConsent />
+            </SettingsProvider>
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSettings, type SystemSettings } from "@/lib/settings";
+import { useAuth } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RefreshCcw, Save } from "lucide-react";
 import AppShell from "@/components/layout/app-shell";
@@ -13,6 +14,7 @@ import AppShell from "@/components/layout/app-shell";
 export default function ParametersPage() {
   const t = useTranslations("ParametersPage");
   const { settings, setSettings, saveSettings, resetSettings, isClient } = useSettings();
+  const { isAdmin } = useAuth();
 
   const handleNestedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -75,14 +77,16 @@ export default function ParametersPage() {
               <h1 className="text-3xl font-bold font-headline">{t('title')}</h1>
               <p className="text-muted-foreground">{t('description')}</p>
             </div>
-            <div className="flex gap-2">
-              <Button onClick={resetSettings} variant="outline">
-                <RefreshCcw /> {t('resetButton')}
-              </Button>
-              <Button onClick={saveSettings}>
-                <Save /> {t('saveButton')}
-              </Button>
-            </div>
+            {isAdmin && (
+              <div className="flex gap-2">
+                <Button onClick={resetSettings} variant="outline">
+                  <RefreshCcw /> {t('resetButton')}
+                </Button>
+                <Button onClick={saveSettings}>
+                  <Save /> {t('saveButton')}
+                </Button>
+              </div>
+            )}
           </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -98,7 +102,7 @@ export default function ParametersPage() {
                     <TableRow key={key}>
                       <TableCell>{t(`perCapitaFactors.${key}` as any)}</TableCell>
                       <TableCell>
-                        <Input type="number" name={`perCapitaFactors.${key}`} value={value} onChange={handleNestedChange} className="text-right" />
+                        <Input type="number" name={`perCapitaFactors.${key}`} value={value} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -119,7 +123,7 @@ export default function ParametersPage() {
                     <TableRow key={key}>
                       <TableCell>{t(`indirectCostsLabels.${key}` as any)}</TableCell>
                       <TableCell>
-                        <Input type="number" name={`indirectCosts.${key}`} value={value} onChange={handleNestedChange} className="text-right" />
+                        <Input type="number" name={`indirectCosts.${key}`} value={value} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -140,14 +144,14 @@ export default function ParametersPage() {
                      <TableRow key={key}>
                       <TableCell>{t(`equivalences.${key}` as any)}</TableCell>
                       <TableCell>
-                        <Input type="number" name={`equivalences.${key}`} value={value} onChange={handleNestedChange} className="text-right" />
+                        <Input type="number" name={`equivalences.${key}`} value={value} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
                       </TableCell>
                     </TableRow>
                   ))}
                   <TableRow>
                     <TableCell>{t('costPerUcs')}</TableCell>
                     <TableCell>
-                      <Input type="number" name="ucsCostPerUnit" value={settings.ucsCostPerUnit} onChange={handleUcsCostChange} className="text-right" />
+                      <Input type="number" name="ucsCostPerUnit" value={settings.ucsCostPerUnit} onChange={handleUcsCostChange} className="text-right" disabled={!isAdmin} />
                     </TableCell>
                   </TableRow>
                 </TableBody>

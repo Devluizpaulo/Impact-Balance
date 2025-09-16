@@ -17,7 +17,8 @@
     "parameters": "Parameters",
     "dataFigures": "World Data",
     "countryResults": "Country Results",
-    "documentation": "Documentation"
+    "documentation": "Documentation",
+    "logout": "Logout"
   },
   "HomePage": {
     "heroTitle": "Impact Balance",
@@ -35,7 +36,7 @@
       "description": "Fill out the form to calculate your event's impact."
     }
   },
-    "ExecutiveReport": {
+  "ExecutiveReport": {
     "table": {
       "participants": "Event Participants",
       "quantity": "Quantity",
@@ -112,13 +113,27 @@
     "export": "Export",
     "toPdf": "Export to PDF",
     "toExcel": "Export to Excel",
-    "inDevelopment": {
-      "title": "Export to {format}",
-      "description": "This feature is currently in development."
+    "excel": {
+      "summarySheet": "Summary",
+      "detailsSheet": "Details",
+      "eventName": "Event Name",
+      "totalUCSToCompensate": "Total UCS to Compensate",
+      "totalDirectCost": "Total Direct Cost",
+      "totalIndirectCost": "Total Indirect Cost",
+      "totalBudget": "Total Budget",
+      "category": "Category",
+      "quantity": "Quantity",
+      "duration": "Duration",
+      "ucs": "UCS",
+      "cost": "Cost (BRL)"
     },
     "pdfError": {
       "title": "PDF Export Failed",
       "description": "An unexpected error occurred while generating the PDF."
+    },
+    "excelError": {
+      "title": "Excel Export Failed",
+      "description": "An unexpected error occurred while generating the Excel file."
     }
   },
   "ParametersPage": {
@@ -176,38 +191,36 @@
   },
   "DataFiguresPage": {
     "title": "World Data and Figures",
-    "description": "Reference data for footprint calculations, from the National Footprint and Biocapacity Accounts.",
-    "table": {
-      "title": "World Footprint Data (1961-2024)",
-      "year": "Year",
-      "footprint_prod_capita": "Footprint of Production (gha/capita)",
-      "footprint_consum_capita": "Footprint of Consumption (gha/capita)",
-      "biocapacity_capita": "Biocapacity (gha/capita)",
-      "footprint_prod_total": "Total Footprint of Production (gha)",
-      "footprint_consum_total": "Total Footprint of Consumption (gha)",
-      "biocapacity_total": "Total Biocapacity (gha)",
-      "preliminary": "Preliminary Estimates"
-    },
-    "chart": {
-      "title": "World Ecological Footprint vs. Biocapacity (Per Capita)",
-      "description": "This chart shows the evolution of human demand (Ecological Footprint) compared to nature's ability to regenerate (Biocapacity) on a per capita basis.",
-      "yAxisLabel": "Global Hectares (gha) per Capita",
-      "footprint": "Ecological Footprint",
-      "biocapacity": "Biocapacity"
-    }
+    "description": "Reference data for footprint calculations, from the National Footprint and Biocapacity Accounts."
   },
   "CountryResultsPage": {
     "title": "Country Results",
-    "description": "View detailed footprint and biocapacity data by country.",
-    "placeholder": {
-      "title": "Country Data",
-      "awaitingData": "Awaiting Data",
-      "description": "Please provide data to populate this view."
-    }
+    "description": "View detailed footprint and biocapacity data by country."
   },
   "CookieConsent": {
     "title": "We Value Your Privacy",
     "description": "We use local storage, similar to cookies, to save your parameter settings and improve your experience. We do not collect personal data. By continuing to use this site, you agree to our use of local storage.",
     "acceptButton": "Accept"
+  },
+  "Auth": {
+    "modal": {
+      "title": "Admin Access Required",
+      "description": "Please enter the admin password to access this section.",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter password...",
+      "cancel": "Cancel",
+      "login": "Login"
+    },
+    "loginSuccess": {
+      "title": "Login Successful",
+      "description": "You are now logged in as an administrator."
+    },
+    "loginError": {
+      "title": "Login Failed",
+      "description": "The password you entered is incorrect."
+    },
+    "logoutSuccess": {
+      "title": "Logout Successful"
+    }
   }
 }

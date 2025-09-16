@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react";
+import * as XLSX from 'xlsx';
 import { Button } from "@/components/ui/button";
 import { CalculationResult, FormData } from "@/lib/types";
 import { FileDown, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
@@ -29,6 +30,7 @@ interface ExportButtonsProps {
 export default function ExportButtons({ results, formData }: ExportButtonsProps) {
     const { toast } = useToast();
     const t = useTranslations('ExportButtons');
+    const t_calc = useTranslations('ImpactCalculator');
     const [isExporting, setIsExporting] = useState(false);
 
     const getActiveTabContentId = () => {
@@ -40,8 +42,8 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
 
     const handlePdfExport = async () => {
         setIsExporting(true);
-        const contentId = getActiveTabContentId();
-        const reportElement = document.getElementById(contentId);
+        // We target a specific container meant for export to get a clean result
+        const reportElement = document.getElementById('report-content-for-export');
         
         if (!reportElement) {
             toast({
@@ -62,7 +64,14 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
               backgroundColor: null,
               onclone: (document) => {
                 // Ensure the background is dark for the screenshot
-                document.body.style.backgroundColor = '#111827';
+                const cloneBody = document.body;
+                cloneBody.style.backgroundColor = '#1f2937'; // A dark background
+                const report = document.getElementById('report-content-for-export');
+                if(report) {
+                  // remove buttons from clone
+                  const exportButtons = report.querySelector('#export-buttons');
+                  if (exportButtons) exportButtons.remove();
+                }
               }
             });
             
@@ -91,35 +100,94 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
     };
 
     const handleExcelExport = () => {
-        toast({
-            title: t('inDevelopment.title', { format: 'Excel' }),
-            description: t('inDevelopment.description'),
-        });
-        console.log(`Exporting data for event "${formData.eventName}" to Excel:`, { formData, results });
+        setIsExporting(true);
+        try {
+            const wb = XLSX.utils.book_new();
+
+            // Summary Sheet
+            const summaryData = [
+                { Item: t('excel.eventName'), Value: formData.eventName },
+                {},
+                { Item: t('excel.totalUCSToCompensate'), Value: results.totalUCS },
+                { Item: t('excel.totalDirectCost'), Value: results.directCost },
+                { Item: t('excel.totalIndirectCost'), Value: results.indirectCost },
+                { Item: t('excel.totalBudget'), Value: results.totalCost },
+            ];
+            const wsSummary = XLSX.utils.json_to_sheet(summaryData, { skipHeader: true });
+            XLSX.utils.book_append_sheet(wb, wsSummary, t('excel.summarySheet'));
+
+            const participantCategories: Record<string, string> = {
+                organizers: t_calc('participants.organizersAndPromoters'), assemblers: t_calc('participants.assemblers'),
+                suppliers: t_calc('participants.suppliers'), exhibitors: t_calc('participants.exhibitors'),
+                supportTeam: t_calc('participants.supportTeam'), attendants: t_calc('participants.attendants'),
+                support: t_calc('participants.support'), visitors: t_calc('participants.visitorsTitle'),
+            };
+
+            const indirectCostCategories: Record<string, string> = {
+                ownershipRegistration: t_calc('indirectCosts.ownershipRegistration'),
+                certificateIssuance: t_calc('indirectCosts.certificateIssuance'),
+                websitePage: t_calc('indirectCosts.websitePage'),
+            };
+
+            // Detailed Breakdown Sheet
+            const directData = results.breakdown.map(item => ({
+                [t('excel.category')]: participantCategories[item.category] || item.category,
+                [t('excel.quantity')]: item.quantity,
+                [t('excel.duration')]: `${item.duration} ${item.durationUnit}`,
+                [t('excel.ucs')]: item.ucs,
+                [t('excel.cost')]: item.cost
+            }));
+
+             const indirectData = results.indirectBreakdown.map(item => ({
+                [t('excel.category')]: indirectCostCategories[item.category] || item.category,
+                [t('excel.quantity')]: 1,
+                [t('excel.duration')]: '-',
+                [t('excel.ucs')]: item.ucs,
+                [t('excel.cost')]: item.cost
+            }));
+
+            const wsDetails = XLSX.utils.json_to_sheet([...directData, ...indirectData]);
+            XLSX.utils.book_append_sheet(wb, wsDetails, t('excel.detailsSheet'));
+
+            const fileName = `${formData.eventName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_impact_report.xlsx`;
+            XLSX.writeFile(wb, fileName);
+        } catch (error) {
+             console.error("Error generating Excel:", error);
+            toast({
+                variant: "destructive",
+                title: t('excelError.title'),
+                description: t('excelError.description'),
+            });
+        } finally {
+            setIsExporting(false);
+        }
     };
 
+
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="text-white border-gray-600 bg-gray-800/60 hover:bg-gray-700/60 hover:text-white" disabled={isExporting}>
-                    {isExporting ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      <FileDown className="mr-2 h-4 w-4" />
-                    )}
-                     {t('export')}
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
-                <DropdownMenuItem onClick={handlePdfExport} disabled={isExporting} className="focus:bg-gray-700">
-                    <FileText className="mr-2 h-4 w-4" />
-                    {t('toPdf')}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExcelExport} className="focus:bg-gray-700">
-                    <FileSpreadsheet className="mr-2 h-4 w-4" />
-                    {t('toExcel')}
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <div id="export-buttons">
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="text-white border-gray-600 bg-gray-800/60 hover:bg-gray-700/60 hover:text-white" disabled={isExporting}>
+                        {isExporting ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <FileDown className="mr-2 h-4 w-4" />
+                        )}
+                         {t('export')}
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
+                    <DropdownMenuItem onClick={handlePdfExport} disabled={isExporting} className="focus:bg-gray-700">
+                        <FileText className="mr-2 h-4 w-4" />
+                        {t('toPdf')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleExcelExport} disabled={isExporting} className="focus:bg-gray-700">
+                        <FileSpreadsheet className="mr-2 h-4 w-4" />
+                        {t('toExcel')}
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
     );
 }

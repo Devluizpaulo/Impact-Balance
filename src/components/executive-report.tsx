@@ -43,20 +43,18 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
     return (
       <div id="executive-report" className="bg-gray-900 text-gray-100 p-6 rounded-lg h-full border border-gray-700 flex flex-col">
         <div id="report-content-for-export" className="flex-grow">
+            <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
+                <h3 className="text-2xl font-bold font-headline text-white">{t('summary.title')}</h3>
+                <ExportButtons results={results} formData={formData} />
+            </div>
+             <p className="text-gray-400 mb-6">{t('summary.forEvent')} <span className="font-semibold text-primary">{formData.eventName}</span></p>
+            
             <Tabs defaultValue="summary">
-                <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
-                    <TabsList className="bg-gray-800/60 text-gray-300 border-gray-700">
-                        <TabsTrigger value="summary" className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"><ListTree className="mr-2 h-4 w-4" />{t('tabs.summary')}</TabsTrigger>
-                        <TabsTrigger value="charts" className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"><BarChart className="mr-2 h-4 w-4" />{t('tabs.charts')}</TabsTrigger>
-                    </TabsList>
-                    <ExportButtons results={results} formData={formData} />
-                </div>
+                <TabsList className="bg-gray-800/60 text-gray-300 border-gray-700 mb-4">
+                    <TabsTrigger value="summary" className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"><ListTree className="mr-2 h-4 w-4" />{t('tabs.summary')}</TabsTrigger>
+                    <TabsTrigger value="charts" className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"><BarChart className="mr-2 h-4 w-4" />{t('tabs.charts')}</TabsTrigger>
+                </TabsList>
                 <TabsContent value="summary" id="summary-content">
-                    <div className="mb-6">
-                      <h3 className="text-2xl font-bold mb-1 font-headline text-white">{t('summary.title')}</h3>
-                      <p className="text-gray-400">{t('summary.forEvent')} <span className="font-semibold text-primary">{formData.eventName}</span></p>
-                    </div>
-
                     <div className="rounded-lg border border-gray-700 bg-gray-800/30 p-4">
                         <Table>
                             <TableHeader>

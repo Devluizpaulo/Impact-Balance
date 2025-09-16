@@ -17,7 +17,8 @@
     "parameters": "Parâmetros",
     "dataFigures": "Dados Mundiais",
     "countryResults": "Resultados por País",
-    "documentation": "Documentação"
+    "documentation": "Documentação",
+    "logout": "Sair"
   },
   "HomePage": {
     "heroTitle": "Balanço de Impacto",
@@ -112,13 +113,27 @@
     "export": "Exportar",
     "toPdf": "Exportar para PDF",
     "toExcel": "Exportar para Excel",
-    "inDevelopment": {
-      "title": "Exportar para {format}",
-      "description": "Este recurso está atualmente em desenvolvimento."
+    "excel": {
+      "summarySheet": "Resumo",
+      "detailsSheet": "Detalhamento",
+      "eventName": "Nome do Evento",
+      "totalUCSToCompensate": "Total de UCS a Compensar",
+      "totalDirectCost": "Custo Direto Total",
+      "totalIndirectCost": "Custo Indireto Total",
+      "totalBudget": "Orçamento Total",
+      "category": "Categoria",
+      "quantity": "Quantidade",
+      "duration": "Duração",
+      "ucs": "UCS",
+      "cost": "Custo (BRL)"
     },
     "pdfError": {
       "title": "Falha ao Exportar PDF",
       "description": "Ocorreu um erro inesperado ao gerar o PDF."
+    },
+    "excelError": {
+      "title": "Falha ao Exportar Excel",
+      "description": "Ocorreu um erro inesperado ao gerar o arquivo Excel."
     }
   },
   "ParametersPage": {
@@ -176,38 +191,36 @@
   },
   "DataFiguresPage": {
     "title": "Dados e Figuras Mundiais",
-    "description": "Dados de referência para os cálculos da pegada, das Contas Nacionais da Pegada e Biocapacidade.",
-    "table": {
-      "title": "Dados da Pegada Mundial (1961-2024)",
-      "year": "Ano",
-      "footprint_prod_capita": "Pegada de Produção (gha/capita)",
-      "footprint_consum_capita": "Pegada de Consumo (gha/capita)",
-      "biocapacity_capita": "Biocapacidade (gha/capita)",
-      "footprint_prod_total": "Pegada Total de Produção (gha)",
-      "footprint_consum_total": "Pegada Total de Consumo (gha)",
-      "biocapacity_total": "Biocapacidade Total (gha)",
-      "preliminary": "Estimativas Preliminares"
-    },
-    "chart": {
-      "title": "Pegada Ecológica Mundial vs. Biocapacidade (Per Capita)",
-      "description": "Este gráfico mostra a evolução da demanda humana (Pegada Ecológica) em comparação com a capacidade de regeneração da natureza (Biocapacidade) em uma base per capita.",
-      "yAxisLabel": "Hectares Globais (gha) por Capita",
-      "footprint": "Pegada Ecológica",
-      "biocapacity": "Biocapacidade"
-    }
+    "description": "Dados de referência para os cálculos da pegada, das Contas Nacionais da Pegada e Biocapacidade."
   },
   "CountryResultsPage": {
     "title": "Resultados por País",
-    "description": "Veja dados detalhados de pegada e biocapacidade por país.",
-    "placeholder": {
-      "title": "Dados do País",
-      "awaitingData": "Aguardando Dados",
-      "description": "Por favor, forneça dados para preencher esta visualização."
-    }
+    "description": "Veja dados detalhados de pegada e biocapacidade por país."
   },
   "CookieConsent": {
     "title": "Nós Valorizamos sua Privacidade",
     "description": "Usamos armazenamento local, semelhante a cookies, para salvar suas configurações de parâmetros e melhorar sua experiência. Não coletamos dados pessoais. Ao continuar a usar este site, você concorda com nosso uso de armazenamento local.",
     "acceptButton": "Aceitar"
+  },
+  "Auth": {
+    "modal": {
+      "title": "Acesso de Administrador Necessário",
+      "description": "Por favor, insira a senha de administrador para acessar esta seção.",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "Digite a senha...",
+      "cancel": "Cancelar",
+      "login": "Entrar"
+    },
+    "loginSuccess": {
+      "title": "Login Bem-sucedido",
+      "description": "Você agora está logado como administrador."
+    },
+    "loginError": {
+      "title": "Falha no Login",
+      "description": "A senha que você digitou está incorreta."
+    },
+    "logoutSuccess": {
+      "title": "Logout Bem-sucedido"
+    }
   }
 }
