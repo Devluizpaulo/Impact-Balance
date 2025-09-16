@@ -66,7 +66,7 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
         return (
             <div className="flex items-center justify-center p-8 min-h-[300px]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="ml-4 text-muted-foreground">{t('loading')}</p>
+                <p className="ml-4 text-gray-400">{t('loading')}</p>
             </div>
         );
     }
@@ -83,13 +83,13 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
     }
 
     return (
-        <Card>
+        <Card className="bg-transparent border-gray-700 text-gray-100">
             <CardHeader>
-                <CardTitle className="font-headline flex items-center"><Lightbulb className="mr-2 text-primary" /> {t('title')}</CardTitle>
-                <CardDescription>{t('description')}</CardDescription>
+                <CardTitle className="font-headline flex items-center text-white"><Lightbulb className="mr-2 text-primary" /> {t('title')}</CardTitle>
+                <CardDescription className="text-gray-400">{t('description')}</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="space-y-3 text-sm">
+                <div className="space-y-3 text-sm text-gray-300">
                     {suggestions.split('\n').filter(line => line.trim() !== '').map((line, index) => {
                         const isListItem = line.startsWith('* ') || line.startsWith('- ');
                         const content = isListItem ? line.substring(2) : line;

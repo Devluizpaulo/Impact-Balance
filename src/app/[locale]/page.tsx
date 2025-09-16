@@ -42,15 +42,15 @@ export default function Home() {
             <ImpactCalculator onCalculate={handleCalculation} onReset={handleReset} />
           </div>
           <div className="xl:col-span-1 sticky top-8">
-            <Card className="h-full min-h-[600px] bg-card/50 backdrop-blur-sm" id="report-content">
+            <Card className="h-full min-h-[600px] bg-gray-900 text-gray-100 border-gray-700" id="report-content">
               <CardContent className="p-6 h-full">
                 {results && formData ? (
                   <ExecutiveReport results={results} formData={formData} />
                 ) : (
                   <div className="flex flex-col items-center justify-center text-center h-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-muted-foreground opacity-50"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M12 18v-6"></path><path d="m9 15 3-3 3 3"></path></svg>
-                    <h3 className="mt-4 text-xl font-semibold text-muted-foreground">{t('awaitingData.title')}</h3>
-                    <p className="mt-2 text-muted-foreground">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mx-auto text-gray-500 opacity-50"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M12 18v-6"></path><path d="m9 15 3-3 3 3"></path></svg>
+                    <h3 className="mt-4 text-xl font-semibold text-gray-500">{t('awaitingData.title')}</h3>
+                    <p className="mt-2 text-gray-400">
                       {t('awaitingData.description')}
                     </p>
                   </div>

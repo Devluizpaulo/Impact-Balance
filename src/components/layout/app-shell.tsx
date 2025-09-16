@@ -83,7 +83,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <div className="flex flex-col">
         <Header mobileNav={<MobileNav />} />
-        <main className="flex flex-1 flex-col gap-4 bg-background p-4 md:gap-8 md:p-8">
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
           {children}
         </main>
       </div>
