@@ -45,7 +45,7 @@ const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData
                   type="number"
                   placeholder={t('participants.quantity')}
                   {...field}
-                  value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
+                  value={field.value ?? ''}
                   className="no-spinner"
                 />
               </FormControl>
@@ -63,7 +63,7 @@ const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData
                   type="number"
                   placeholder={t('participants.days')}
                   {...field}
-                  value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
+                  value={field.value ?? ''}
                   className="no-spinner"
                 />
               </FormControl>
@@ -121,7 +121,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       const days = p?.days || 0;
       if (count > 0 && days > 0) {
         totalParticipantsCount += count;
-        const ucs = count * days * perCapitaFactors.dailyUcsConsumption;
+        const ucs = Math.ceil(count * days * perCapitaFactors.dailyUcsConsumption);
         breakdown.push({
           category: key,
           ucs,
@@ -144,11 +144,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       if (visitors?.unit === 'days') {
         duration = visitors?.days || 0;
         durationUnit = 'days';
-        ucs = visitorCount * duration * perCapitaFactors.dailyUcsConsumption;
+        ucs = Math.ceil(visitorCount * duration * perCapitaFactors.dailyUcsConsumption);
       } else {
         duration = visitors?.hours || 0;
         durationUnit = 'hours';
-        ucs = visitorCount * duration * perCapitaFactors.hourlyUcsConsumption;
+        ucs = Math.ceil(visitorCount * duration * perCapitaFactors.hourlyUcsConsumption);
       }
       
       if (duration > 0) {
@@ -168,17 +168,17 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     if (indirectCosts) {
       if ((indirectCosts.ownershipRegistration || 0) > 0) {
         const cost = indirectCosts.ownershipRegistration!;
-        const ucs = cost / ucsCostPerUnit;
+        const ucs = Math.ceil(cost / ucsCostPerUnit);
         indirectBreakdown.push({ category: "ownershipRegistration", ucs, cost });
       }
       if ((indirectCosts.certificateIssuance || 0) > 0) {
         const cost = indirectCosts.certificateIssuance!;
-        const ucs = cost / ucsCostPerUnit;
+        const ucs = Math.ceil(cost / ucsCostPerUnit);
         indirectBreakdown.push({ category: "certificateIssuance", ucs, cost });
       }
       if ((indirectCosts.websitePage || 0) > 0) {
         const cost = indirectCosts.websitePage!;
-        const ucs = cost / ucsCostPerUnit;
+        const ucs = Math.ceil(cost / ucsCostPerUnit);
         indirectBreakdown.push({ category: "websitePage", ucs, cost });
       }
     }
@@ -290,7 +290,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><Users className="w-5 h-5"/>{t('participants.quantity')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.quantity')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                      <Input type="number" placeholder={t('participants.quantity')} {...field} value={field.value ?? ''} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -315,7 +315,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 <FormItem className={cn(visitorUnit === 'days' && 'hidden')}>
                   <FormLabel className="flex items-center gap-2"><Clock className="w-5 h-5"/>{t('participants.hours')}</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder={t('participants.hours')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                    <Input type="number" placeholder={t('participants.hours')} {...field} value={field.value ?? ''} className="no-spinner" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -329,7 +329,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 <FormItem className={cn(visitorUnit === 'hours' && 'hidden')}>
                   <FormLabel className="flex items-center gap-2"><CalendarDays className="w-5 h-5"/>{t('participants.days')}</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder={t('participants.days')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                    <Input type="number" placeholder={t('participants.days')} {...field} value={field.value ?? ''} className="no-spinner" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -347,7 +347,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                      <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -360,7 +360,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
                      <FormControl>
-                       <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                       <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -372,7 +372,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>                     <FormControl>
-                       <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                       <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
