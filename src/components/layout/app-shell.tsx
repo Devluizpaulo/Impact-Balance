@@ -16,6 +16,7 @@ import { Calculator, Settings } from "lucide-react"
 import { usePathname } from "@/navigation"
 import Header from "./header"
 import { useTranslations } from "next-intl"
+import Link from "next/link"
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -33,22 +34,26 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
-                href="/"
+                asChild
                 isActive={pathname === "/"}
                 tooltip={t('calculator')}
               >
-                <Calculator />
-                <span>{t('calculator')}</span>
+                <Link href="/">
+                  <Calculator />
+                  <span>{t('calculator')}</span>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
-                href="/parameters"
+                asChild
                 isActive={pathname === "/parameters"}
                 tooltip={t('parameters')}
               >
-                <Settings />
-                <span>{t('parameters')}</span>
+                <Link href="/parameters">
+                  <Settings />
+                  <span>{t('parameters')}</span>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

@@ -40,11 +40,11 @@ export default function LanguageSwitcher() {
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          {(locales as (keyof ReturnType<typeof t>)[]).map((cur) => (
+          {locales.map((cur) => (
             <SelectItem key={cur} value={cur}>
               <div className="flex items-center gap-2">
                 {flagComponents[cur]}
-                <span>{t(cur)}</span>
+                <span>{t(cur as keyof ReturnType<typeof t>)}</span>
               </div>
             </SelectItem>
           ))}
