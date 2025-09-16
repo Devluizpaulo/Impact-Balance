@@ -44,8 +44,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         support: 300,
         visitors: 4500,
       },
-      durationHours: 8,
-      durationDays: 3,
+      durationHours: 3,
+      durationDays: 20,
       venueSizeSqm: 500,
       travelKm: 250,
       wasteKg: 150,
@@ -62,18 +62,26 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { ucsFactors, ucsCostPerUnit, equivalences, perCapitaFactors, indirectCosts } = settings;
     const { participants, durationDays, durationHours } = values;
 
-    const totalParticipants = Object.values(participants).reduce((acc, val) => acc + (val || 0), 0);
+    const breakdown: { category: string; ucs: number; cost: number }[] = [];
+    
+    // 1. Participant Impact
     const staffParticipants = (participants.organizers || 0) + (participants.assemblers || 0) + (participants.suppliers || 0) + (participants.exhibitors || 0) + (participants.supportTeam || 0) + (participants.attendants || 0) + (participants.support || 0);
     const visitorParticipants = participants.visitors || 0;
     
-    const staffHours = staffParticipants * (durationDays || 0) * 8;
+    // Assuming staff works 8 hours/day for the duration of the event
+    const staffHours = staffParticipants * (durationDays || 0) * 8; 
     const visitorHours = visitorParticipants * (durationHours || 0);
+    
     const participantUcs = (staffHours + visitorHours) * perCapitaFactors.hourlyUcsConsumption;
-    
-    const breakdown: { category: string; ucs: number; cost: number }[] = [];
-    
-    breakdown.push({ category: "Participants", ucs: participantUcs, cost: participantUcs * ucsCostPerUnit });
+    if (participantUcs > 0) {
+      breakdown.push({
+        category: "Participants",
+        ucs: participantUcs,
+        cost: participantUcs * ucsCostPerUnit,
+      });
+    }
 
+    // 2. Direct Factors Impact
     const directFactors = [
       { key: "Duration", value: values.durationDays || 0, factor: ucsFactors.durationDays },
       { key: "Venue Size", value: values.venueSizeSqm || 0, factor: ucsFactors.venueSizeSqm },
@@ -84,28 +92,37 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     ];
     
     directFactors.forEach(item => {
+      if (item.value > 0) {
         const ucs = item.value * item.factor;
-        breakdown.push({ category: item.key, ucs: ucs, cost: ucs * ucsCostPerUnit });
+        breakdown.push({
+          category: item.key,
+          ucs: ucs,
+          cost: ucs * ucsCostPerUnit
+        });
+      }
     });
-    
+
+    // 3. Indirect Costs Impact
     if (values.includeOwnershipRegistration) {
-        const cost = indirectCosts.ownershipRegistration;
-        const ucs = cost / ucsCostPerUnit;
-        breakdown.push({ category: "Ownership Registration", ucs: ucs, cost: cost });
+      const cost = indirectCosts.ownershipRegistration;
+      const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+      breakdown.push({ category: "Ownership Registration", ucs: ucs, cost: cost });
     }
     if (values.includeCertificateIssuance) {
-        const cost = indirectCosts.certificateIssuance;
-        const ucs = cost / ucsCostPerUnit;
-        breakdown.push({ category: "Certificate Issuance", ucs: ucs, cost: cost });
+      const cost = indirectCosts.certificateIssuance;
+      const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+      breakdown.push({ category: "Certificate Issuance", ucs: ucs, cost: cost });
     }
     if (values.includeWebsitePage) {
-        const cost = indirectCosts.websitePage;
-        const ucs = cost / ucsCostPerUnit;
-        breakdown.push({ category: "Website Page", ucs: ucs, cost: cost });
+      const cost = indirectCosts.websitePage;
+      const ucs = ucsCostPerUnit > 0 ? cost / ucsCostPerUnit : 0;
+      breakdown.push({ category: "Website Page", ucs: ucs, cost: cost });
     }
 
+    // 4. Totals and Equivalences
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
+    const totalParticipants = staffParticipants + visitorParticipants;
     const totalEventHours = (values.durationDays || 0) * 24;
 
     const results: CalculationResult = {
@@ -117,7 +134,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       equivalences: {
         dailyUCS: (values.durationDays || 0) > 0 ? totalUCS / values.durationDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
-        gdpPercentage: (totalCost / equivalences.gdpPerCapita) * 100,
+        gdpPercentage: equivalences.gdpPerCapita > 0 ? (totalCost / equivalences.gdpPerCapita) * 100 : 0,
       },
     };
 
