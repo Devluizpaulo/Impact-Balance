@@ -23,31 +23,28 @@
   "HomePage": {
     "heroTitle": "Balance de Impacto",
     "heroSubtitle": "Comprenda, cuantifique y mitigue la huella socioambiental de sus eventos.",
-    "tabs": {
-      "summary": "Resumen",
-      "charts": "Gráficos"
-    },
-    "summary": {
-      "title": "Resumen de Impacto",
-      "forEvent": "para el evento"
-    },
     "awaitingData": {
       "title": "Esperando Datos",
       "description": "Complete el formulario para calcular el impacto de su evento."
     }
   },
     "ExecutiveReport": {
+    "title": "Informe de Impacto Socioambiental",
+    "forEvent": "para el evento",
+    "introduction": "Este informe detalla la huella de Unidades de Crédito de Sostenibilidad (UCS) y el presupuesto de compensación asociado para el evento especificado. El análisis abarca el impacto directo generado por los participantes y los costos indirectos relacionados.",
+    "breakdownTitle": "Desglose del Impacto",
+    "summaryTitle": "Resumen de Totales",
     "table": {
       "participants": "Participantes del Evento",
       "quantity": "Cantidad",
       "duration": "Duración",
       "totalUCS": "Total UCS",
-      "directCost": "Costo Directo (UCS)"
+      "directCost": "Costo Directo (R$)"
     },
     "totals": {
       "directUCScost": "Costo Directo UCS (Huella)",
       "indirectUCScost": "Costos Indirectos (Presupuesto)",
-      "totalToCompensate": "Total a Compensar",
+      "totalToCompensate": "Total a Compensar con UC",
       "totalBudget": "Presupuesto Total",
       "costPerParticipantDay": "Compensación por Participante-Día",
       "costPerParticipantHour": "Compensación por Participante-Hora"
@@ -94,8 +91,8 @@
     }
   },
   "ImpactCharts": {
-    "title": "Desglose del Impacto",
-    "description": "Contribución de cada categoría al UCS total.",
+    "title": "Desglose Visual del Impacto",
+    "description": "Contribución de cada categoría al total de Unidades de Crédito de Sostenibilidad (UCS).",
     "categories": {
       "participants": "Participantes",
       "ownershipRegistration": "Registro de Propiedad",
@@ -127,7 +124,7 @@
       "quantity": "Cantidad",
       "duration": "Duración",
       "ucs": "UCS",
-      "cost": "Costo (BRL)"
+      "cost": "Costo (R$)"
     },
     "pdfError": {
       "title": "Error al Exportar PDF",

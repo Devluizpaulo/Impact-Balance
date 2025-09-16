@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import { Button } from "@/components/ui/button";
 import { CalculationResult, FormData } from "@/lib/types";
 import { FileDown, FileText, FileSpreadsheet, Loader2 } from "lucide-react";
@@ -14,13 +16,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useTranslations } from "next-intl";
 
-const loadPdfLibraries = async () => {
-  const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
-    import('jspdf'),
-    import('html2canvas')
-  ]);
-  return { jsPDF, html2canvas };
-};
+interface jsPDFWithAutoTable extends jsPDF {
+  autoTable: (options: any) => jsPDF;
+}
 
 interface ExportButtonsProps {
     results: CalculationResult;
@@ -31,61 +29,97 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
     const { toast } = useToast();
     const t = useTranslations('ExportButtons');
     const t_calc = useTranslations('ImpactCalculator');
+    const t_report = useTranslations('ExecutiveReport');
     const [isExporting, setIsExporting] = useState(false);
 
-    const getActiveTabContentId = () => {
-        const reportElement = document.getElementById('executive-report');
-        if (!reportElement) return 'summary-content';
-        const activeTabTrigger = reportElement.querySelector<HTMLButtonElement>('[role="tab"][data-state="active"]');
-        return activeTabTrigger?.getAttribute('data-value') + '-content' || 'summary-content';
-    }
+    const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+
+    const participantCategories: Record<string, string> = {
+        organizers: t_calc('participants.organizersAndPromoters'), assemblers: t_calc('participants.assemblers'),
+        suppliers: t_calc('participants.suppliers'), exhibitors: t_calc('participants.exhibitors'),
+        supportTeam: t_calc('participants.supportTeam'), attendants: t_calc('participants.attendants'),
+        support: t_calc('participants.support'), visitors: t_calc('participants.visitorsTitle'),
+    };
+    
+    const indirectCostCategories: Record<string, string> = {
+        ownershipRegistration: t_calc('indirectCosts.ownershipRegistration'),
+        certificateIssuance: t_calc('indirectCosts.certificateIssuance'),
+        websitePage: t_calc('indirectCosts.websitePage'),
+    };
 
     const handlePdfExport = async () => {
         setIsExporting(true);
-        // We target a specific container meant for export to get a clean result
-        const reportElement = document.getElementById('report-content-for-export');
-        
-        if (!reportElement) {
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "Could not find report content to export.",
-            });
-            setIsExporting(false);
-            return;
-        }
-
         try {
-            const { jsPDF, html2canvas } = await loadPdfLibraries();
-            
-            const canvas = await html2canvas(reportElement, {
-              scale: 2, 
-              useCORS: true, 
-              backgroundColor: null,
-              onclone: (document) => {
-                // Ensure the background is dark for the screenshot
-                const cloneBody = document.body;
-                cloneBody.style.backgroundColor = '#1f2937'; // A dark background
-                const report = document.getElementById('report-content-for-export');
-                if(report) {
-                  // remove buttons from clone
-                  const exportButtons = report.querySelector('#export-buttons');
-                  if (exportButtons) exportButtons.remove();
-                }
-              }
+            const doc = new jsPDF() as jsPDFWithAutoTable;
+
+            // Header
+            doc.setFontSize(20);
+            doc.text(t_report('title'), 14, 22);
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text(`${t_report('forEvent')} ${formData.eventName}`, 14, 29);
+
+            // Introduction Text
+            doc.setFontSize(10);
+            const introText = doc.splitTextToSize(t_report('introduction'), 180);
+            doc.text(introText, 14, 40);
+
+            // Breakdown Table
+            const tableData = results.breakdown.map(item => [
+                participantCategories[item.category] || item.category,
+                item.quantity,
+                `${item.duration} ${t_calc(`participants.${item.durationUnit}` as any)}`,
+                item.ucs.toFixed(0),
+                formatCurrency(item.cost)
+            ]);
+
+            doc.autoTable({
+                startY: 55,
+                head: [[t_report('table.participants'), t_report('table.quantity'), t_report('table.duration'), t_report('table.totalUCS'), t_report('table.directCost')]],
+                body: tableData,
+                theme: 'striped',
+                headStyles: { fillColor: [4, 120, 87] }, // Primary color
             });
             
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'px',
-                format: [canvas.width, canvas.height]
+            let finalY = (doc as any).lastAutoTable.finalY || 100;
+
+            // Summary section
+            finalY += 10;
+            doc.setFontSize(14);
+            doc.text(t_report('summaryTitle'), 14, finalY);
+            doc.setFontSize(10);
+            doc.setTextColor(0);
+
+            const summaryItems = [
+              [t_report('totals.directUCScost'), formatCurrency(results.directCost)],
+              [t_report('totals.indirectUCScost'), formatCurrency(results.indirectCost)],
+              [t_report('totals.costPerParticipantDay'), formatCurrency(results.costPerParticipantDay)],
+              [t_report('totals.costPerParticipantHour'), formatCurrency(results.costPerParticipantHour)],
+            ];
+
+            const totalsItems = [
+                [t_report('totals.totalToCompensate'), `${results.totalUCS.toFixed(0)} UCS`],
+                [t_report('totals.totalBudget'), formatCurrency(results.totalCost)],
+            ];
+
+            doc.autoTable({
+                startY: finalY + 5,
+                body: summaryItems,
+                theme: 'plain',
+                styles: { fontSize: 10 },
             });
-            
-            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-            
+            finalY = (doc as any).lastAutoTable.finalY;
+
+            doc.autoTable({
+                startY: finalY,
+                body: totalsItems,
+                theme: 'plain',
+                styles: { fontSize: 12, fontStyle: 'bold' },
+            });
+
+
             const fileName = `${formData.eventName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_impact_report.pdf`;
-            pdf.save(fileName);
+            doc.save(fileName);
 
         } catch (error) {
             console.error("Error generating PDF:", error);
@@ -112,28 +146,17 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 { Item: t('excel.totalDirectCost'), Value: results.directCost },
                 { Item: t('excel.totalIndirectCost'), Value: results.indirectCost },
                 { Item: t('excel.totalBudget'), Value: results.totalCost },
+                { Item: t_report('totals.costPerParticipantDay'), Value: results.costPerParticipantDay },
+                { Item: t_report('totals.costPerParticipantHour'), Value: results.costPerParticipantHour },
             ];
             const wsSummary = XLSX.utils.json_to_sheet(summaryData, { skipHeader: true });
             XLSX.utils.book_append_sheet(wb, wsSummary, t('excel.summarySheet'));
-
-            const participantCategories: Record<string, string> = {
-                organizers: t_calc('participants.organizersAndPromoters'), assemblers: t_calc('participants.assemblers'),
-                suppliers: t_calc('participants.suppliers'), exhibitors: t_calc('participants.exhibitors'),
-                supportTeam: t_calc('participants.supportTeam'), attendants: t_calc('participants.attendants'),
-                support: t_calc('participants.support'), visitors: t_calc('participants.visitorsTitle'),
-            };
-
-            const indirectCostCategories: Record<string, string> = {
-                ownershipRegistration: t_calc('indirectCosts.ownershipRegistration'),
-                certificateIssuance: t_calc('indirectCosts.certificateIssuance'),
-                websitePage: t_calc('indirectCosts.websitePage'),
-            };
 
             // Detailed Breakdown Sheet
             const directData = results.breakdown.map(item => ({
                 [t('excel.category')]: participantCategories[item.category] || item.category,
                 [t('excel.quantity')]: item.quantity,
-                [t('excel.duration')]: `${item.duration} ${item.durationUnit}`,
+                [t('excel.duration')]: `${item.duration} ${t_calc(`participants.${item.durationUnit}` as any)}`,
                 [t('excel.ucs')]: item.ucs,
                 [t('excel.cost')]: item.cost
             }));
@@ -142,7 +165,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 [t('excel.category')]: indirectCostCategories[item.category] || item.category,
                 [t('excel.quantity')]: 1,
                 [t('excel.duration')]: '-',
-                [t('excel.ucs')]: item.ucs,
+                [t('excel.ucs')]: 0, // Indirect costs do not contribute UCS
                 [t('excel.cost')]: item.cost
             }));
 

@@ -23,26 +23,23 @@
   "HomePage": {
     "heroTitle": "Balanço de Impacto",
     "heroSubtitle": "Entenda, quantifique e mitigue a pegada socioambiental de seus eventos.",
-    "tabs": {
-      "summary": "Resumo",
-      "charts": "Gráficos"
-    },
-    "summary": {
-      "title": "Resumo do Impacto",
-      "forEvent": "para o evento"
-    },
     "awaitingData": {
       "title": "Aguardando Dados",
       "description": "Preencha o formulário para calcular o impacto do seu evento."
     }
   },
   "ExecutiveReport": {
+    "title": "Relatório de Impacto Socioambiental",
+    "forEvent": "para o evento",
+    "introduction": "Este relatório detalha a pegada de Unidades de Crédito de Sustentabilidade (UCS) e o orçamento de compensação associado para o evento especificado. A análise abrange o impacto direto gerado pelos participantes e os custos indiretos relacionados.",
+    "breakdownTitle": "Detalhamento do Impacto",
+    "summaryTitle": "Resumo dos Totais",
     "table": {
       "participants": "Pessoas Participantes do Evento",
       "quantity": "Quantidade",
       "duration": "Duração",
       "totalUCS": "Total de UCS",
-      "directCost": "Custo Direto de UCS"
+      "directCost": "Custo Direto (R$)"
     },
     "totals": {
       "directUCScost": "Custo Direto de UCS (Pegada)",
@@ -94,8 +91,8 @@
     }
   },
   "ImpactCharts": {
-    "title": "Detalhamento do Impacto",
-    "description": "Contribuição de cada categoria para o UCS total.",
+    "title": "Detalhamento Visual do Impacto",
+    "description": "Contribuição de cada categoria para o total de Unidades de Crédito de Sustentabilidade (UCS).",
     "categories": {
       "participants": "Participantes",
       "ownershipRegistration": "Registro de Titularidade",
@@ -127,7 +124,7 @@
       "quantity": "Quantidade",
       "duration": "Duração",
       "ucs": "UCS",
-      "cost": "Custo (BRL)"
+      "cost": "Custo (R$)"
     },
     "pdfError": {
       "title": "Falha ao Exportar PDF",
