@@ -59,7 +59,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
   function onSubmit(values: FormData) {
-    const { ucsCostPerUnit, equivalences, perCapitaFactors } = settings;
+    const { ucsCostPerUnit, perCapitaFactors } = settings;
     const { participants, visitors, indirectCosts } = values;
 
     const breakdown: { category: string; ucs: number; cost: number }[] = [];
@@ -128,7 +128,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       equivalences: {
         dailyUCS: maxDays > 0 ? totalUCS / maxDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
-        gdpPercentage: equivalences.gdpPerCapita > 0 ? (totalCost / equivalences.gdpPerCapita) * 100 : 0,
+        gdpPercentage: settings.equivalences.gdpPerCapita > 0 ? (totalCost / settings.equivalences.gdpPerCapita) * 100 : 0,
       },
     };
 
@@ -169,35 +169,41 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   }
   
   const ParticipantField = ({ name, icon, label }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string }) => (
-    <div className="space-y-2">
-      <FormLabel className="flex items-center gap-2 text-sm">{icon} {label}</FormLabel>
-      <div className="grid grid-cols-2 gap-2">
-        <FormField
-          control={form.control}
-          name={`participants.${name}.count`}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name={`participants.${name}.days`}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <FormItem>
+      <div className="grid grid-cols-2 items-center gap-4">
+        <FormLabel className="flex items-center gap-2 text-sm font-normal -mr-4">{icon} {label}</FormLabel>
+        <div className="grid grid-cols-2 gap-2">
+          <FormField
+            control={form.control}
+            name={`participants.${name}.count`}
+            render={({ field }) => (
+                <FormControl>
+                  <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                </FormControl>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`participants.${name}.days`}
+            render={({ field }) => (
+                <FormControl>
+                  <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                </FormControl>
+            )}
+          />
+        </div>
       </div>
-    </div>
+      <FormField
+        control={form.control}
+        name={`participants.${name}.count`}
+        render={() => <FormMessage />}
+      />
+      <FormField
+        control={form.control}
+        name={`participants.${name}.days`}
+        render={() => <FormMessage />}
+      />
+    </FormItem>
   );
 
   return (
@@ -224,15 +230,17 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             />
             
             <Separator />
-            <p className="font-medium">{t('participants.staffTitle')}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
-                <ParticipantField name="organizers" icon={<UserCog />} label={t('participants.organizersAndPromoters')} />
-                <ParticipantField name="assemblers" icon={<Wrench />} label={t('participants.assemblers')} />
-                <ParticipantField name="suppliers" icon={<Briefcase />} label={t('participants.suppliers')} />
-                <ParticipantField name="exhibitors" icon={<Building2 />} label={t('participants.exhibitors')} />
-                <ParticipantField name="supportTeam" icon={<Headset />} label={t('participants.supportTeam')} />
-                <ParticipantField name="attendants" icon={<User />} label={t('participants.attendants')} />
-                <ParticipantField name="support" icon={<Handshake />} label={t('participants.support')} />
+            <div className="space-y-4">
+              <p className="font-medium">{t('participants.staffTitle')}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                  <ParticipantField name="organizers" icon={<UserCog />} label={t('participants.organizersAndPromoters')} />
+                  <ParticipantField name="assemblers" icon={<Wrench />} label={t('participants.assemblers')} />
+                  <ParticipantField name="suppliers" icon={<Briefcase />} label={t('participants.suppliers')} />
+                  <ParticipantField name="exhibitors" icon={<Building2 />} label={t('participants.exhibitors')} />
+                  <ParticipantField name="supportTeam" icon={<Headset />} label={t('participants.supportTeam')} />
+                  <ParticipantField name="attendants" icon={<User />} label={t('participants.attendants')} />
+                  <ParticipantField name="support" icon={<Handshake />} label={t('participants.support')} />
+              </div>
             </div>
             
             <Separator />
