@@ -41,7 +41,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
 
         try {
             const canvas = await html2canvas(reportElement, {
-              scale: 2, // Higher scale for better quality
+              scale: 2, 
               useCORS: true, 
               backgroundColor: null,
             });
@@ -55,7 +55,6 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             
             pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
             
-            // Sanitize event name for filename
             const fileName = `${formData.eventName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_impact_report.pdf`;
             pdf.save(fileName);
 
