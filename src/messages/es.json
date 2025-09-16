@@ -1,3 +1,4 @@
+
 {
   "Header": {
     "title": "Balance de Impacto",
@@ -236,7 +237,27 @@
     "description": "Documentación del proyecto y metodología."
   },
   "DataFiguresPage": {
-    "title": "Datos y Cifras Mundiales (2022)",
-    "description": "Datos de referencia para los cálculos de la huella."
+    "title": "Datos y Cifras Mundiales",
+    "description": "Datos de referencia para los cálculos de la huella, de las Cuentas Nacionales de Huella y Biocapacidad.",
+    "table": {
+      "title": "Datos de la Huella Mundial (1961-2024)",
+      "year": "Año",
+      "footprint_prod_capita": "Huella de Producción (gha/cápita)",
+      "footprint_consum_capita": "Huella de Consumo (gha/cápita)",
+      "biocapacity_capita": "Biocapacidad (gha/cápita)",
+      "footprint_prod_total": "Huella Total de Producción (gha)",
+      "footprint_consum_total": "Huella Total de Consumo (gha)",
+      "biocapacity_total": "Biocapacidad Total (gha)",
+      "preliminary": "Estimaciones Preliminares"
+    },
+    "chart": {
+      "title": "Huella Ecológica Mundial vs. Biocapacidad (Per Cápita)",
+      "description": "Este gráfico muestra la evolución de la demanda humana (Huella Ecológica) en comparación con la capacidad de regeneración de la naturaleza (Biocapacidad) por cápita.",
+      "yAxisLabel": "Hectáreas Globales (gha) por Cápita",
+      "footprint": "Huella Ecológica",
+      "biocapacity": "Biocapacidad"
+    }
   }
 }
+
+    

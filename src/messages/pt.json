@@ -1,3 +1,4 @@
+
 {
   "Header": {
     "title": "Balanço de Impacto",
@@ -236,7 +237,27 @@
     "description": "Documentação do projeto e metodologia."
   },
   "DataFiguresPage": {
-    "title": "Dados e Figuras Mundiais (2022)",
-    "description": "Dados de referência para os cálculos da pegada."
+    "title": "Dados e Figuras Mundiais",
+    "description": "Dados de referência para os cálculos da pegada, das Contas Nacionais da Pegada e Biocapacidade.",
+    "table": {
+      "title": "Dados da Pegada Mundial (1961-2024)",
+      "year": "Ano",
+      "footprint_prod_capita": "Pegada de Produção (gha/capita)",
+      "footprint_consum_capita": "Pegada de Consumo (gha/capita)",
+      "biocapacity_capita": "Biocapacidade (gha/capita)",
+      "footprint_prod_total": "Pegada Total de Produção (gha)",
+      "footprint_consum_total": "Pegada Total de Consumo (gha)",
+      "biocapacity_total": "Biocapacidade Total (gha)",
+      "preliminary": "Estimativas Preliminares"
+    },
+    "chart": {
+      "title": "Pegada Ecológica Mundial vs. Biocapacidade (Per Capita)",
+      "description": "Este gráfico mostra a evolução da demanda humana (Pegada Ecológica) em comparação com a capacidade de regeneração da natureza (Biocapacidade) em uma base per capita.",
+      "yAxisLabel": "Hectares Globais (gha) por Capita",
+      "footprint": "Pegada Ecológica",
+      "biocapacity": "Biocapacidade"
+    }
   }
 }
+
+    

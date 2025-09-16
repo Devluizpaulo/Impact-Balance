@@ -1,3 +1,4 @@
+
 {
   "Header": {
     "title": "Impact Balance",
@@ -236,7 +237,27 @@
     "description": "Project documentation and methodology."
   },
   "DataFiguresPage": {
-    "title": "World Data and Figures (2022)",
-    "description": "Reference data for footprint calculations."
+    "title": "World Data and Figures",
+    "description": "Reference data for footprint calculations, from the National Footprint and Biocapacity Accounts.",
+    "table": {
+      "title": "World Footprint Data (1961-2024)",
+      "year": "Year",
+      "footprint_prod_capita": "Footprint of Production (gha/capita)",
+      "footprint_consum_capita": "Footprint of Consumption (gha/capita)",
+      "biocapacity_capita": "Biocapacity (gha/capita)",
+      "footprint_prod_total": "Total Footprint of Production (gha)",
+      "footprint_consum_total": "Total Footprint of Consumption (gha)",
+      "biocapacity_total": "Total Biocapacity (gha)",
+      "preliminary": "Preliminary Estimates"
+    },
+    "chart": {
+      "title": "World Ecological Footprint vs. Biocapacity (Per Capita)",
+      "description": "This chart shows the evolution of human demand (Ecological Footprint) compared to nature's ability to regenerate (Biocapacity) on a per capita basis.",
+      "yAxisLabel": "Global Hectares (gha) per Capita",
+      "footprint": "Ecological Footprint",
+      "biocapacity": "Biocapacity"
+    }
   }
 }
+
+    
