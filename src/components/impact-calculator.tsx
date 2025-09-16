@@ -76,7 +76,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         breakdown.push({
           category: key,
           ucs,
-          cost: ucs * equivalences.ucsQuotationValue,
+          cost: ucs * equivalences.ucsQuotationValue, // Corrected: use ucsQuotationValue for direct cost
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -88,27 +88,28 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const visitorCount = visitors?.count || 0;
     if (visitorCount > 0) {
       totalParticipantsCount += visitorCount;
+      let ucs = 0;
+      let duration = 0;
+      let durationUnit: 'days' | 'hours' = 'hours';
+
       if (visitors?.unit === 'days') {
-        const visitorDays = visitors?.days || 0;
-        const ucs = visitorCount * visitorDays * perCapitaFactors.dailyUcsConsumption;
-        breakdown.push({
-          category: 'visitors',
-          ucs,
-          cost: ucs * equivalences.ucsQuotationValue,
-          quantity: visitorCount,
-          duration: visitorDays,
-          durationUnit: 'days'
-        });
+        duration = visitors?.days || 0;
+        durationUnit = 'days';
+        ucs = visitorCount * duration * perCapitaFactors.dailyUcsConsumption;
       } else {
-        const visitorHours = visitors?.hours || 0;
-        const ucs = visitorCount * visitorHours * (perCapitaFactors.dailyUcsConsumption / 8); // Assuming 8-hour day
+        duration = visitors?.hours || 0;
+        durationUnit = 'hours';
+        ucs = visitorCount * duration * perCapitaFactors.hourlyUcsConsumption;
+      }
+      
+      if (duration > 0) {
         breakdown.push({
           category: 'visitors',
           ucs,
-          cost: ucs * equivalences.ucsQuotationValue,
+          cost: ucs * equivalences.ucsQuotationValue, // Corrected: use ucsQuotationValue for direct cost
           quantity: visitorCount,
-          duration: visitorHours,
-          durationUnit: 'hours'
+          duration: duration,
+          durationUnit: durationUnit
         });
       }
     }
@@ -169,30 +170,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     onCalculate(results, values);
   }
 
+
   const handleResetClick = () => {
-    form.reset({
-      eventName: "",
-      participants: {
-        organizers: { count: undefined, days: undefined },
-        assemblers: { count: undefined, days: undefined },
-        suppliers: { count: undefined, days: undefined },
-        exhibitors: { count: undefined, days: undefined },
-        supportTeam: { count: undefined, days: undefined },
-        attendants: { count: undefined, days: undefined },
-        support: { count: undefined, days: undefined },
-      },
-      visitors: {
-        count: undefined,
-        unit: 'hours',
-        hours: undefined,
-        days: undefined,
-      },
-      indirectCosts: {
-        ownershipRegistration: undefined,
-        certificateIssuance: undefined,
-        websitePage: undefined,
-      }
-    });
+    form.reset();
     setVisitorUnit('hours');
     onReset();
   }
@@ -287,7 +267,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             
             <Separator />
             <p className="font-medium">{t('participants.visitorsTitle')}</p>
-            <div className="grid grid-cols-[1fr_auto] gap-4 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 items-end">
               <FormField
                 control={form.control}
                 name="visitors.count"
@@ -352,7 +332,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="0.00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                      <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -364,8 +344,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
-                    <FormControl>
-                       <Input type="number" placeholder="0.00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                     <FormControl>
+                       <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -378,7 +358,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
                      <FormControl>
-                       <Input type="number" placeholder="0.00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                       <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -398,3 +378,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
