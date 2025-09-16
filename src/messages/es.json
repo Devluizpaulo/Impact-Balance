@@ -46,9 +46,11 @@
     },
     "totals": {
       "directUCScost": "Costo Directo UCS (Huella)",
-      "indirectUCScost": "Costo Indirecto UCS (Huella)",
+      "indirectUCScost": "Costos Indirectos (Presupuesto)",
       "totalToCompensate": "Total a Compensar",
-      "totalBudget": "Presupuesto Total"
+      "totalBudget": "Presupuesto Total",
+      "costPerParticipantDay": "Compensación por Participante-Día",
+      "costPerParticipantHour": "Compensación por Participante-Hora"
     }
   },
   "ImpactCalculator": {
@@ -191,11 +193,34 @@
   },
   "DataFiguresPage": {
     "title": "Datos y Cifras Mundiales",
-    "description": "Datos de referencia para los cálculos de la huella, de las Cuentas Nacionales de Huella y Biocapacidad."
+    "description": "Datos de referencia para los cálculos de la huella, de las Cuentas Nacionales de Huella y Biocapacidad.",
+    "table": {
+      "title": "Datos de la Huella Mundial (1961-2024)",
+      "year": "Año",
+      "footprint_prod_capita": "Huella de Producción (gha/capita)",
+      "footprint_consum_capita": "Huella de Consumo (gha/capita)",
+      "biocapacity_capita": "Biocapacidad (gha/capita)",
+      "footprint_prod_total": "Huella Total de Producción (gha)",
+      "footprint_consum_total": "Huella Total de Consumo (gha)",
+      "biocapacity_total": "Biocapacidad Total (gha)",
+      "preliminary": "* Estimaciones Preliminares"
+    },
+    "chart": {
+      "title": "Huella Ecológica Mundial vs. Biocapacidad (Per Cápita)",
+      "description": "Este gráfico muestra la evolución de la demanda humana (Huella Ecológica) en comparación con la capacidad de regeneración de la naturaleza (Biocapacidad) en una base per cápita.",
+      "yAxisLabel": "Hectáreas Globales (gha) por Cápita",
+      "footprint": "Huella Ecológica",
+      "biocapacity": "Biocapacidad"
+    }
   },
   "CountryResultsPage": {
     "title": "Resultados por País",
-    "description": "Vea datos detallados de huella y biocapacidad por país."
+    "description": "Vea datos detallados de huella y biocapacidad por país.",
+    "placeholder": {
+      "title": "Datos del País",
+      "awaitingData": "Esperando Datos",
+      "description": "Por favor, proporcione datos para poblar esta vista."
+    }
   },
   "CookieConsent": {
     "title": "Valoramos su Privacidad",

@@ -3,7 +3,7 @@
 import type { CalculationResult, FormData } from "@/lib/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, ListTree } from "lucide-react";
-import ImpactCharts from "./impact-charts";
+import ImpactCharts from "../impact-charts";
 import ExportButtons from "@/components/export-buttons";
 import { useTranslations } from "next-intl";
 import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow } from "@/components/ui/table";
@@ -93,7 +93,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
 
                         <Separator className="my-4 bg-gray-700" />
 
-                        <div className="grid grid-cols-2 gap-4 px-4 text-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 px-4 text-sm">
                             <div className="space-y-1">
                                 <div className="flex justify-between">
                                     <span className="text-gray-400">{t_report('totals.directUCScost')}</span>
@@ -103,8 +103,16 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                                     <span className="text-gray-400">{t_report('totals.indirectUCScost')}</span>
                                     <span className="font-mono font-medium text-white">{formatCurrency(results.indirectCost)}</span>
                                 </div>
+                                 <div className="flex justify-between">
+                                    <span className="text-gray-400">{t_report('totals.costPerParticipantDay')}</span>
+                                    <span className="font-mono font-medium text-white">{formatCurrency(results.costPerParticipantDay)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-400">{t_report('totals.costPerParticipantHour')}</span>
+                                    <span className="font-mono font-medium text-white">{formatCurrency(results.costPerParticipantHour)}</span>
+                                </div>
                             </div>
-                            <div className="space-y-2 text-right">
+                            <div className="space-y-2 text-right md:text-right self-end">
                                  <div className="flex justify-between items-baseline">
                                     <span className="text-gray-400 text-base">{t_report('totals.totalToCompensate')}</span>
                                     <span className="font-mono font-bold text-lg text-amber-400">{results.totalUCS.toFixed(0)} UCS</span>

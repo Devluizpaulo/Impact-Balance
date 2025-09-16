@@ -46,9 +46,11 @@
     },
     "totals": {
       "directUCScost": "Direct UCS Cost (Footprint)",
-      "indirectUCScost": "Indirect UCS Cost (Footprint)",
+      "indirectUCScost": "Indirect Costs (Budget)",
       "totalToCompensate": "Total to Compensate",
-      "totalBudget": "Total Budget"
+      "totalBudget": "Total Budget",
+      "costPerParticipantDay": "Compensation per Participant-Day",
+      "costPerParticipantHour": "Compensation per Participant-Hour"
     }
   },
   "ImpactCalculator": {
@@ -191,11 +193,34 @@
   },
   "DataFiguresPage": {
     "title": "World Data and Figures",
-    "description": "Reference data for footprint calculations, from the National Footprint and Biocapacity Accounts."
+    "description": "Reference data for footprint calculations, from the National Footprint and Biocapacity Accounts.",
+    "table": {
+      "title": "World Footprint Data (1961-2024)",
+      "year": "Year",
+      "footprint_prod_capita": "Production Footprint (gha/capita)",
+      "footprint_consum_capita": "Consumption Footprint (gha/capita)",
+      "biocapacity_capita": "Biocapacity (gha/capita)",
+      "footprint_prod_total": "Total Production Footprint (gha)",
+      "footprint_consum_total": "Total Consumption Footprint (gha)",
+      "biocapacity_total": "Total Biocapacity (gha)",
+      "preliminary": "* Preliminary Estimates"
+    },
+    "chart": {
+      "title": "World Ecological Footprint vs. Biocapacity (Per Capita)",
+      "description": "This chart shows the evolution of human demand (Ecological Footprint) compared to nature's regenerative capacity (Biocapacity) on a per capita basis.",
+      "yAxisLabel": "Global Hectares (gha) per Capita",
+      "footprint": "Ecological Footprint",
+      "biocapacity": "Biocapacity"
+    }
   },
   "CountryResultsPage": {
     "title": "Country Results",
-    "description": "View detailed footprint and biocapacity data by country."
+    "description": "View detailed footprint and biocapacity data by country.",
+    "placeholder": {
+      "title": "Country Data",
+      "awaitingData": "Awaiting Data",
+      "description": "Please provide data to populate this view."
+    }
   },
   "CookieConsent": {
     "title": "We Value Your Privacy",

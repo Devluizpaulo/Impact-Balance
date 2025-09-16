@@ -45,10 +45,12 @@
       "directCost": "Custo Direto de UCS"
     },
     "totals": {
-      "directUCScost": "Custo Direto de UCS Por Pegada",
-      "indirectUCScost": "Custo Indireto de UCS Por Pegada",
+      "directUCScost": "Custo Direto de UCS (Pegada)",
+      "indirectUCScost": "Custos Indiretos (Orçamento)",
       "totalToCompensate": "Total a Compensar com UC",
-      "totalBudget": "Orçamento Total"
+      "totalBudget": "Orçamento Total",
+      "costPerParticipantDay": "Compensação por Participante-Dia",
+      "costPerParticipantHour": "Compensação por Participante-Hora"
     }
   },
   "ImpactCalculator": {
@@ -191,11 +193,34 @@
   },
   "DataFiguresPage": {
     "title": "Dados e Figuras Mundiais",
-    "description": "Dados de referência para os cálculos da pegada, das Contas Nacionais da Pegada e Biocapacidade."
+    "description": "Dados de referência para os cálculos da pegada, das Contas Nacionais da Pegada e Biocapacidade.",
+    "table": {
+      "title": "Dados da Pegada Mundial (1961-2024)",
+      "year": "Ano",
+      "footprint_prod_capita": "Pegada de Produção (gha/capita)",
+      "footprint_consum_capita": "Pegada de Consumo (gha/capita)",
+      "biocapacity_capita": "Biocapacidade (gha/capita)",
+      "footprint_prod_total": "Pegada Total de Produção (gha)",
+      "footprint_consum_total": "Pegada Total de Consumo (gha)",
+      "biocapacity_total": "Biocapacidade Total (gha)",
+      "preliminary": "* Estimativas Preliminares"
+    },
+    "chart": {
+      "title": "Pegada Ecológica Mundial vs. Biocapacidade (Per Capita)",
+      "description": "Este gráfico mostra a evolução da demanda humana (Pegada Ecológica) em comparação com a capacidade de regeneração da naturez (Biocapacidade) em uma base per capita.",
+      "yAxisLabel": "Hectares Globais (gha) por Capita",
+      "footprint": "Pegada Ecológica",
+      "biocapacity": "Biocapacidade"
+    }
   },
   "CountryResultsPage": {
     "title": "Resultados por País",
-    "description": "Veja dados detalhados de pegada e biocapacidade por país."
+    "description": "Veja dados detalhados de pegada e biocapacidade por país.",
+    "placeholder": {
+      "title": "Dados do País",
+      "awaitingData": "Aguardando Dados",
+      "description": "Por favor, forneça dados para preencher esta visualização."
+    }
   },
   "CookieConsent": {
     "title": "Nós Valorizamos sua Privacidade",

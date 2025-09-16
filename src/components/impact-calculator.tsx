@@ -109,11 +109,12 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
  function onSubmit(values: FormData) {
-    const { ucsCostPerUnit, perCapitaFactors, equivalences } = settings;
+    const { perCapitaFactors, equivalences } = settings;
     const { participants, visitors, indirectCosts } = values;
 
     const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsCount = 0;
+    let totalParticipantDays = 0;
 
     // Calculate staff UCS
     Object.entries(participants).forEach(([key, p]) => {
@@ -121,6 +122,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       const days = p?.days || 0;
       if (count > 0 && days > 0) {
         totalParticipantsCount += count;
+        totalParticipantDays += count * days;
         const ucs = Math.ceil(count * days * perCapitaFactors.dailyUcsConsumption);
         breakdown.push({
           category: key,
@@ -135,24 +137,29 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     // Calculate visitor UCS
     const visitorCount = visitors?.count || 0;
+    let visitorDaysEquivalent = 0;
     if (visitorCount > 0) {
       totalParticipantsCount += visitorCount;
       let ucs = 0;
       let duration = 0;
       let durationUnit: 'days' | 'hours' = 'hours';
+      
+      const hourlyFactor = parseFloat((perCapitaFactors.dailyUcsConsumption / 8).toFixed(3));
 
       if (visitors?.unit === 'days') {
         duration = visitors?.days || 0;
         durationUnit = 'days';
+        visitorDaysEquivalent = visitorCount * duration;
         ucs = Math.ceil(visitorCount * duration * perCapitaFactors.dailyUcsConsumption);
-      } else {
+      } else { // hours
         duration = visitors?.hours || 0;
         durationUnit = 'hours';
-        // Replicating Excel's rounding behavior for precision match
-        const hourlyFactor = parseFloat((perCapitaFactors.hourlyUcsConsumption).toFixed(3)); // 0.0085 -> 0.009
+        visitorDaysEquivalent = visitorCount * duration / 8;
         ucs = Math.ceil(visitorCount * duration * hourlyFactor);
       }
       
+      totalParticipantDays += visitorDaysEquivalent;
+
       if (duration > 0) {
         breakdown.push({
           category: 'visitors',
@@ -165,33 +172,26 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       }
     }
 
-    // Indirect Costs
-    const indirectBreakdown: { category: string; ucs: number; cost: number }[] = [];
+    // Indirect Costs (monetary only)
+    const indirectBreakdown: { category: string; cost: number }[] = [];
     if (indirectCosts) {
       if ((indirectCosts.ownershipRegistration || 0) > 0) {
-        const cost = indirectCosts.ownershipRegistration!;
-        const ucs = Math.ceil(cost / ucsCostPerUnit);
-        indirectBreakdown.push({ category: "ownershipRegistration", ucs, cost });
+        indirectBreakdown.push({ category: "ownershipRegistration", cost: indirectCosts.ownershipRegistration! });
       }
       if ((indirectCosts.certificateIssuance || 0) > 0) {
-        const cost = indirectCosts.certificateIssuance!;
-        const ucs = Math.ceil(cost / ucsCostPerUnit);
-        indirectBreakdown.push({ category: "certificateIssuance", ucs, cost });
+        indirectBreakdown.push({ category: "certificateIssuance", cost: indirectCosts.certificateIssuance! });
       }
       if ((indirectCosts.websitePage || 0) > 0) {
-        const cost = indirectCosts.websitePage!;
-        const ucs = Math.ceil(cost / ucsCostPerUnit);
-        indirectBreakdown.push({ category: "websitePage", ucs, cost });
+        indirectBreakdown.push({ category: "websitePage", cost: indirectCosts.websitePage! });
       }
     }
     
     const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    const indirectUcs = indirectBreakdown.reduce((acc, item) => acc + item.ucs, 0);
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    const totalUCS = directUcs + indirectUcs;
+    const totalUCS = directUcs; // Indirect costs do not contribute to UCS
     const totalCost = directCost + indirectCost;
 
     const maxDays = Math.max(
@@ -205,10 +205,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       totalCost,
       directUcs,
       directCost,
-      indirectUcs,
       indirectCost,
       ucsPerParticipant: totalParticipantsCount > 0 ? totalUCS / totalParticipantsCount : 0,
       costPerParticipant: totalParticipantsCount > 0 ? totalCost / totalParticipantsCount : 0,
+      costPerParticipantDay: totalParticipantDays > 0 ? totalCost / totalParticipantDays : 0,
+      costPerParticipantHour: totalParticipantDays > 0 ? totalCost / (totalParticipantDays * 8) : 0,
       breakdown,
       indirectBreakdown,
       equivalences: {

@@ -51,10 +51,11 @@ export type CalculationResult = {
   totalCost: number;
   directUcs: number;
   directCost: number;
-  indirectUcs: number;
-  indirectCost: number;
+  indirectCost: number; // Indirect costs are purely monetary
   ucsPerParticipant: number;
   costPerParticipant: number;
+  costPerParticipantDay: number;
+  costPerParticipantHour: number;
   breakdown: {
     category: string;
     ucs: number;
@@ -65,7 +66,6 @@ export type CalculationResult = {
   }[];
   indirectBreakdown: {
     category: string;
-    ucs: number;
     cost: number;
   }[];
   equivalences: {

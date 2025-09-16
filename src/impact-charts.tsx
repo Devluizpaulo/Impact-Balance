@@ -27,10 +27,8 @@ export default function ImpactCharts({ results }: ImpactChartsProps) {
         websitePage: t('categories.websitePage'),
     };
     
-    const chartData = [
-        ...results.breakdown,
-        ...results.indirectBreakdown
-    ].filter(item => item.ucs > 0);
+    // Chart data should only include items that contribute to UCS
+    const chartData = results.breakdown.filter(item => item.ucs > 0);
 
 
     const translatedData = chartData.map(item => ({
