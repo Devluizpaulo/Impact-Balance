@@ -20,6 +20,7 @@ import { useTranslations } from "next-intl";
 import { useSettings } from "@/lib/settings";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface ImpactCalculatorProps {
   onCalculate: (data: CalculationResult, formData: FormData) => void;
@@ -180,7 +181,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -192,7 +193,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -256,7 +257,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><Users />{t('participants.quantity')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                      <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -282,7 +283,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><Clock />{t('participants.hours')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.hours')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                      <Input type="number" placeholder={t('participants.hours')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -298,7 +299,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><CalendarDays />{t('participants.days')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+                      <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -317,7 +318,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} />
+                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -330,7 +331,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} />
+                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -343,7 +344,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
                      <FormControl>
-                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} />
+                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
