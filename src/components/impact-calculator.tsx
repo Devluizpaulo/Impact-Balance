@@ -60,20 +60,23 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
   function onSubmit(values: FormData) {
-    const { ucsCostPerUnit, perCapitaFactors } = settings;
+    const { ucsCostPerUnit, perCapitaFactors, equivalences } = settings;
     const { participants, visitors, indirectCosts } = values;
 
     const breakdown: { category: string; ucs: number; cost: number }[] = [];
     
     let totalParticipantsCount = 0;
     
+    // Calculate staff UCS
     const staffUcs = Object.values(participants).reduce((total, p) => {
       const count = p?.count || 0;
       const days = p?.days || 0;
       totalParticipantsCount += count;
-      return total + (count * days * perCapitaFactors.dailyUcsConsumption);
+      const ucs = count * days * perCapitaFactors.dailyUcsConsumption;
+      return total + ucs;
     }, 0);
 
+    // Calculate visitor UCS
     let visitorUcs = 0;
     const visitorCount = visitors?.count || 0;
     totalParticipantsCount += visitorCount;
@@ -83,19 +86,20 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         visitorUcs = visitorCount * visitorDays * perCapitaFactors.dailyUcsConsumption;
     } else {
         const visitorHours = visitors?.hours || 0;
-        visitorUcs = visitorCount * visitorHours * (perCapitaFactors.dailyUcsConsumption / 8);
+        visitorUcs = visitorCount * visitorHours * (perCapitaFactors.dailyUcsConsumption / 8); // Assuming 8-hour day
     }
 
+    // Total Participant UCS
     const participantUcs = staffUcs + visitorUcs;
-
     if (participantUcs > 0) {
       breakdown.push({
         category: "Participants",
         ucs: participantUcs,
-        cost: participantUcs * ucsCostPerUnit,
+        cost: participantUcs * equivalences.ucsQuotationValue, // Corrected to use ucsQuotationValue
       });
     }
 
+    // Indirect Costs
     if (indirectCosts) {
       if ((indirectCosts.ownershipRegistration || 0) > 0) {
         const cost = indirectCosts.ownershipRegistration!;
@@ -114,9 +118,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       }
     }
 
+    // Final Totals
     const totalUCS = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const totalCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
+    // Equivalences
     const maxDays = Math.max(
       ...Object.values(participants).map(p => p?.days || 0),
       (visitors?.unit === 'days' ? (visitors.days || 0) : (visitors?.hours || 0) / 8)
@@ -170,6 +176,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   const handleUnitChange = (unit: 'hours' | 'days') => {
     setVisitorUnit(unit);
     form.setValue('visitors.unit', unit);
+    if (unit === 'hours') {
+      form.setValue('visitors.days', undefined);
+    } else {
+      form.setValue('visitors.hours', undefined);
+    }
   }
   
   const ParticipantField = ({ name, icon, label }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string }) => (
@@ -184,7 +195,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="number" placeholder={t('participants.quantity')} {...field} className="no-spinner" />
+                <Input type="number" placeholder={t('participants.quantity')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -196,7 +207,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="number" placeholder={t('participants.days')} {...field} className="no-spinner" />
+                <Input type="number" placeholder={t('participants.days')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -260,7 +271,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><Users className="w-5 h-5"/>{t('participants.quantity')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.quantity')} {...field} className="no-spinner" />
+                      <Input type="number" placeholder={t('participants.quantity')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -278,37 +289,33 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               </div>
             </div>
 
-            {visitorUnit === 'hours' && (
-              <FormField
-                control={form.control}
-                name="visitors.hours"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2"><Clock className="w-5 h-5"/>{t('participants.hours')}</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder={t('participants.hours')} {...field} className="no-spinner" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="visitors.hours"
+              render={({ field }) => (
+                <FormItem className={cn(visitorUnit === 'days' && 'hidden')}>
+                  <FormLabel className="flex items-center gap-2"><Clock className="w-5 h-5"/>{t('participants.hours')}</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder={t('participants.hours')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            {visitorUnit === 'days' && (
-              <FormField
-                control={form.control}
-                name="visitors.days"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2"><CalendarDays className="w-5 h-5"/>{t('participants.days')}</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder={t('participants.days')} {...field} className="no-spinner" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="visitors.days"
+              render={({ field }) => (
+                <FormItem className={cn(visitorUnit === 'hours' && 'hidden')}>
+                  <FormLabel className="flex items-center gap-2"><CalendarDays className="w-5 h-5"/>{t('participants.days')}</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder={t('participants.days')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
 
             <Separator />
@@ -321,7 +328,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="0.00" {...field} className="no-spinner" />
+                      <Input type="number" placeholder="0.00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -334,7 +341,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
                     <FormControl>
-                       <Input type="number" placeholder="0.00" {...field} className="no-spinner" />
+                       <Input type="number" placeholder="0.00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -347,7 +354,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
                      <FormControl>
-                       <Input type="number" placeholder="0.00" {...field} className="no-spinner" />
+                       <Input type="number" placeholder="0.00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
