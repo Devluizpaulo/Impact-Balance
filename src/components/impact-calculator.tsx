@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +28,54 @@ interface ImpactCalculatorProps {
   onReset: () => void;
 }
 
+// Moved ParticipantField outside of ImpactCalculator to prevent re-renders and focus loss
+const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string, t: (key: string) => string, form: any }) => (
+    <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 text-sm font-normal w-48 flex-shrink-0">
+        {icon} {label}
+      </div>
+      <div className="grid grid-cols-2 gap-2 w-full">
+        <FormField
+          control={form.control}
+          name={`participants.${name}.count`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder={t('participants.quantity')}
+                  {...field}
+                  value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
+                  className="no-spinner"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`participants.${name}.days`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder={t('participants.days')}
+                  {...field}
+                  value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
+                  className="no-spinner"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    </div>
+  );
+
+
 export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalculatorProps) {
   const t = useTranslations('ImpactCalculator');
   const { settings } = useSettings();
@@ -46,8 +95,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         support: { count: undefined, days: undefined },
       },
       visitors: {
-        count: undefined,
         unit: 'hours',
+        count: undefined,
         hours: undefined,
         days: undefined,
       },
@@ -76,7 +125,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         breakdown.push({
           category: key,
           ucs,
-          cost: ucs * equivalences.ucsQuotationValue, // Corrected: use ucsQuotationValue for direct cost
+          cost: ucs * equivalences.ucsQuotationValue,
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -106,7 +155,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         breakdown.push({
           category: 'visitors',
           ucs,
-          cost: ucs * equivalences.ucsQuotationValue, // Corrected: use ucsQuotationValue for direct cost
+          cost: ucs * equivalences.ucsQuotationValue,
           quantity: visitorCount,
           duration: duration,
           durationUnit: durationUnit
@@ -187,42 +236,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     }
   }
   
-  const ParticipantField = ({ name, icon, label }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string }) => (
-    <div className="flex items-center gap-4">
-      <div className="flex items-center gap-2 text-sm font-normal w-48 flex-shrink-0">
-        {icon} {label}
-      </div>
-      <div className="grid grid-cols-2 gap-2 w-full">
-        <FormField
-          control={form.control}
-          name={`participants.${name}.count`}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type="number" placeholder={t('participants.quantity')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name={`participants.${name}.days`}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input type="number" placeholder={t('participants.days')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-    </div>
-  );
-
   return (
-    <Card>
+    <Card className="border-border bg-card text-card-foreground">
       <CardHeader>
         <CardTitle className="font-headline flex items-center"><Calculator className="mr-2" /> {t('title')}</CardTitle>
         <CardDescription>{t('description')}</CardDescription>
@@ -255,13 +270,13 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               </div>
 
               <div className="space-y-3">
-                  <ParticipantField name="organizers" icon={<UserCog className="w-5 h-5"/>} label={t('participants.organizersAndPromoters')} />
-                  <ParticipantField name="assemblers" icon={<Wrench className="w-5 h-5"/>} label={t('participants.assemblers')} />
-                  <ParticipantField name="suppliers" icon={<Briefcase className="w-5 h-5"/>} label={t('participants.suppliers')} />
-                  <ParticipantField name="exhibitors" icon={<Building2 className="w-5 h-5"/>} label={t('participants.exhibitors')} />
-                  <ParticipantField name="supportTeam" icon={<Headset className="w-5 h-5"/>} label={t('participants.supportTeam')} />
-                  <ParticipantField name="attendants" icon={<User className="w-5 h-5"/>} label={t('participants.attendants')} />
-                  <ParticipantField name="support" icon={<Handshake className="w-5 h-5"/>} label={t('participants.support')} />
+                  <ParticipantField form={form} name="organizers" icon={<UserCog className="w-5 h-5"/>} label={t('participants.organizersAndPromoters')} t={t}/>
+                  <ParticipantField form={form} name="assemblers" icon={<Wrench className="w-5 h-5"/>} label={t('participants.assemblers')} t={t}/>
+                  <ParticipantField form={form} name="suppliers" icon={<Briefcase className="w-5 h-5"/>} label={t('participants.suppliers')} t={t}/>
+                  <ParticipantField form={form} name="exhibitors" icon={<Building2 className="w-5 h-5"/>} label={t('participants.exhibitors')} t={t}/>
+                  <ParticipantField form={form} name="supportTeam" icon={<Headset className="w-5 h-5"/>} label={t('participants.supportTeam')} t={t}/>
+                  <ParticipantField form={form} name="attendants" icon={<User className="w-5 h-5"/>} label={t('participants.attendants')} t={t}/>
+                  <ParticipantField form={form} name="support" icon={<Handshake className="w-5 h-5"/>} label={t('participants.support')} t={t}/>
               </div>
             </div>
             
@@ -356,8 +371,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 name="indirectCosts.websitePage"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
-                     <FormControl>
+                    <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>                     <FormControl>
                        <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
