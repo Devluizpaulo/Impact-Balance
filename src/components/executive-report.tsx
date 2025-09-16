@@ -53,7 +53,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                 </TabsList>
                 <ExportButtons results={results} formData={formData} />
             </div>
-            <TabsContent value="summary">
+            <TabsContent value="summary" id="summary-content">
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold mb-1 font-headline text-white">{t('summary.title')}</h3>
                   <p className="text-gray-400">{t('summary.forEvent')} <span className="font-semibold text-primary">{formData.eventName}</span></p>
@@ -121,10 +121,10 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                     </div>
                 </div>
             </TabsContent>
-            <TabsContent value="charts">
+            <TabsContent value="charts" id="charts-content">
                 <ImpactCharts results={results} />
             </TabsContent>
-            <TabsContent value="ai-suggestions">
+            <TabsContent value="ai-suggestions" id="ai-suggestions-content">
                 <AiSuggestions formData={formData} />
             </TabsContent>
         </Tabs>

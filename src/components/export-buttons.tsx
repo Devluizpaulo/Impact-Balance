@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTranslations } from "next-intl";
-// Dynamic imports for client-side only libraries
+
 const loadPdfLibraries = async () => {
   const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
     import('jspdf'),
@@ -20,7 +20,6 @@ const loadPdfLibraries = async () => {
   ]);
   return { jsPDF, html2canvas };
 };
-
 
 interface ExportButtonsProps {
     results: CalculationResult;
@@ -32,9 +31,18 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
     const t = useTranslations('ExportButtons');
     const [isExporting, setIsExporting] = useState(false);
 
+    const getActiveTabContentId = () => {
+        const reportElement = document.getElementById('executive-report');
+        if (!reportElement) return 'summary-content';
+        const activeTabTrigger = reportElement.querySelector<HTMLButtonElement>('[role="tab"][data-state="active"]');
+        return activeTabTrigger?.getAttribute('data-value') + '-content' || 'summary-content';
+    }
+
     const handlePdfExport = async () => {
         setIsExporting(true);
-        const reportElement = document.getElementById('executive-report');
+        const contentId = getActiveTabContentId();
+        const reportElement = document.getElementById(contentId);
+        
         if (!reportElement) {
             toast({
                 variant: "destructive",
@@ -52,6 +60,10 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
               scale: 2, 
               useCORS: true, 
               backgroundColor: null,
+              onclone: (document) => {
+                // Ensure the background is dark for the screenshot
+                document.body.style.backgroundColor = '#111827';
+              }
             });
             
             const imgData = canvas.toDataURL('image/png');
@@ -89,7 +101,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" disabled={isExporting}>
+                <Button variant="outline" className="text-white border-gray-600 bg-gray-800/60 hover:bg-gray-700/60 hover:text-white" disabled={isExporting}>
                     {isExporting ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
@@ -98,12 +110,12 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                      {t('export')}
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <DropdownMenuItem onClick={handlePdfExport} disabled={isExporting}>
+            <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
+                <DropdownMenuItem onClick={handlePdfExport} disabled={isExporting} className="focus:bg-gray-700">
                     <FileText className="mr-2 h-4 w-4" />
                     {t('toPdf')}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExcelExport}>
+                <DropdownMenuItem onClick={handleExcelExport} className="focus:bg-gray-700">
                     <FileSpreadsheet className="mr-2 h-4 w-4" />
                     {t('toExcel')}
                 </DropdownMenuItem>
