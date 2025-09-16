@@ -3,9 +3,13 @@
 import AppShell from "@/components/layout/app-shell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
+import Link from "next/link";
 
 export default function DocumentationPage() {
   const t = useTranslations("DocumentationPage");
+  const chartImage = PlaceHolderImages.find((img) => img.id === "hdi-footprint-chart");
 
   return (
     <AppShell>
@@ -16,12 +20,98 @@ export default function DocumentationPage() {
         </div>
         <Card>
             <CardHeader>
-                <CardTitle>Conteúdo da Documentação</CardTitle>
+                <CardTitle>Footprint and Biocapacity Accounting</CardTitle>
             </CardHeader>
             <CardContent className="prose dark:prose-invert max-w-none">
               <p>
-                Por favor, cole aqui o conteúdo da sua documentação. Eu o formatarei corretamente.
+                Footprint and biocapacity accounting helps us answer the basic research question: How much do people demand from biologically productive surfaces (Ecological Footprint) compared to how much the planet (or a region&apos;s productive surface) can regenerate on those surfaces (biocapacity)?
               </p>
+
+              <h3>What is the Ecological Footprint?</h3>
+              <p>
+                The Ecological Footprint is a measure of the biologically productive land and water area demanded by an activity. It is commonly applied to individuals, populations, institutions, or products. In the National Footprint and Biocapacity Accounts, it refers to the biocapacity demanded by the population of a country or the World to produce and transport resources it consumes, accommodate occupied urban infrastructure, and absorb the waste it generates, using prevailing technology and resource management practices. It is measured in global hectares.
+              </p>
+
+              <h3>What is biocapacity?</h3>
+              <p>
+                Biocapacity is a property of the bioproductive surfaces on Earth. It represents the capacity of biologically productive areas to provide for human demand (people&apos;s Footprints). Like Footprint, it is measured in global hectares. It shows the capacity of the biosphere to regenerate and provide natural resources and services for life. Biocapacity is the lens of Footprint and biocapacity accounting. Such accounting enables us to add up the competing human demands on nature, which include natural resources, waste absorption, water renewal, and productive areas dedicated to urban uses. Footprint and biocapacity accounting allows us to determine how large the material metabolism of human economies is compared to what nature can renew.
+              </p>
+
+              <h3>Biocapacity and Footprint Categories</h3>
+              <ul>
+                <li><strong>Cropland:</strong> Cropland is the most bioproductive of all the land-use types and consists of areas used to produce food and fiber for human consumption, feed for livestock, oil crops, and rubber. Due to lack of globally consistent data sets, current cropland Footprint calculations do not yet take into account the extent to which farming techniques or unsustainable agricultural practices may cause long-term degradation of soil. The cropland Footprint includes crop products allocated to livestock and aquaculture feed mixes, and those used for fibers and materials.</li>
+                <li><strong>Forest Land:</strong> Forests provide for two types of human demand. The forest product Footprint, which is calculated based on the amount of lumber, pulp, timber products, and fuel wood consumed by a country on a yearly basis. It also accommodates the Carbon Footprint.</li>
+                <li><strong>Carbon Footprint:</strong> This component of the Ecological Footprint represents the carbon dioxide emissions from burning fossil fuels and cement production. The Carbon Footprint represents the area necessary to sequester these carbon emissions. The carbon Footprint component of the Ecological Footprint is calculated as the amount of forest land needed to absorb these carbon dioxide emissions for good. Currently, the carbon Footprint is the largest portion of humanity’s Footprint. The Carbon Footprint of consumption also includes embodied carbon in imported goods.</li>
+                <li><strong>Fishing grounds:</strong> The fishing grounds Footprint is calculated based on estimates of the maximum sustainable catch for a variety of fish species. These sustainable catch estimates are converted into an equivalent mass of primary production based on the various species’ trophic levels. This estimate of maximum harvestable primary production is then divided amongst the continental shelf areas of the world. Fish caught and used in aquaculture feed mixes are included.</li>
+                <li><strong>Grazing land:</strong> Grazing land is used to raise livestock for meat, dairy, hide, and wool products. The grazing land Footprint is calculated by comparing the amount of livestock feed available in a country with the amount of feed required for all livestock in that year, with the remainder of feed demand assumed to come from grazing land.</li>
+                <li><strong>Built-up land:</strong> The built-up land Footprint is calculated based on the area of land covered by human infrastructure — transportation, housing, industrial structures, and reservoirs for hydropower. In absence of better evidence, we typically assume that built-up land occupies what would previously have been cropland.</li>
+              </ul>
+
+              <h3>What is a global hectare (gha)?</h3>
+              <p>
+                A global hectare is a biologically productive hectare with world average productivity. Because each unit of space harbours a different portion of the global regenerative capacity, each unit is counted proportional to its global biocapacity share. For this reason, hectares are adjusted proportionally to their productivity and are expressed in global hectares.
+              </p>
+
+              <h3>Measuring Sustainable Development with HDI and Footprint Assessments</h3>
+              
+              {chartImage && (
+                <div className="my-6">
+                  <Image
+                    src={chartImage.imageUrl}
+                    alt={chartImage.description}
+                    width={800}
+                    height={600}
+                    className="mx-auto rounded-md"
+                    data-ai-hint={chartImage.imageHint}
+                  />
+                </div>
+              )}
+
+              <p>
+                The essence of sustainable development can be measured by tracking its two core dimensions: 1) economic and social development and 2) environmental sustainability. For details, consult{" "}
+                <Link href="https://www.footprintnetwork.org/our-work/sustainable-development/" target="_blank" rel="noopener noreferrer">https://www.footprintnetwork.org/our-work/sustainable-development/</Link>.
+              </p>
+              <p>
+                Economic and social development, or human well-being, can be approximated with UNDP’s widely recognized Human Development Index (HDI). UNDP considers an HDI of more than 0.7 to be “high human development.” Environmental sustainability, or living within the means of nature, can be evaluated with the Ecological Footprint. The HDI-Footprint graph above shows how a population&apos;s HDI compares to its resource demand. The graph illustrates the challenge of creating a globally-reproducible high level of human well-being without overtaxing the planet’s ecological resource base.
+              </p>
+              <p>
+                Note that the comparison against global average biocapacity provides a global overview. This approach can be further extended by comparing Footprints also against local biocapacity. For most countries, local availability of biocapacity (and the financial means to access biocapacity from elsewhere) is a more significant determinant of resource access than the global average.
+              </p>
+
+              <h3>Appendix: Background on Ecological Footprint</h3>
+              <p>Simple introductions to Footprint accounting:</p>
+              <ul>
+                <li><Link href="https://www.footprintnetwork.org/our-work/ecological-footprint/" target="_blank" rel="noopener noreferrer">https://www.footprintnetwork.org/our-work/ecological-footprint/</Link></li>
+                <li><Link href="https://www.footprintnetwork.org/what-ecological-footprints-measure/" target="_blank" rel="noopener noreferrer">https://www.footprintnetwork.org/what-ecological-footprints-measure/</Link></li>
+                <li><Link href="https://www.footprintnetwork.org/what-biocapacity-measures/" target="_blank" rel="noopener noreferrer">https://www.footprintnetwork.org/what-biocapacity-measures/</Link></li>
+                <li><Link href="https://www.footprintnetwork.org/resources/data/" target="_blank" rel="noopener noreferrer">https://www.footprintnetwork.org/resources/data/</Link></li>
+              </ul>
+              
+              <p>Methodology Papers on the National Footprint and Biocapacity Accounts:</p>
+              <ul>
+                  <li>Lin et al. (2018) Ecological Footprint Accounting for Countries: Updates and Results of the National Footprint Accounts, 2012–2018, Resources, 7(3), 58.</li>
+                  <li>Borucke et al. (2013) Accounting for demand and supply of the Biosphere’s regenerative capacity: the National Footprint Accounts’ underlying methodology and framework. Ecological Indicators, 24, 518-533.</li>
+              </ul>
+
+              <p>A more thorough introduction to the Footprint concept:</p>
+              <ul>
+                  <li>Wackernagel, M.; Lin, D.; Evans, M.; Hanscom, L.; Raven, P. Defying the Footprint Oracle: Implications of Country Resource Trends. Sustainability 2019, 11, 2164.</li>
+                  <li>Wackernagel, M., Hanscom, L., Jayasinghe, P., Lin, D., Murthy, A., Neill, E., Raven, P., 2021. The importance of resource security for poverty eradication. Nature Sustainability. Volume 4, pages731–738. https://doi.org/10.1038/s41893-021-00708-4. Plus supplementary information for information on the methodology.</li>
+                  <li>Release notes, 2025 edition</li>
+              </ul>
+
+              <p>A list of academic literature on the Ecological Footprint:</p>
+              <p><Link href="http://www.footprintnetwork.org/resources/journal-articles/" target="_blank" rel="noopener noreferrer">www.footprintnetwork.org/resources/journal-articles/</Link></p>
+
+              <p>Ecological Footprint Reviews by national governments:</p>
+              <p><Link href="http://www.footprintnetwork.org/reviews" target="_blank" rel="noopener noreferrer">www.footprintnetwork.org/reviews</Link></p>
+              
+              <p>Frequently asked questions:</p>
+              <p><Link href="http://www.footprintnetwork.org/faq" target="_blank" rel="noopener noreferrer">www.footprintnetwork.org/faq</Link></p>
+
+              <p>Limitations and Criticisms:</p>
+              <p><Link href="http://www.footprintnetwork.org/our-work/ecological-footprint/limitations-and-criticisms/" target="_blank" rel="noopener noreferrer">www.footprintnetwork.org/our-work/ecological-footprint/limitations-and-criticisms/</Link></p>
+
             </CardContent>
         </Card>
       </div>

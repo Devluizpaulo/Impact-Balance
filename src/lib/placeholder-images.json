@@ -5,6 +5,12 @@
       "description": "Lush green forest canopy from above.",
       "imageUrl": "https://picsum.photos/seed/impact-hero/1920/1080",
       "imageHint": "forest canopy"
+    },
+    {
+      "id": "hdi-footprint-chart",
+      "description": "A chart showing the Ecological Footprint and Human Development Index of Countries in 2022.",
+      "imageUrl": "https://picsum.photos/seed/hdi-chart/800/600",
+      "imageHint": "development chart"
     }
   ]
 }
