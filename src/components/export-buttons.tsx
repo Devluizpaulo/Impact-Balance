@@ -58,23 +58,34 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             img.src = '/logo.png';
             await new Promise(resolve => { img.onload = resolve; });
 
-            const pageHeight = doc.internal.pageSize.height;
             const pageWidth = doc.internal.pageSize.width;
             const margin = 14;
+            const logoWidth = 30; // Desired width
+            const logoHeight = (img.height * logoWidth) / img.width; // Maintain aspect ratio
+            const headerY = 20;
 
             // Add logo
-            doc.addImage(img, 'PNG', margin, 20, 30, 10);
+            doc.addImage(img, 'PNG', margin, headerY, logoWidth, logoHeight);
 
-            // Add title next to the logo
+            // Add title - Right Aligned
             doc.setFontSize(16);
             doc.setTextColor(30, 30, 30);
-            doc.text(t_report('title'), margin + 35, 22);
+            const reportTitle = t_report('title');
+            doc.text(reportTitle, pageWidth - margin, headerY + logoHeight / 2, { align: 'right' });
+            
+            // Separator line
+            doc.setDrawColor(220, 220, 220); // Light gray
+            doc.line(margin, headerY + logoHeight + 5, pageWidth - margin, headerY + logoHeight + 5);
 
-            // Event Name - Highlighted
-            doc.setFontSize(12);
+            let finalY = headerY + logoHeight + 15;
+
+            // Event Name - Centered and Highlighted
+            doc.setFontSize(14);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(0, 0, 0);
-            doc.text(formData.eventName, margin, 40);
+            doc.text(formData.eventName, pageWidth / 2, finalY, { align: 'center' });
+            
+            finalY += 10;
             
             // Reset font style
             doc.setFont('helvetica', 'normal');
@@ -83,9 +94,9 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             doc.setFontSize(10);
             doc.setTextColor(100);
             const introText = doc.splitTextToSize(t_report('introduction'), pageWidth - (margin * 2));
-            doc.text(introText, margin, 50);
+            doc.text(introText, margin, finalY);
 
-            let finalY = 50 + (introText.length * 5) + 5;
+            finalY += (introText.length * 5) + 5;
 
 
             // --- Breakdown Table ---
@@ -102,7 +113,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 head: [[t_report('table.participants'), t_report('table.quantity'), t_report('table.duration'), t_report('table.totalUCS'), t_report('table.directCost')]],
                 body: tableData,
                 theme: 'striped',
-                headStyles: { fillColor: [4, 120, 87] }, // Primary color
+                headStyles: { fillColor: [22, 101, 52] }, // Primary color
                 margin: { left: margin, right: margin }
             });
             
