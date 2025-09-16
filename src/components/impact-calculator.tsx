@@ -318,7 +318,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                      <Input type="number" placeholder="0,00" {...field} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -331,7 +331,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                      <Input type="number" placeholder="0,00" {...field} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -344,7 +344,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>
                      <FormControl>
-                      <Input type="number" placeholder="R$ 0,00" {...field} onChange={e => field.onChange(Number(e.target.value))} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                      <Input type="number" placeholder="0,00" {...field} className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
