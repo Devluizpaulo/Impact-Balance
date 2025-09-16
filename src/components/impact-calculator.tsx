@@ -148,7 +148,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       } else {
         duration = visitors?.hours || 0;
         durationUnit = 'hours';
-        ucs = Math.ceil(visitorCount * duration * perCapitaFactors.hourlyUcsConsumption);
+        // Replicating Excel's rounding behavior for precision match
+        const hourlyFactor = parseFloat((perCapitaFactors.hourlyUcsConsumption).toFixed(3)); // 0.0085 -> 0.009
+        ucs = Math.ceil(visitorCount * duration * hourlyFactor);
       }
       
       if (duration > 0) {
@@ -264,8 +266,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               <div className='flex items-center gap-4'>
                 <p className="font-medium text-sm w-48 flex-shrink-0">{t('participants.staffTitle')}</p>
                 <div className="grid grid-cols-2 gap-2 w-full">
-                  <p className="font-medium text-sm text-muted-foreground">{t('participants.quantity')}</p>
-                  <p className="font-medium text-sm text-muted-foreground">{t('participants.days')}</p>
+                  <p className="font-medium text-sm text-muted-foreground flex items-center gap-2"><Users className="w-4 h-4"/>{t('participants.quantity')}</p>
+                  <p className="font-medium text-sm text-muted-foreground flex items-center gap-2"><CalendarDays className="w-4 h-4"/>{t('participants.days')}</p>
                 </div>
               </div>
 
@@ -392,5 +394,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-    
