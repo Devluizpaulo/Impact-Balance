@@ -41,7 +41,7 @@ export default function Home() {
           <div className="xl:col-span-1">
             <ImpactCalculator onCalculate={handleCalculation} onReset={handleReset} />
           </div>
-          <div className="xl:col-span-1 sticky top-20">
+          <div className="xl:col-span-1 sticky top-8">
             <Card className="h-full min-h-[600px]" id="report-content">
               <CardContent className="p-6 h-full">
                 {results && formData ? (
