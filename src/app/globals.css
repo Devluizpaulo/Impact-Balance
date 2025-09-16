@@ -36,6 +36,8 @@
     --sidebar-accent: 0 0% 100%;
     --sidebar-accent-foreground: 240 10% 3.9%;
     --sidebar-ring: 142 76% 36%;
+
+    --font-sans: "Inter", sans-serif;
   }
   .dark {
     --background: 240 10% 3.9%;

@@ -169,41 +169,37 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   }
   
   const ParticipantField = ({ name, icon, label }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string }) => (
-    <FormItem>
-      <div className="grid grid-cols-2 items-center gap-4">
-        <FormLabel className="flex items-center gap-2 text-sm font-normal -mr-4">{icon} {label}</FormLabel>
-        <div className="grid grid-cols-2 gap-2">
-          <FormField
-            control={form.control}
-            name={`participants.${name}.count`}
-            render={({ field }) => (
-                <FormControl>
-                  <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
-                </FormControl>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name={`participants.${name}.days`}
-            render={({ field }) => (
-                <FormControl>
-                  <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
-                </FormControl>
-            )}
-          />
-        </div>
+    <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 text-sm font-normal w-48 flex-shrink-0">
+        {icon} {label}
       </div>
-      <FormField
-        control={form.control}
-        name={`participants.${name}.count`}
-        render={() => <FormMessage />}
-      />
-      <FormField
-        control={form.control}
-        name={`participants.${name}.days`}
-        render={() => <FormMessage />}
-      />
-    </FormItem>
+      <div className="grid grid-cols-2 gap-2 w-full">
+        <FormField
+          control={form.control}
+          name={`participants.${name}.count`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input type="number" placeholder={t('participants.quantity')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={`participants.${name}.days`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input type="number" placeholder={t('participants.days')} {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    </div>
   );
 
   return (
@@ -231,8 +227,15 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             
             <Separator />
             <div className="space-y-4">
-              <p className="font-medium">{t('participants.staffTitle')}</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+              <div className='flex items-center gap-4'>
+                <p className="font-medium text-sm w-48 flex-shrink-0">{t('participants.staffTitle')}</p>
+                <div className="grid grid-cols-2 gap-2 w-full">
+                  <p className="font-medium text-sm text-muted-foreground">{t('participants.quantity')}</p>
+                  <p className="font-medium text-sm text-muted-foreground">{t('participants.days')}</p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
                   <ParticipantField name="organizers" icon={<UserCog />} label={t('participants.organizersAndPromoters')} />
                   <ParticipantField name="assemblers" icon={<Wrench />} label={t('participants.assemblers')} />
                   <ParticipantField name="suppliers" icon={<Briefcase />} label={t('participants.suppliers')} />
