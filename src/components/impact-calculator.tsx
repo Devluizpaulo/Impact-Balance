@@ -117,6 +117,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsCount = 0;
     let totalParticipantDays = 0;
+    let totalParticipantHours = 0;
 
     // Calculate staff UCS
     Object.entries(participants).forEach(([key, p]) => {
@@ -125,6 +126,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       if (count > 0 && days > 0) {
         totalParticipantsCount += count;
         totalParticipantDays += count * days;
+        totalParticipantHours += count * days * 8; // Assuming 8-hour day
         const ucs = Math.ceil(count * days * perCapitaFactors.dailyUcsConsumption);
         breakdown.push({
           category: key,
@@ -139,7 +141,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     // Calculate visitor UCS
     const visitorCount = visitors?.count || 0;
-    let visitorDaysEquivalent = 0;
     if (visitorCount > 0) {
       totalParticipantsCount += visitorCount;
       let ucs = 0;
@@ -149,17 +150,18 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       if (visitors?.unit === 'days') {
         duration = visitors?.days || 0;
         durationUnit = 'days';
-        visitorDaysEquivalent = visitorCount * duration;
+        totalParticipantDays += visitorCount * duration;
+        totalParticipantHours += visitorCount * duration * 8; // Assuming 8-hour day
         ucs = Math.ceil(visitorCount * duration * perCapitaFactors.dailyUcsConsumption);
       } else { // hours
         duration = visitors?.hours || 0;
         durationUnit = 'hours';
+        totalParticipantHours += visitorCount * duration;
+        totalParticipantDays += (visitorCount * duration) / 8; // Assuming 8-hour day
         const hourlyFactor = perCapitaFactors.dailyUcsConsumption / 24;
-        visitorDaysEquivalent = (visitorCount * duration) / 8; // Assuming an 8-hour day
         ucs = Math.ceil(visitorCount * duration * hourlyFactor);
       }
       
-      totalParticipantDays += visitorDaysEquivalent;
 
       if (duration > 0) {
         breakdown.push({
@@ -210,7 +212,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       ucsPerParticipant: totalParticipantsCount > 0 ? totalUCS / totalParticipantsCount : 0,
       costPerParticipant: totalParticipantsCount > 0 ? totalCost / totalParticipantsCount : 0,
       costPerParticipantDay: totalParticipantDays > 0 ? totalCost / totalParticipantDays : 0,
-      costPerParticipantHour: totalParticipantDays > 0 ? totalCost / (totalParticipantDays * 8) : 0,
+      costPerParticipantHour: totalParticipantHours > 0 ? totalCost / totalParticipantHours : 0,
       breakdown,
       indirectBreakdown,
       equivalences: {
