@@ -157,9 +157,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         duration = visitors?.hours || 0;
         durationUnit = 'hours';
         totalParticipantHours += visitorCount * duration;
-        totalParticipantDays += (visitorCount * duration) / 8; // Assuming 8-hour day
+        const visitorDaysEquivalent = (visitorCount * duration) / 8; // Assuming 8-hour day
+        totalParticipantDays += visitorDaysEquivalent;
+        
         const hourlyFactor = perCapitaFactors.dailyUcsConsumption / 24;
-        ucs = Math.ceil(visitorCount * duration * hourlyFactor);
+        ucs = visitorCount * duration * hourlyFactor; // Removed Math.ceil
       }
       
 
@@ -399,3 +401,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    

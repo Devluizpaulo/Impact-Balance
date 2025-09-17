@@ -81,7 +81,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                                 <TableCell className="font-sans font-medium text-foreground/90">{participantCategories[item.category] || item.category}</TableCell>
                                 <TableCell className="text-right text-foreground/90">{item.quantity}</TableCell>
                                 <TableCell className="text-right text-foreground/90">{item.duration} <span className="text-xs text-muted-foreground">{t_calc(`participants.${item.durationUnit}` as any)}</span></TableCell>
-                                <TableCell className="text-right text-primary font-semibold">{item.ucs.toFixed(0)}</TableCell>
+                                <TableCell className="text-right text-primary font-semibold">{item.ucs.toFixed(2)}</TableCell>
                                 <TableCell className="text-right text-primary/90 font-semibold">{formatCurrency(item.cost)}</TableCell>
                             </TableRow>
                         ))}
@@ -125,7 +125,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                     <div className="space-y-2 text-right md:text-right self-end">
                           <div className="flex justify-between items-baseline">
                             <span className="text-muted-foreground text-base">{t_report('totals.totalToCompensate')}</span>
-                            <span className="font-mono font-bold text-lg text-primary">{results.totalUCS.toFixed(0)} UCS</span>
+                            <span className="font-mono font-bold text-lg text-primary">{results.totalUCS.toFixed(2)} UCS</span>
                         </div>
                           <div className="flex justify-between items-baseline">
                             <span className="text-muted-foreground text-base">{t_report('totals.totalBudget')}</span>
@@ -142,3 +142,5 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
       </div>
     );
 }
+
+    
