@@ -215,7 +215,6 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 { Item: t_report('totals.costPerParticipantHour'), Value: results.costPerParticipantHour },
             ];
             const wsSummary = XLSX.utils.json_to_sheet(summaryData, { skipHeader: true });
-            wsSummary['B3'].z = '0.0000'; // Format total UCS
             XLSX.utils.book_append_sheet(wb, wsSummary, t('excel.summarySheet'));
 
             // Detailed Breakdown Sheet
@@ -223,7 +222,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 [t('excel.category')]: participantCategories[item.category] || item.category,
                 [t('excel.quantity')]: item.quantity,
                 [t('excel.duration')]: `${item.duration} ${t_calc(`participants.${item.durationUnit}` as any)}`,
-                [t('excel.ucs')]: item.ucs, // Keep as a fraction
+                [t('excel.ucs')]: item.ucs,
                 [t('excel.cost')]: item.cost
             }));
 
@@ -287,3 +286,6 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
 
     
 
+
+
+    
