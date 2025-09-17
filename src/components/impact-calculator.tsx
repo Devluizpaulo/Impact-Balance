@@ -142,40 +142,46 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     // Calculate visitor UCS
     const visitorCount = visitors?.count || 0;
     if (visitorCount > 0) {
-      totalParticipantsCount += visitorCount;
-      let ucs = 0;
-      let duration = 0;
-      let durationUnit: 'days' | 'hours' = 'hours';
-      
-      if (visitors?.unit === 'days') {
-        duration = visitors?.days || 0;
-        durationUnit = 'days';
-        totalParticipantDays += visitorCount * duration;
-        totalParticipantHours += visitorCount * duration * 8; // Assuming 8-hour day
-        ucs = Math.ceil(visitorCount * duration * perCapitaFactors.dailyUcsConsumption);
-      } else { // hours
-        duration = visitors?.hours || 0;
-        durationUnit = 'hours';
-        const visitorTotalHours = visitorCount * duration;
-        totalParticipantHours += visitorTotalHours;
-        const visitorDaysEquivalent = visitorTotalHours / 8; // Assuming 8-hour day
-        totalParticipantDays += visitorDaysEquivalent;
-        
-        // Calculate hourly UCS as a fraction of daily consumption
-        ucs = visitorTotalHours * (perCapitaFactors.dailyUcsConsumption / 24);
-      }
-      
+        totalParticipantsCount += visitorCount;
+        let ucs = 0;
+        let cost = 0;
+        let duration = 0;
+        let durationUnit: 'days' | 'hours' = 'hours';
 
-      if (duration > 0) {
-        breakdown.push({
-          category: 'visitors',
-          ucs,
-          cost: ucs * equivalences.ucsQuotationValue,
-          quantity: visitorCount,
-          duration: duration,
-          durationUnit: durationUnit
-        });
-      }
+        if (visitors.unit === 'days') {
+            duration = visitors.days || 0;
+            durationUnit = 'days';
+            if (duration > 0) {
+                totalParticipantDays += visitorCount * duration;
+                totalParticipantHours += visitorCount * duration * 8;
+                ucs = Math.ceil(visitorCount * duration * perCapitaFactors.dailyUcsConsumption);
+                cost = ucs * equivalences.ucsQuotationValue;
+            }
+        } else { // hours
+            duration = visitors.hours || 0;
+            durationUnit = 'hours';
+            if (duration > 0) {
+                const visitorTotalHours = visitorCount * duration;
+                totalParticipantHours += visitorTotalHours;
+                const visitorDaysEquivalent = visitorTotalHours / 8;
+                totalParticipantDays += visitorDaysEquivalent;
+                
+                // Use fractional UCS for hours
+                ucs = (visitorCount * duration) / 24;
+                cost = ucs * equivalences.ucsQuotationValue;
+            }
+        }
+
+        if (duration > 0) {
+            breakdown.push({
+                category: 'visitors',
+                ucs,
+                cost,
+                quantity: visitorCount,
+                duration: duration,
+                durationUnit: durationUnit,
+            });
+        }
     }
 
     // Indirect Costs (monetary only)
@@ -402,5 +408,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
 
     
