@@ -71,7 +71,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const seloHeight = (seloImg.height * seloWidth) / seloImg.width;
             const seloX = (pageWidth - seloWidth) / 2;
             const seloY = (pageHeight - seloHeight) / 2 + 20; // Center it lower on the page
-            doc.setGState(new (doc as any).GState({ opacity: 0.08 })); // Slightly more visible
+            doc.setGState(new (doc as any).GState({ opacity: 0.05 })); // Slightly more visible
             doc.addImage(seloImg, 'PNG', seloX, seloY, seloWidth, seloHeight);
             doc.setGState(new (doc as any).GState({ opacity: 1 }));
 
