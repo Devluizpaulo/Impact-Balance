@@ -10,6 +10,7 @@ export const pathnames = {
   '/data-figures': '/data-figures',
   '/country-results': '/country-results',
   '/documentation': '/documentation',
+  '/scientific-review': '/scientific-review',
 } satisfies Pathnames<typeof locales>;
 
 export const {Link, redirect, usePathname, useRouter} =

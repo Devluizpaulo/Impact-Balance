@@ -11,6 +11,12 @@
       "description": "A chart showing the Ecological Footprint and Human Development Index of Countries in 2022.",
       "imageUrl": "https://picsum.photos/seed/hdi-chart/800/600",
       "imageHint": "development chart"
+    },
+    {
+      "id": "review-policy-logos",
+      "description": "Logos for Global Footprint Network, York University, and FoDaFo.",
+      "imageUrl": "https://picsum.photos/seed/review-logos/800/100",
+      "imageHint": "organization logos"
     }
   ]
 }

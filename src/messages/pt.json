@@ -18,6 +18,7 @@
     "dataFigures": "Dados Mundiais",
     "countryResults": "Resultados por País",
     "documentation": "Documentação",
+    "scientificReview": "Revisão Científica",
     "logout": "Sair"
   },
   "HomePage": {
@@ -188,6 +189,10 @@
     "title": "Documentação",
     "description": "Documentação do projeto e metodologia."
   },
+  "ScientificReviewPage": {
+    "title": "Revisão Científica",
+    "description": "Política de Licenciamento e Revisão Científica."
+  },
   "DataFiguresPage": {
     "title": "Dados e Figuras Mundiais",
     "description": "Dados de referência para os cálculos da pegada, das Contas Nacionais da Pegada e Biocapacidade.",
@@ -247,7 +252,7 @@
   },
   "AiSuggestions": {
     "title": "Sugestões com IA",
-    "description": "Recomendações práticas para reduzir a pegada do seu evento.",
+    "description": "Recomendações práticas para reduzir a pegada do seu evento.",
     "loading": "Gerando sugestões...",
     "error": {
       "title": "Erro",
@@ -256,5 +261,3 @@
     }
   }
 }
-
-    

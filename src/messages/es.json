@@ -18,6 +18,7 @@
     "dataFigures": "Datos Mundiales",
     "countryResults": "Resultados por País",
     "documentation": "Documentación",
+    "scientificReview": "Revisión Científica",
     "logout": "Cerrar Sesión"
   },
   "HomePage": {
@@ -188,6 +189,10 @@
     "title": "Documentación",
     "description": "Documentación del proyecto y metodología."
   },
+  "ScientificReviewPage": {
+    "title": "Revisión Científica",
+    "description": "Política de Licenciamiento y Revisión Científica."
+  },
   "DataFiguresPage": {
     "title": "Datos y Cifras Mundiales",
     "description": "Datos de referencia para los cálculos de la huella, de las Cuentas Nacionales de Huella y Biocapacidad.",
@@ -256,5 +261,3 @@
     }
   }
 }
-
-    

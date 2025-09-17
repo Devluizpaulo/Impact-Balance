@@ -1,6 +1,6 @@
 "use client"
 
-import { BookText, Calculator, Map, Settings, PanelLeft, Lock, LogOut, FilePieChart, Globe2 } from "lucide-react";
+import { BookText, Calculator, Map, Settings, PanelLeft, Lock, LogOut, FilePieChart, Globe2, FileText } from "lucide-react";
 import { Link, usePathname, useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -42,6 +42,11 @@ const navItemsConfig: NavItem[] = [
     href: "/documentation",
     icon: <BookText className="h-5 w-5" />,
     translationKey: 'documentation',
+  },
+  {
+    href: "/scientific-review",
+    icon: <FileText className="h-5 w-5" />,
+    translationKey: 'scientificReview',
   },
   {
     href: "/data-figures", 

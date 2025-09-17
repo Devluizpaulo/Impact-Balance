@@ -18,6 +18,7 @@
     "dataFigures": "World Data",
     "countryResults": "Country Results",
     "documentation": "Documentation",
+    "scientificReview": "Scientific Review",
     "logout": "Logout"
   },
   "HomePage": {
@@ -188,6 +189,10 @@
     "title": "Documentation",
     "description": "Project documentation and methodology."
   },
+  "ScientificReviewPage": {
+    "title": "Scientific Review",
+    "description": "Licensing and Scientific Review Policy."
+  },
   "DataFiguresPage": {
     "title": "World Data and Figures",
     "description": "Reference data for footprint calculations, from the National Footprint and Biocapacity Accounts.",
@@ -256,5 +261,3 @@
     }
   }
 }
-
-    
