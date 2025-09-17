@@ -67,11 +67,11 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             await new Promise(resolve => { seloImg.onload = resolve; });
 
              // --- Add Seal Watermark ---
-            const seloWidth = 120; // Increased size
+            const seloWidth = 140; // Increased size for PDF
             const seloHeight = (seloImg.height * seloWidth) / seloImg.width;
             const seloX = (pageWidth - seloWidth) / 2;
-            const seloY = (pageHeight - seloHeight) / 2 + 20; // Center it lower on the page
-            doc.setGState(new (doc as any).GState({ opacity: 0.05 })); // Slightly more visible
+            const seloY = (pageHeight - seloHeight) / 2; // Center it
+            doc.setGState(new (doc as any).GState({ opacity: 0.04 })); // Lighter
             doc.addImage(seloImg, 'PNG', seloX, seloY, seloWidth, seloHeight);
             doc.setGState(new (doc as any).GState({ opacity: 1 }));
 
@@ -116,7 +116,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 participantCategories[item.category] || item.category,
                 item.quantity,
                 `${item.duration} ${t_calc(`participants.${item.durationUnit}` as any)}`,
-                item.ucs.toFixed(0),
+                item.ucs.toFixed(4),
                 formatCurrency(item.cost)
             ]);
 
@@ -156,7 +156,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             ];
 
             const totalsItems = [
-                [t_report('totals.totalToCompensate'), `${results.totalUCS.toFixed(0)} UCS`],
+                [t_report('totals.totalToCompensate'), `${results.totalUCS.toFixed(4)} UCS`],
                 [t_report('totals.totalBudget'), formatCurrency(results.totalCost)],
             ];
 
@@ -215,6 +215,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 { Item: t_report('totals.costPerParticipantHour'), Value: results.costPerParticipantHour },
             ];
             const wsSummary = XLSX.utils.json_to_sheet(summaryData, { skipHeader: true });
+            wsSummary['B3'].z = '0.0000'; // Format total UCS
             XLSX.utils.book_append_sheet(wb, wsSummary, t('excel.summarySheet'));
 
             // Detailed Breakdown Sheet
@@ -222,7 +223,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 [t('excel.category')]: participantCategories[item.category] || item.category,
                 [t('excel.quantity')]: item.quantity,
                 [t('excel.duration')]: `${item.duration} ${t_calc(`participants.${item.durationUnit}` as any)}`,
-                [t('excel.ucs')]: item.ucs,
+                [t('excel.ucs')]: item.ucs, // Keep as a fraction
                 [t('excel.cost')]: item.cost
             }));
 
@@ -235,6 +236,8 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             }));
 
             const wsDetails = XLSX.utils.json_to_sheet([...directData, ...indirectData]);
+            // Set number format for UCS and Cost columns
+            wsDetails['!cols'] = [ {wch:30}, {wch:10}, {wch:15}, {wch:15, z: '0.0000'}, {wch:15, z: '"R$"#,##0.00'} ];
             XLSX.utils.book_append_sheet(wb, wsDetails, t('excel.detailsSheet'));
 
             const fileName = `${formData.eventName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_impact_report.xlsx`;
@@ -256,7 +259,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         <div id="export-buttons">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="text-foreground border-border hover:bg-accent" disabled={isExporting}>
+                    <Button variant="outline" className="text-gray-700 border-gray-300 hover:bg-gray-100" disabled={isExporting}>
                         {isExporting ? (
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         ) : (
@@ -283,3 +286,4 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
     
 
     
+

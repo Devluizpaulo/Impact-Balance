@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
@@ -37,10 +38,10 @@ export default function ImpactCharts({ results }: ImpactChartsProps) {
     }));
 
     return (
-        <Card className="bg-card text-card-foreground">
+        <Card className="bg-white/70 backdrop-blur-sm border-gray-200 text-gray-800">
             <CardHeader>
-                <CardTitle className="font-headline text-foreground">{t('title')}</CardTitle>
-                <CardDescription className="text-muted-foreground">{t('description')}</CardDescription>
+                <CardTitle className="font-headline text-gray-900">{t('title')}</CardTitle>
+                <CardDescription className="text-gray-600">{t('description')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={{
@@ -55,7 +56,7 @@ export default function ImpactCharts({ results }: ImpactChartsProps) {
                         <YAxis tickLine={false} axisLine={false} tickMargin={10} tick={{ fill: 'hsl(var(--muted-foreground))' }}/>
                         <ChartTooltip
                           cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
-                          content={<ChartTooltipContent indicator="dot" className="bg-card border" />}
+                          content={<ChartTooltipContent indicator="dot" className="bg-white/80 backdrop-blur-sm border-gray-200" />}
                         />
                         <Bar dataKey="ucs" fill="var(--color-ucs)" radius={[4, 4, 0, 0]} />
                     </BarChart>

@@ -40,95 +40,98 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
     };
 
     return (
-      <div id="executive-report" className="bg-card text-card-foreground p-6 rounded-lg h-full relative flex flex-col">
-          <div className="absolute inset-0 flex justify-center pointer-events-none pt-20">
+      <div id="executive-report" className="bg-white text-gray-800 p-6 sm:p-8 rounded-lg h-full relative flex flex-col shadow-lg">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-4 sm:p-8">
               <Image 
                   src="/selo.png" 
                   alt="Selo de Certificação"
-                  width={600}
-                  height={600}
+                  layout="fill"
+                  objectFit="contain"
+                  objectPosition="center"
                   className="opacity-5"
               />
           </div>
-          <div id="report-content-for-export" className="flex-grow space-y-6 z-10">
+          <div id="report-content-for-export" className="flex-grow space-y-6 z-10 relative">
             <div className="flex flex-wrap justify-between items-start gap-4">
                 <div>
-                  <h3 className="text-2xl font-bold font-headline text-foreground">{t_report('title')}</h3>
-                  <p className="text-muted-foreground">{t_report('forEvent')} <span className="font-semibold text-primary">{formData.eventName}</span></p>
+                  <h3 className="text-2xl font-bold font-headline text-gray-900">{t_report('title')}</h3>
+                  <p className="text-gray-600">{t_report('forEvent')} <span className="font-semibold text-primary">{formData.eventName}</span></p>
                 </div>
                 <ExportButtons results={results} formData={formData} />
             </div>
             
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-gray-600 leading-relaxed max-w-prose">
               {t_report('introduction')}
             </p>
             
-            <div className="rounded-lg border bg-background/30 p-4">
-                <h4 className="font-headline text-lg text-foreground mb-4">{t_report('breakdownTitle')}</h4>
-                <Table>
-                    <TableHeader>
-                        <TableRow className="hover:bg-muted/50">
-                            <TableHead className="text-foreground">{t_report('table.participants')}</TableHead>
-                            <TableHead className="text-right text-foreground">{t_report('table.quantity')}</TableHead>
-                            <TableHead className="text-right text-foreground">{t_report('table.duration')}</TableHead>
-                            <TableHead className="text-right text-foreground">{t_report('table.totalUCS')}</TableHead>
-                            <TableHead className="text-right text-foreground">{t_report('table.directCost')}</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {results.breakdown.map((item) => (
-                            <TableRow key={item.category} className="font-mono hover:bg-muted/50">
-                                <TableCell className="font-sans font-medium text-foreground/90">{participantCategories[item.category] || item.category}</TableCell>
-                                <TableCell className="text-right text-foreground/90">{item.quantity}</TableCell>
-                                <TableCell className="text-right text-foreground/90">{item.duration} <span className="text-xs text-muted-foreground">{t_calc(`participants.${item.durationUnit}` as any)}</span></TableCell>
-                                <TableCell className="text-right text-primary font-semibold">{item.ucs.toFixed(2)}</TableCell>
-                                <TableCell className="text-right text-primary/90 font-semibold">{formatCurrency(item.cost)}</TableCell>
+            <div className="rounded-lg border bg-gray-50/50 p-4">
+                <h4 className="font-headline text-lg text-gray-800 mb-4">{t_report('breakdownTitle')}</h4>
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="hover:bg-gray-100/50 border-gray-200">
+                                <TableHead className="text-gray-700">{t_report('table.participants')}</TableHead>
+                                <TableHead className="text-right text-gray-700">{t_report('table.quantity')}</TableHead>
+                                <TableHead className="text-right text-gray-700">{t_report('table.duration')}</TableHead>
+                                <TableHead className="text-right text-gray-700">{t_report('table.totalUCS')}</TableHead>
+                                <TableHead className="text-right text-gray-700">{t_report('table.directCost')}</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {results.breakdown.map((item) => (
+                                <TableRow key={item.category} className="font-mono hover:bg-gray-100/50 border-gray-200">
+                                    <TableCell className="font-sans font-medium text-gray-800">{participantCategories[item.category] || item.category}</TableCell>
+                                    <TableCell className="text-right text-gray-700">{item.quantity}</TableCell>
+                                    <TableCell className="text-right text-gray-700">{item.duration} <span className="text-xs text-gray-500">{t_calc(`participants.${item.durationUnit}` as any)}</span></TableCell>
+                                    <TableCell className="text-right text-primary font-semibold">{item.ucs.toFixed(4)}</TableCell>
+                                    <TableCell className="text-right text-primary/90 font-semibold">{formatCurrency(item.cost)}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
 
-                <Separator className="my-4" />
+                <Separator className="my-4 bg-gray-200" />
                 
                 <div className="px-4">
-                    <h4 className="font-bold text-foreground mb-2">{t_calc('indirectCosts.title')}</h4>
+                    <h4 className="font-bold text-gray-800 mb-2">{t_calc('indirectCosts.title')}</h4>
                       {results.indirectBreakdown.map(item => (
-                          <div key={item.category} className="flex justify-between items-center text-sm font-mono text-foreground/90">
+                          <div key={item.category} className="flex justify-between items-center text-sm font-mono text-gray-700">
                               <p className="font-sans">{indirectCostCategories[item.category]}</p>
                               <p className="font-semibold text-primary/90">{formatCurrency(item.cost)}</p>
                           </div>
                       ))}
                 </div>
 
-                <Separator className="my-4" />
+                <Separator className="my-4 bg-gray-200" />
                 
-                <h4 className="font-headline text-lg text-foreground mb-4 px-4">{t_report('summaryTitle')}</h4>
+                <h4 className="font-headline text-lg text-gray-800 mb-4 px-4">{t_report('summaryTitle')}</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 px-4 text-sm">
                     <div className="space-y-1">
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">{t_report('totals.directUCScost')}</span>
-                            <span className="font-mono font-medium text-foreground">{formatCurrency(results.directCost)}</span>
+                            <span className="text-gray-600">{t_report('totals.directUCScost')}</span>
+                            <span className="font-mono font-medium text-gray-800">{formatCurrency(results.directCost)}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">{t_report('totals.indirectUCScost')}</span>
-                            <span className="font-mono font-medium text-foreground">{formatCurrency(results.indirectCost)}</span>
+                            <span className="text-gray-600">{t_report('totals.indirectUCScost')}</span>
+                            <span className="font-mono font-medium text-gray-800">{formatCurrency(results.indirectCost)}</span>
                         </div>
                           <div className="flex justify-between">
-                            <span className="text-muted-foreground">{t_report('totals.costPerParticipantDay')}</span>
-                            <span className="font-mono font-medium text-foreground">{formatCurrency(results.costPerParticipantDay)}</span>
+                            <span className="text-gray-600">{t_report('totals.costPerParticipantDay')}</span>
+                            <span className="font-mono font-medium text-gray-800">{formatCurrency(results.costPerParticipantDay)}</span>
                         </div>
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">{t_report('totals.costPerParticipantHour')}</span>
-                            <span className="font-mono font-medium text-foreground">{formatCurrency(results.costPerParticipantHour)}</span>
+                            <span className="text-gray-600">{t_report('totals.costPerParticipantHour')}</span>
+                            <span className="font-mono font-medium text-gray-800">{formatCurrency(results.costPerParticipantHour)}</span>
                         </div>
                     </div>
                     <div className="space-y-2 text-right md:text-right self-end">
                           <div className="flex justify-between items-baseline">
-                            <span className="text-muted-foreground text-base">{t_report('totals.totalToCompensate')}</span>
-                            <span className="font-mono font-bold text-lg text-primary">{results.totalUCS.toFixed(2)} UCS</span>
+                            <span className="text-gray-600 text-base">{t_report('totals.totalToCompensate')}</span>
+                            <span className="font-mono font-bold text-lg text-primary">{results.totalUCS.toFixed(4)} UCS</span>
                         </div>
                           <div className="flex justify-between items-baseline">
-                            <span className="text-muted-foreground text-base">{t_report('totals.totalBudget')}</span>
+                            <span className="text-gray-600 text-base">{t_report('totals.totalBudget')}</span>
                             <span className="font-mono font-bold text-lg text-primary">{formatCurrency(results.totalCost)}</span>
                         </div>
                     </div>
