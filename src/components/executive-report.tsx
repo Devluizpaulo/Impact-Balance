@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { CalculationResult, FormData } from "@/lib/types";
@@ -40,7 +41,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
 
     return (
       <div id="executive-report" className="bg-card text-card-foreground p-6 rounded-lg h-full relative flex flex-col">
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="absolute inset-0 flex justify-center pointer-events-none pt-20">
               <Image 
                   src="/selo.png" 
                   alt="Selo de Certificação"
