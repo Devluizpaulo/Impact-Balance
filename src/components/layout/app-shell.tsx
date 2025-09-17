@@ -154,6 +154,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
 }
 
 function MobileNav() {
+  const t = useTranslations("AppShell");
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -169,7 +170,13 @@ function MobileNav() {
           </Link>
         </div>
         <div className="flex-1 overflow-y-auto py-2">
-          <SidebarNav isCollapsed={false} />
+           <nav className="flex flex-col h-full">
+              <div className="flex-1 px-2 space-y-1">
+                {navItemsConfig.map((item) => (
+                  <NavLink key={item.href} item={item} isCollapsed={false} />
+                ))}
+              </div>
+          </nav>
         </div>
       </SheetContent>
     </Sheet>
@@ -191,11 +198,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         onMouseLeave={() => setIsCollapsed(true)}
       >
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-16 items-center justify-center border-b px-4">
-             <Link href="/" className="flex items-center justify-center gap-2 font-bold">
-               <Image src="/logo.png" alt="BMV Logo" width={120} height={41} priority className={cn("transition-opacity", isCollapsed ? "opacity-0 absolute" : "opacity-100")}/>
-               <Image src="/icon.png" alt="BMV Icon" width={32} height={32} priority className={cn("transition-opacity", !isCollapsed ? "opacity-0 absolute" : "opacity-100")}/>
-            </Link>
+          <div className="flex h-16 items-center border-b px-4">
+             <span className="font-bold text-lg">{isCollapsed ? ' ' : ' '}</span>
           </div>
           <div className="flex-1 py-4 overflow-y-auto">
             <SidebarNav isCollapsed={isCollapsed} />
