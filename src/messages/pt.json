@@ -33,7 +33,7 @@
     "forEvent": "para o evento",
     "introduction": "Este relatório detalha a pegada de Unidades de Crédito de Sustentabilidade (UCS) e o orçamento de compensação associado para o evento especificado. A análise abrange o impacto direto gerado pelos participantes e os custos indiretos relacionados.",
     "breakdownTitle": "Detalhamento do Impacto",
-    "summaryTitle": "Resumo dos Totais",
+    "summaryTitle": "Resumo",
     "table": {
       "participants": "Pessoas Participantes do Evento",
       "quantity": "Quantidade",
@@ -244,5 +244,17 @@
     "logoutSuccess": {
       "title": "Logout Bem-sucedido"
     }
+  },
+  "AiSuggestions": {
+    "title": "Sugestões com IA",
+    "description": "Recomendações práticas para reduzir a pegada do seu evento.",
+    "loading": "Gerando sugestões...",
+    "error": {
+      "title": "Erro",
+      "description": "Não foi possível obter sugestões da IA no momento.",
+      "loadFail": "Falha ao carregar sugestões. Por favor, recalcule."
+    }
   }
 }
+
+    

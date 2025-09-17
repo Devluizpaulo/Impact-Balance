@@ -33,7 +33,7 @@
     "forEvent": "para el evento",
     "introduction": "Este informe detalla la huella de Unidades de Crédito de Sostenibilidad (UCS) y el presupuesto de compensación asociado para el evento especificado. El análisis abarca el impacto directo generado por los participantes y los costos indirectos relacionados.",
     "breakdownTitle": "Desglose del Impacto",
-    "summaryTitle": "Resumen de Totales",
+    "summaryTitle": "Resumen",
     "table": {
       "participants": "Participantes del Evento",
       "quantity": "Cantidad",
@@ -244,5 +244,17 @@
     "logoutSuccess": {
       "title": "Cierre de Sesión Exitoso"
     }
+  },
+  "AiSuggestions": {
+    "title": "Sugerencias con IA",
+    "description": "Recomendaciones prácticas para reducir la huella de su evento.",
+    "loading": "Generando sugerencias...",
+    "error": {
+      "title": "Error",
+      "description": "No se pudieron recuperar las sugerencias de la IA en este momento.",
+      "loadFail": "Error al cargar las sugerencias. Por favor, vuelva a calcular."
+    }
   }
 }
+
+    

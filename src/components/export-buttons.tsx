@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import { useState } from "react";
@@ -52,45 +53,57 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         setIsExporting(true);
         try {
             const doc = new jsPDF() as jsPDFWithAutoTable;
-            
-            // --- PDF Header ---
-            const img = new Image();
-            img.src = '/logo.png';
-            await new Promise(resolve => { img.onload = resolve; });
-
             const pageWidth = doc.internal.pageSize.width;
-            const margin = 14;
-            const logoWidth = 30; // Desired width
-            const logoHeight = (img.height * logoWidth) / img.width; // Maintain aspect ratio
+            const pageHeight = doc.internal.pageSize.height;
+            const margin = 15;
+
+            // --- Load Images ---
+            const logoImg = new Image();
+            logoImg.src = '/logo.png';
+            await new Promise(resolve => { logoImg.onload = resolve; });
+            
+            const seloImg = new Image();
+            seloImg.src = '/selo.png';
+            await new Promise(resolve => { seloImg.onload = resolve; });
+
+            // --- Add Seal Watermark ---
+            const seloWidth = 80;
+            const seloHeight = (seloImg.height * seloWidth) / seloImg.width;
+            const seloX = (pageWidth - seloWidth) / 2;
+            const seloY = (pageHeight - seloHeight) / 2;
+            doc.setGState(new (doc as any).GState({ opacity: 0.1 }));
+            doc.addImage(seloImg, 'PNG', seloX, seloY, seloWidth, seloHeight);
+            doc.setGState(new (doc as any).GState({ opacity: 1 }));
+
+
+            // --- PDF Header ---
+            const logoWidth = 30; 
+            const logoHeight = (logoImg.height * logoWidth) / logoImg.width; 
             const headerY = 20;
 
-            // Add logo
-            doc.addImage(img, 'PNG', margin, headerY, logoWidth, logoHeight);
+            doc.addImage(logoImg, 'PNG', margin, headerY, logoWidth, logoHeight);
 
-            // Add title - Right Aligned
             doc.setFontSize(16);
             doc.setTextColor(30, 30, 30);
             const reportTitle = t_report('title');
             doc.text(reportTitle, pageWidth - margin, headerY + logoHeight / 2, { align: 'right' });
             
-            // Separator line
-            doc.setDrawColor(220, 220, 220); // Light gray
-            doc.line(margin, headerY + logoHeight + 5, pageWidth - margin, headerY + logoHeight + 5);
+            let finalY = headerY + logoHeight + 10;
 
-            let finalY = headerY + logoHeight + 15;
+            doc.setDrawColor(220, 220, 220); 
+            doc.line(margin, finalY, pageWidth - margin, finalY);
+            finalY += 10;
 
-            // Event Name - Centered and Highlighted
+            // --- Event Name ---
             doc.setFontSize(14);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(0, 0, 0);
             doc.text(formData.eventName, pageWidth / 2, finalY, { align: 'center' });
-            
             finalY += 10;
             
-            // Reset font style
             doc.setFont('helvetica', 'normal');
             
-            // Introduction Text
+            // --- Introduction Text ---
             doc.setFontSize(10);
             doc.setTextColor(100);
             const introText = doc.splitTextToSize(t_report('introduction'), pageWidth - (margin * 2));
@@ -235,7 +248,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         <div id="export-buttons">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="text-white border-gray-600 bg-gray-800/60 hover:bg-gray-700/60 hover:text-white" disabled={isExporting}>
+                    <Button variant="outline" className="text-foreground border-border hover:bg-accent" disabled={isExporting}>
                         {isExporting ? (
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         ) : (
@@ -244,12 +257,12 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                          {t('export')}
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-gray-800 border-gray-700 text-white">
-                    <DropdownMenuItem onClick={handlePdfExport} disabled={isExporting} className="focus:bg-gray-700">
+                <DropdownMenuContent>
+                    <DropdownMenuItem onClick={handlePdfExport} disabled={isExporting}>
                         <FileText className="mr-2 h-4 w-4" />
                         {t('toPdf')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleExcelExport} disabled={isExporting} className="focus:bg-gray-700">
+                    <DropdownMenuItem onClick={handleExcelExport} disabled={isExporting}>
                         <FileSpreadsheet className="mr-2 h-4 w-4" />
                         {t('toExcel')}
                     </DropdownMenuItem>
@@ -258,3 +271,5 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         </div>
     );
 }
+
+    
