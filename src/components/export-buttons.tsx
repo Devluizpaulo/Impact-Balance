@@ -67,11 +67,11 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             await new Promise(resolve => { seloImg.onload = resolve; });
 
              // --- Add Seal Watermark ---
-            const seloWidth = 80;
+            const seloWidth = 120; // Increased size
             const seloHeight = (seloImg.height * seloWidth) / seloImg.width;
             const seloX = (pageWidth - seloWidth) / 2;
-            const seloY = (pageHeight - seloHeight) / 1.5; // Moved down
-            doc.setGState(new (doc as any).GState({ opacity: 0.1 }));
+            const seloY = (pageHeight - seloHeight) / 2 + 20; // Center it lower on the page
+            doc.setGState(new (doc as any).GState({ opacity: 0.08 })); // Slightly more visible
             doc.addImage(seloImg, 'PNG', seloX, seloY, seloWidth, seloHeight);
             doc.setGState(new (doc as any).GState({ opacity: 1 }));
 
@@ -82,13 +82,13 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const headerY = 20;
 
             doc.addImage(logoImg, 'PNG', margin, headerY, logoWidth, logoHeight);
-
+            
             doc.setFontSize(16);
             doc.setTextColor(30, 30, 30);
             const reportTitle = t_report('title');
-            doc.text(reportTitle, pageWidth - margin, headerY + 5, { align: 'right' });
+            doc.text(reportTitle, pageWidth - margin, headerY + 8, { align: 'right' });
             
-            let finalY = headerY + logoHeight + 5;
+            let finalY = headerY + logoHeight + 15;
             
             doc.setFontSize(14);
             doc.setFont('helvetica', 'bold');
@@ -124,8 +124,17 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 startY: finalY,
                 head: [[t_report('table.participants'), t_report('table.quantity'), t_report('table.duration'), t_report('table.totalUCS'), t_report('table.directCost')]],
                 body: tableData,
-                theme: 'striped',
-                headStyles: { fillColor: [22, 101, 52] }, // Primary color
+                theme: 'grid', // Use grid to show borders without solid fill
+                headStyles: { 
+                  fillColor: [22, 101, 52], 
+                  textColor: 255 
+                },
+                alternateRowStyles: {
+                  fillColor: false // No background for alternate rows
+                },
+                styles: {
+                  fillColor: false // No background for regular rows
+                },
                 margin: { left: margin, right: margin }
             });
             
@@ -155,7 +164,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 startY: finalY,
                 body: summaryItems,
                 theme: 'plain',
-                styles: { fontSize: 10 },
+                styles: { fontSize: 10, fillColor: false },
                 columnStyles: { 0: { cellWidth: 70 }, 1: { halign: 'right' } },
                 tableWidth: 100,
                 margin: { left: margin }
@@ -167,7 +176,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 startY: lastY,
                 body: totalsItems,
                 theme: 'plain',
-                styles: { fontSize: 12, fontStyle: 'bold' },
+                styles: { fontSize: 12, fontStyle: 'bold', fillColor: false },
                 columnStyles: { 0: { cellWidth: 70, fontStyle: 'bold' }, 1: { halign: 'right', fontStyle: 'bold' } },
                 tableWidth: 100,
                 margin: { left: margin }
@@ -270,5 +279,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         </div>
     );
 }
+
+    
 
     
