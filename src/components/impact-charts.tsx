@@ -12,14 +12,24 @@ interface ImpactChartsProps {
 
 export default function ImpactCharts({ results }: ImpactChartsProps) {
     const t = useTranslations('ImpactCharts');
+
+    const categoryTranslations: Record<string, string> = {
+        organizers: t('categories.organizers'),
+        assemblers: t('categories.assemblers'),
+        suppliers: t('categories.suppliers'),
+        exhibitors: t('categories.exhibitors'),
+        supportTeam: t('categories.supportTeam'),
+        attendants: t('categories.attendants'),
+        support: t('categories.support'),
+        visitors: t('categories.visitors'),
+        ownershipRegistration: t('categories.ownershipRegistration'),
+        certificateIssuance: t('categories.certificateIssuance'),
+        websitePage: t('categories.websitePage'),
+    };
+    
+    // Chart data should only include items that contribute to UCS
     const chartData = results.breakdown.filter(item => item.ucs > 0);
 
-    const categoryTranslations: {[key: string]: string} = {
-        "Participants": t('categories.participants'),
-        "Ownership Registration": t('categories.ownershipRegistration'),
-        "Certificate Issuance": t('categories.certificateIssuance'),
-        "Website Page": t('categories.websitePage'),
-    }
 
     const translatedData = chartData.map(item => ({
         ...item,
@@ -27,10 +37,10 @@ export default function ImpactCharts({ results }: ImpactChartsProps) {
     }));
 
     return (
-        <Card className="bg-transparent border-gray-700 text-gray-100">
+        <Card className="bg-card text-card-foreground">
             <CardHeader>
-                <CardTitle className="font-headline text-white">{t('title')}</CardTitle>
-                <CardDescription className="text-gray-400">{t('description')}</CardDescription>
+                <CardTitle className="font-headline text-foreground">{t('title')}</CardTitle>
+                <CardDescription className="text-muted-foreground">{t('description')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={{
@@ -41,11 +51,11 @@ export default function ImpactCharts({ results }: ImpactChartsProps) {
                 }} className="h-80 w-full">
                     <BarChart accessibilityLayer data={translatedData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border) / 0.5)" />
-                        <XAxis dataKey="category" tickLine={false} axisLine={false} tickMargin={10} tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                        <XAxis dataKey="category" tickLine={false} axisLine={false} tickMargin={10} tick={{ fill: 'hsl(var(--muted-foreground))' }} angle={-45} textAnchor="end" height={80} />
                         <YAxis tickLine={false} axisLine={false} tickMargin={10} tick={{ fill: 'hsl(var(--muted-foreground))' }}/>
                         <ChartTooltip
                           cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
-                          content={<ChartTooltipContent indicator="dot" className="bg-gray-800 border-gray-700 text-gray-100" />}
+                          content={<ChartTooltipContent indicator="dot" className="bg-card border" />}
                         />
                         <Bar dataKey="ucs" fill="var(--color-ucs)" radius={[4, 4, 0, 0]} />
                     </BarChart>
