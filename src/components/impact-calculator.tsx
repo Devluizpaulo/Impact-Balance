@@ -146,8 +146,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       let duration = 0;
       let durationUnit: 'days' | 'hours' = 'hours';
       
-      const hourlyFactor = parseFloat((perCapitaFactors.dailyUcsConsumption / 8).toFixed(3));
-
       if (visitors?.unit === 'days') {
         duration = visitors?.days || 0;
         durationUnit = 'days';
@@ -156,8 +154,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       } else { // hours
         duration = visitors?.hours || 0;
         durationUnit = 'hours';
-        visitorDaysEquivalent = visitorCount * duration / 8;
-        ucs = Math.ceil(visitorCount * duration * hourlyFactor);
+        visitorDaysEquivalent = (visitorCount * duration) / 8; // Assuming an 8-hour day
+        ucs = Math.ceil(visitorCount * duration * perCapitaFactors.hourlyUcsConsumption);
       }
       
       totalParticipantDays += visitorDaysEquivalent;
