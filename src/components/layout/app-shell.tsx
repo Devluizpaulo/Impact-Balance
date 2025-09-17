@@ -16,6 +16,8 @@ import {
 import { Globe } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import Image from "next/image";
+import { useState } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type NavItem = {
   href: string;
@@ -56,7 +58,7 @@ const navItemsConfig: NavItem[] = [
   },
 ];
 
-function NavLink({ item, isSubItem = false }: { item: NavItem, isSubItem?: boolean }) {
+function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSubItem?: boolean, isCollapsed: boolean }) {
   const { isAdmin, promptLogin } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -65,8 +67,8 @@ function NavLink({ item, isSubItem = false }: { item: NavItem, isSubItem?: boole
   const isActive = pathname === item.href;
 
   const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     if (item.isProtected && !isAdmin) {
-      e.preventDefault();
       promptLogin();
     } else {
       router.push(item.href);
@@ -74,32 +76,42 @@ function NavLink({ item, isSubItem = false }: { item: NavItem, isSubItem?: boole
   };
 
   const linkContent = (
-    <>
-      <div className="flex items-center gap-3">
-        {item.icon}
-        {t(item.translationKey as any)}
-      </div>
-      {item.isProtected && !isAdmin && <Lock className="h-4 w-4 ml-auto" />}
-    </>
-  );
-
-  return (
     <a
       href={item.href}
       onClick={handleClick}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
         isActive && (isSubItem ? "bg-muted text-primary" : "text-primary"),
-        !isSubItem && "font-medium"
+        !isSubItem && "font-medium",
+        isCollapsed && "justify-center"
       )}
     >
-      {linkContent}
+        {item.icon}
+        <span className={cn("truncate transition-opacity", isCollapsed && "opacity-0 w-0 h-0")}>
+          {t(item.translationKey as any)}
+        </span>
+        {item.isProtected && !isAdmin && <Lock className={cn("h-4 w-4 ml-auto", isCollapsed && "hidden")} />}
     </a>
   );
+  
+  if (isCollapsed) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          {linkContent}
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          {t(item.translationKey as any)}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  return linkContent;
 }
 
 
-function SidebarNav() {
+function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
   const pathname = usePathname();
   const t = useTranslations("AppShell");
   const { isAdmin, logout } = useAuth();
@@ -107,8 +119,35 @@ function SidebarNav() {
   const getAccordionTriggerClass = (item: NavItem) => {
     return cn(
         "flex items-center w-full justify-between rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:no-underline",
-        item.subItems?.some(sub => pathname === sub.href) && "text-primary"
+        item.subItems?.some(sub => pathname === sub.href) && "text-primary",
+        isCollapsed ? "justify-center" : "justify-between"
     );
+  }
+
+  if (isCollapsed) {
+     return (
+       <nav className="flex flex-col h-full items-center">
+        <div className="flex-1 space-y-2">
+            {navItemsConfig.map((item) => (
+              <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
+            ))}
+        </div>
+        {isAdmin && (
+            <div className="mt-auto p-4">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-center text-muted-foreground" onClick={logout}>
+                        <LogOut className="h-5 w-5" />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                    {t('logout')}
+                </TooltipContent>
+              </Tooltip>
+            </div>
+        )}
+       </nav>
+     )
   }
 
   return (
@@ -121,19 +160,19 @@ function SidebarNav() {
                 <AccordionTrigger className={getAccordionTriggerClass(item)}>
                    <div className="flex items-center gap-3">
                     {item.icon}
-                    {t(item.translationKey as any)}
+                    <span>{t(item.translationKey as any)}</span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pl-8">
                   <nav className="flex flex-col gap-1">
                     {item.subItems.map((subItem) => (
-                      <NavLink key={subItem.href} item={subItem} isSubItem />
+                      <NavLink key={subItem.href} item={subItem} isSubItem isCollapsed={isCollapsed} />
                     ))}
                   </nav>
                 </AccordionContent>
               </AccordionItem>
             ) : (
-              <NavLink key={item.href} item={item} />
+              <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
             )
           ))}
         </Accordion>
@@ -151,6 +190,8 @@ function SidebarNav() {
 }
 
 function MobileNav() {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -162,11 +203,11 @@ function MobileNav() {
       <SheetContent side="left" className="flex flex-col p-0">
          <div className="flex h-16 items-center border-b px-6">
           <Link href="/" className="flex items-center gap-2 font-bold">
-             <Image src="/logo.png" alt="BMV Logo" width={100} height={34} priority />
+             <Image src="/logo.png" alt="BMV Logo" width={120} height={41} priority />
           </Link>
         </div>
         <div className="flex-1 overflow-y-auto py-6 px-4">
-          <SidebarNav />
+          <SidebarNav isCollapsed={false} />
         </div>
       </SheetContent>
     </Sheet>
@@ -175,17 +216,26 @@ function MobileNav() {
 
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-muted/40 md:block">
+    <div className="grid min-h-screen w-full md:grid-cols-[auto_1fr]">
+      <div 
+        className={cn(
+          "hidden border-r bg-muted/40 md:block transition-all duration-300",
+          isCollapsed ? "w-20" : "w-72"
+        )}
+        onMouseEnter={() => setIsCollapsed(false)}
+        onMouseLeave={() => setIsCollapsed(true)}
+      >
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-16 items-center border-b px-6">
-            <Link href="/" className="flex items-center gap-2 font-bold">
-               <Image src="/logo.png" alt="BMV Logo" width={100} height={34} priority />
+             <Link href="/" className={cn("flex items-center gap-2 font-bold transition-opacity", isCollapsed ? "opacity-0" : "opacity-100")}>
+               <Image src="/logo.png" alt="BMV Logo" width={120} height={41} priority />
             </Link>
           </div>
-          <div className="flex-1">
-            <SidebarNav />
+          <div className="flex-1 py-4">
+            <SidebarNav isCollapsed={isCollapsed} />
           </div>
         </div>
       </div>
