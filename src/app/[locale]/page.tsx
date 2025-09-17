@@ -20,6 +20,7 @@ export default function Home() {
   const [formData, setFormData] = useState<FormData | null>(null);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const t = useTranslations("HomePage");
+  const t_report = useTranslations("ExecutiveReport");
 
   const handleCalculation = (data: CalculationResult, formData: FormData) => {
     setResults(data);
@@ -42,9 +43,12 @@ export default function Home() {
        {results && formData && (
         <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
           <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
-              <div className="flex-grow overflow-y-auto pr-6">
-                <ExecutiveReport results={results} formData={formData} />
-              </div>
+            <DialogHeader>
+              <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
+            </DialogHeader>
+            <div className="flex-grow overflow-y-auto pr-6 -mt-4">
+              <ExecutiveReport results={results} formData={formData} />
+            </div>
           </DialogContent>
         </Dialog>
       )}
