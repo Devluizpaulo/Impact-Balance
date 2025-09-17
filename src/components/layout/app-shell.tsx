@@ -188,12 +188,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
-    <div className="relative min-h-screen w-full">
+    <div className="flex flex-col min-h-screen w-full bg-background">
       <Header mobileNav={<MobileNav />} />
-      <div className="flex">
-        <div 
+      <div className="flex flex-1">
+        <div
           className={cn(
-            "hidden border-r bg-muted/40 md:block transition-all duration-300 pt-16",
+            "hidden border-r bg-muted/40 md:block transition-all duration-300",
             isCollapsed ? "w-20" : "w-64"
           )}
           onMouseEnter={() => setIsCollapsed(false)}
@@ -205,10 +205,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </div>
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 pt-20 bg-background">
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
           {children}
         </main>
       </div>
     </div>
-  )
+  );
 }
