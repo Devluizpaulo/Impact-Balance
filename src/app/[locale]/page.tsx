@@ -34,11 +34,11 @@ export default function Home() {
   return (
     <AppShell>
        <div className="space-y-4">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-start">
-          <div className="xl:col-span-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div>
             <ImpactCalculator onCalculate={handleCalculation} onReset={handleReset} />
           </div>
-          <div className="xl:col-span-1 sticky top-8">
+          <div className="lg:sticky top-8">
             <div className="h-full min-h-[600px] border-border shadow-sm" id="report-content">
               {results && formData ? (
                   <ExecutiveReport results={results} formData={formData} />

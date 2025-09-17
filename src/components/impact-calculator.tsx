@@ -30,16 +30,17 @@ interface ImpactCalculatorProps {
 
 // Moved ParticipantField outside of ImpactCalculator to prevent re-renders and focus loss
 const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string, t: (key: string) => string, form: any }) => (
-    <div className="flex items-center gap-4">
-      <div className="flex items-center gap-2 text-sm font-normal w-48 flex-shrink-0">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] items-center gap-2 md:gap-4 border-b border-border/50 pb-3">
+      <div className="flex items-center gap-2 text-sm font-medium">
         {icon} {label}
       </div>
-      <div className="grid grid-cols-2 gap-2 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
         <FormField
           control={form.control}
           name={`participants.${name}.count`}
           render={({ field }) => (
             <FormItem>
+              <FormLabel className="text-xs text-muted-foreground sm:hidden">{t('participants.quantity')}</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -58,6 +59,7 @@ const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData
           name={`participants.${name}.days`}
           render={({ field }) => (
             <FormItem>
+               <FormLabel className="text-xs text-muted-foreground sm:hidden">{t('participants.days')}</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -240,7 +242,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   }
   
   return (
-    <Card className="border-border bg-card text-card-foreground">
+    <Card className="border-border bg-card text-card-foreground shadow-sm">
       <CardHeader>
         <CardTitle className="font-headline flex items-center"><Calculator className="mr-2" /> {t('title')}</CardTitle>
         <CardDescription>{t('description')}</CardDescription>
@@ -264,15 +266,16 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             
             <Separator />
             <div className="space-y-4">
-              <div className='flex items-center gap-4'>
-                <p className="font-medium text-sm w-48 flex-shrink-0">{t('participants.staffTitle')}</p>
+              <div className='hidden md:grid md:grid-cols-[1fr_2fr] items-center gap-4'>
+                <p className="font-medium text-sm">{t('participants.staffTitle')}</p>
                 <div className="grid grid-cols-2 gap-2 w-full">
                   <p className="font-medium text-sm text-muted-foreground flex items-center gap-2"><Users className="w-4 h-4"/>{t('participants.quantity')}</p>
                   <p className="font-medium text-sm text-muted-foreground flex items-center gap-2"><CalendarDays className="w-4 h-4"/>{t('participants.days')}</p>
                 </div>
               </div>
+               <p className="font-medium text-sm md:hidden">{t('participants.staffTitle')}</p>
 
-              <div className="space-y-3">
+              <div className="space-y-4">
                   <ParticipantField form={form} name="organizers" icon={<UserCog className="w-5 h-5"/>} label={t('participants.organizersAndPromoters')} t={t}/>
                   <ParticipantField form={form} name="assemblers" icon={<Wrench className="w-5 h-5"/>} label={t('participants.assemblers')} t={t}/>
                   <ParticipantField form={form} name="suppliers" icon={<Briefcase className="w-5 h-5"/>} label={t('participants.suppliers')} t={t}/>
