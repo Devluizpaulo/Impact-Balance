@@ -44,8 +44,8 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
               <Image 
                   src="/selo.png" 
                   alt="Selo de Certificação"
-                  width={300}
-                  height={300}
+                  width={600}
+                  height={600}
                   className="opacity-5"
               />
           </div>
