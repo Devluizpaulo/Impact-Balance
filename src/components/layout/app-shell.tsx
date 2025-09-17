@@ -188,27 +188,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[auto_1fr]">
-      <div 
-        className={cn(
-          "hidden border-r bg-muted/40 md:block transition-all duration-300",
-          isCollapsed ? "w-20" : "w-64"
-        )}
-        onMouseEnter={() => setIsCollapsed(false)}
-        onMouseLeave={() => setIsCollapsed(true)}
-      >
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-16 items-center border-b px-4">
-             <span className="font-bold text-lg">{isCollapsed ? ' ' : ' '}</span>
-          </div>
-          <div className="flex-1 py-4 overflow-y-auto">
-            <SidebarNav isCollapsed={isCollapsed} />
+    <div className="relative min-h-screen w-full">
+      <Header mobileNav={<MobileNav />} />
+      <div className="flex">
+        <div 
+          className={cn(
+            "hidden border-r bg-muted/40 md:block transition-all duration-300 pt-16",
+            isCollapsed ? "w-20" : "w-64"
+          )}
+          onMouseEnter={() => setIsCollapsed(false)}
+          onMouseLeave={() => setIsCollapsed(true)}
+        >
+          <div className="flex h-full max-h-screen flex-col gap-2">
+            <div className="flex-1 py-4 overflow-y-auto">
+              <SidebarNav isCollapsed={isCollapsed} />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col">
-        <Header mobileNav={<MobileNav />} />
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 bg-background">
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 pt-20 bg-background">
           {children}
         </main>
       </div>
