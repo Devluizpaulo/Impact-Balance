@@ -66,11 +66,11 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             seloImg.src = '/selo.png';
             await new Promise(resolve => { seloImg.onload = resolve; });
 
-            // --- Add Seal Watermark ---
+             // --- Add Seal Watermark ---
             const seloWidth = 80;
             const seloHeight = (seloImg.height * seloWidth) / seloImg.width;
             const seloX = (pageWidth - seloWidth) / 2;
-            const seloY = (pageHeight - seloHeight) / 2;
+            const seloY = (pageHeight - seloHeight) / 1.5; // Moved down
             doc.setGState(new (doc as any).GState({ opacity: 0.1 }));
             doc.addImage(seloImg, 'PNG', seloX, seloY, seloWidth, seloHeight);
             doc.setGState(new (doc as any).GState({ opacity: 1 }));
@@ -86,21 +86,20 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             doc.setFontSize(16);
             doc.setTextColor(30, 30, 30);
             const reportTitle = t_report('title');
-            doc.text(reportTitle, pageWidth - margin, headerY + logoHeight / 2, { align: 'right' });
+            doc.text(reportTitle, pageWidth - margin, headerY + 5, { align: 'right' });
             
-            let finalY = headerY + logoHeight + 10;
-
-            doc.setDrawColor(220, 220, 220); 
-            doc.line(margin, finalY, pageWidth - margin, finalY);
-            finalY += 10;
-
-            // --- Event Name ---
+            let finalY = headerY + logoHeight + 5;
+            
             doc.setFontSize(14);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(0, 0, 0);
             doc.text(formData.eventName, pageWidth / 2, finalY, { align: 'center' });
             finalY += 10;
-            
+
+            doc.setDrawColor(220, 220, 220); 
+            doc.line(margin, finalY, pageWidth - margin, finalY);
+            finalY += 10;
+
             doc.setFont('helvetica', 'normal');
             
             // --- Introduction Text ---

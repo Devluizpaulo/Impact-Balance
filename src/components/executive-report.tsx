@@ -39,14 +39,14 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
     };
 
     return (
-      <div id="executive-report" className="bg-card text-card-foreground p-6 rounded-lg h-full border relative flex flex-col">
+      <div id="executive-report" className="bg-card text-card-foreground p-6 rounded-lg h-full relative flex flex-col">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Image 
                   src="/selo.png" 
                   alt="Selo de Certificação"
                   width={300}
                   height={300}
-                  className="opacity-10"
+                  className="opacity-5"
               />
           </div>
           <div id="report-content-for-export" className="flex-grow space-y-6 z-10">
