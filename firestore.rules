@@ -1,15 +1,23 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // System settings are publicly readable but only writable by admins
+    
+    // System settings are public to read for calculations,
+    // but only admins can write/update them.
     match /systemSettings/{docId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
-
-    // Events can only be created and read by admins
+    
+    // Anyone can create an event record by using the calculator.
+    // Only admins can view the list of all past events.
+    // No one can update or delete records to maintain data integrity.
     match /events/{eventId} {
-      allow read, write: if request.auth != null;
+      allow create: if true;
+      allow list: if request.auth != null;
+      allow get: if request.auth != null; // Also allow admin to get single doc
+      allow update, delete: if false;
     }
   }
 }
