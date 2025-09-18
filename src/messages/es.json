@@ -143,6 +143,9 @@
     "perCapitaBasis": "Base de Cálculo Per Cápita",
     "indirectCosts": "Costos Indirectos",
     "equivalencesAndCosts": "Equivalencias y Costos",
+    "sealParametersCard": {
+      "title": "Parámetros del Sello (Beneficios de la Inversión)"
+    },
     "table": {
       "parameter": "Parámetro",
       "value": "Valor"
@@ -167,6 +170,14 @@
       "gdpPercentage": "Equivalencia al PIB (%)",
       "equivalenceValuePerDay": "Valor de Equivalencia por Día",
       "equivalenceValuePerHour": "Valor de Equivalencia por Hora"
+    },
+     "sealParameters": {
+      "preservedNativeForestArea": "Área de Bosque Nativo Preservado (m²)",
+      "carbonEmissionAvoided": "Emisión de Carbono Evitada (tCO2e)",
+      "storedWood": "Madera Almacenada (m³)",
+      "faunaSpeciesPreservation": "Preservación de Especies de Fauna (por Hectárea)",
+      "floraSpeciesPreservation": "Preservación de Especies de Flora (por Hectárea)",
+      "hydrologicalFlowPreservation": "Preservación de Flujo Hidrológico (Litros/Año)"
     },
     "toasts": {
       "saveSuccess": {

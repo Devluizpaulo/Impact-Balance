@@ -143,6 +143,9 @@
     "perCapitaBasis": "Per Capita Calculation Basis",
     "indirectCosts": "Indirect Costs",
     "equivalencesAndCosts": "Equivalences and Costs",
+    "sealParametersCard": {
+      "title": "Seal Parameters (Investment Benefits)"
+    },
     "table": {
       "parameter": "Parameter",
       "value": "Value"
@@ -167,6 +170,14 @@
       "gdpPercentage": "Equivalence to GDP (%)",
       "equivalenceValuePerDay": "Equivalence Value per Day",
       "equivalenceValuePerHour": "Equivalence Value per Hour"
+    },
+    "sealParameters": {
+      "preservedNativeForestArea": "Preserved Native Forest Area (m²)",
+      "carbonEmissionAvoided": "Carbon Emission Avoided (tCO2e)",
+      "storedWood": "Stored Wood (m³)",
+      "faunaSpeciesPreservation": "Fauna Species Preservation (per Hectare)",
+      "floraSpeciesPreservation": "Flora Species Preservation (per Hectare)",
+      "hydrologicalFlowPreservation": "Hydrological Flow Preservation (Liters/Year)"
     },
     "toasts": {
       "saveSuccess": {

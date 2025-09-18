@@ -10,7 +10,6 @@ export const pathnames = {
   '/parameters': '/parameters',
   '/data-figures': '/data-figures',
   '/country-results': '/country-results',
-  '/documentation': '/documentation',
   '/scientific-review': '/scientific-review',
   '/event-seal': '/event-seal',
 } satisfies Pathnames<typeof locales>;

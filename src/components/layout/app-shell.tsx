@@ -40,29 +40,28 @@ const navItemsConfig: NavItem[] = [
     isProtected: true,
   },
   {
-    href: "/documentation",
-    icon: <BookText className="h-5 w-5" />,
-    translationKey: 'documentation',
-  },
-  {
     href: "/scientific-review",
     icon: <FileText className="h-5 w-5" />,
     translationKey: 'scientificReview',
+    isProtected: true,
   },
   {
     href: "/data-figures", 
     icon: <FilePieChart className="h-5 w-5" />, 
-    translationKey: 'dataFigures' 
+    translationKey: 'dataFigures',
+    isProtected: true,
   },
   { 
     href: "/country-results", 
     icon: <Globe2 className="h-5 w-5" />, 
-    translationKey: 'countryResults' 
+    translationKey: 'countryResults',
+    isProtected: true,
   },
     { 
     href: "/event-seal", 
     icon: <Award className="h-5 w-5" />, 
-    translationKey: 'eventSeal' 
+    translationKey: 'eventSeal',
+    isProtected: true,
   },
 ];
 

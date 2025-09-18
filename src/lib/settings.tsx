@@ -28,6 +28,14 @@ export interface SystemSettings {
       certificateIssuance: number;
       websitePage: number;
     };
+    sealParameters: {
+      preservedNativeForestArea: string;
+      carbonEmissionAvoided: string;
+      storedWood: string;
+      faunaSpeciesPreservation: string;
+      floraSpeciesPreservation: string;
+      hydrologicalFlowPreservation: string;
+    };
 }
 
 // Define the default settings
@@ -53,6 +61,14 @@ const defaultSettings: SystemSettings = {
       certificateIssuance: 200,
       websitePage: 300,
     },
+    sealParameters: {
+      preservedNativeForestArea: "3197.37 m²",
+      carbonEmissionAvoided: "243 tCO2e",
+      storedWood: "83.79 m³",
+      faunaSpeciesPreservation: "1749",
+      floraSpeciesPreservation: "546",
+      hydrologicalFlowPreservation: "10503.36",
+    }
 };
 
 // Define the shape of the context
@@ -71,8 +87,6 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 const mergeSettings = (base: SystemSettings, updates: Partial<SystemSettings>): SystemSettings => {
     const safeUpdates = updates || {};
     return {
-        ...base,
-        ...safeUpdates,
         perCapitaFactors: {
           ...base.perCapitaFactors,
           ...safeUpdates.perCapitaFactors,
@@ -84,6 +98,10 @@ const mergeSettings = (base: SystemSettings, updates: Partial<SystemSettings>): 
         indirectCosts: {
           ...base.indirectCosts,
           ...safeUpdates.indirectCosts
+        },
+        sealParameters: {
+          ...base.sealParameters,
+          ...safeUpdates.sealParameters
         }
     };
 };
@@ -139,8 +157,12 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
+    const handleSetSettings = (newSettings: SystemSettings) => {
+      setSettings(mergeSettings(settings, newSettings));
+    }
+
     return (
-        <SettingsContext.Provider value={{ settings, setSettings, saveSettings, resetSettings, isClient }}>
+        <SettingsContext.Provider value={{ settings, setSettings: handleSetSettings, saveSettings, resetSettings, isClient }}>
             {children}
         </SettingsContext.Provider>
     );
