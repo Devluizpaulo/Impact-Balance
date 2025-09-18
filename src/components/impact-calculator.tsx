@@ -81,6 +81,27 @@ const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData
     </div>
   );
 
+// Helper function to recursively replace undefined with null
+// Firestore doesn't support `undefined` values.
+const cleanupUndefined = (obj: any): any => {
+  if (obj === undefined) {
+    return null;
+  }
+  if (typeof obj !== 'object' || obj === null) {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(cleanupUndefined);
+  }
+  const newObj: { [key: string]: any } = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      newObj[key] = cleanupUndefined(obj[key]);
+    }
+  }
+  return newObj;
+};
+
 
 export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalculatorProps) {
   const t = useTranslations('ImpactCalculator');
@@ -166,7 +187,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 const visitorTotalHours = visitorCount * duration;
                 totalParticipantHours += visitorTotalHours;
                 totalParticipantDays += visitorTotalHours / 8;
-                // This logic mirrors the user's spreadsheet: convert hours to days, ceil it, then apply daily factor and ceil again.
                 ucs = Math.ceil(Math.ceil(visitorCount * duration / 8) * calculation.perCapitaFactors.dailyUcsConsumption);
             }
         }
@@ -241,14 +261,15 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         });
     }
 
+    const cleanedValues = cleanupUndefined(values);
 
     await addEvent({
       timestamp: Date.now(),
-      formData: values,
+      formData: cleanedValues,
       results
     });
 
-    onCalculate(results, values);
+    onCalculate(results, cleanedValues);
   }
 
 
@@ -383,6 +404,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 }
 
     
-
-    
-
