@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useTranslations } from "next-intl";
@@ -350,7 +351,7 @@ export default function ParametersPage() {
                       </TableCell>
                     </TableRow>
                   ))}
-                </Body>
+                </TableBody>
               </Table>
             </CardContent>
           </Card>
