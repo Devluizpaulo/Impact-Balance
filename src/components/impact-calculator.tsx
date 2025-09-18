@@ -113,8 +113,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
  async function onSubmit(values: FormData) {
     // --- Data Sanitization ---
     const sanitizedValues = JSON.parse(JSON.stringify(values, (key, value) => {
-        if (value === undefined || value === null || isNaN(value)) {
-          // For numeric fields that are empty/invalid, treat as 0
+        if (value === undefined || value === null || (typeof value === 'number' && isNaN(value))) {
           if (['count', 'days', 'hours'].includes(key)) {
             return 0;
           }
@@ -122,7 +121,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         return value;
     }));
     
-    // Ensure only the relevant unit for visitors has a value
     if (sanitizedValues.visitors) {
       if (sanitizedValues.visitors.unit === 'hours') {
         sanitizedValues.visitors.days = 0;
@@ -143,13 +141,16 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     // Calculate staff UCS
     Object.entries(participants).forEach(([key, p]) => {
       const participantData = p as { count?: number; days?: number };
-      const count = participantData?.count || 0;
-      const days = participantData?.days || 0;
+      const count = participantData.count || 0;
+      const days = participantData.days || 0;
+
       if (count > 0 && days > 0) {
         totalParticipantsCount += count;
         totalParticipantDays += count * days;
         totalParticipantHours += count * days * 8; // Assuming 8-hour day
+
         const ucs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
+        
         breakdown.push({
           category: key,
           ucs,
@@ -166,7 +167,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     if (visitorCount > 0 && visitors) {
         totalParticipantsCount += visitorCount;
         let ucs = 0;
-        let cost = 0;
         let duration = 0;
         let durationUnit: 'days' | 'hours' = 'hours';
 
@@ -176,8 +176,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 totalParticipantDays += visitorCount * duration;
                 totalParticipantHours += visitorCount * duration * 8;
-                ucs = (visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption);
-                cost = ucs * calculation.equivalences.ucsQuotationValue;
+                ucs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
             }
         } else { // hours
             duration = visitors.hours || 0;
@@ -185,10 +184,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 const visitorTotalHours = visitorCount * duration;
                 totalParticipantHours += visitorTotalHours;
-                const visitorDaysEquivalent = visitorTotalHours / 8;
-                totalParticipantDays += visitorDaysEquivalent;
-                ucs = (visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption);
-                cost = ucs * calculation.equivalences.ucsQuotationValue;
+                totalParticipantDays += visitorTotalHours / 8;
+                ucs = visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption;
             }
         }
 
@@ -196,7 +193,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             breakdown.push({
                 category: 'visitors',
                 ucs,
-                cost,
+                cost: ucs * calculation.equivalences.ucsQuotationValue,
                 quantity: visitorCount,
                 duration: duration,
                 durationUnit: durationUnit,
@@ -402,3 +399,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
