@@ -3,8 +3,8 @@
 
 import type { EventRecord } from "@/lib/types";
 import { useTranslations } from "next-intl";
-import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
+import { Separator } from "./ui/separator";
 
 interface EventCertificateProps {
     event: EventRecord;
@@ -15,14 +15,14 @@ export default function EventCertificate({ event }: EventCertificateProps) {
     const { formData, results, timestamp, id } = event;
     const { benefits } = results;
 
-    const formatDate = (date: number | Date) => new Date(date).toLocaleDateString('pt-BR');
+    const formatDate = (date: number | Date) => new Date(date).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const benefitItems = [
         { label: t('benefits.preservedNativeForestArea'), value: benefits?.preservedNativeForestArea, unit: 'm²' },
-        { label: t('benefits.carbonEmissionAvoided'), value: benefits?.carbonEmissionAvoided, unit: 'tCO2e' },
+        { label: t('benefits.carbonEmissionAvoided'), value: benefits?.carbonEmissionAvoided, unit: 'tCO₂e' },
         { label: t('benefits.storedWood'), value: benefits?.storedWood, unit: 'm³' },
-        { label: t('benefits.faunaSpeciesPreservation'), value: benefits?.faunaSpeciesPreservation, unit: '' },
-        { label: t('benefits.floraSpeciesPreservation'), value: benefits?.floraSpeciesPreservation, unit: '' },
+        { label: t('benefits.faunaSpeciesPreservation'), value: benefits?.faunaSpeciesPreservation, unit: t('benefits.speciesUnit') },
+        { label: t('benefits.floraSpeciesPreservation'), value: benefits?.floraSpeciesPreservation, unit: t('benefits.speciesUnit') },
         { label: t('benefits.hydrologicalFlowPreservation'), value: benefits?.hydrologicalFlowPreservation, unit: 'L/Ano' },
     ];
     
@@ -32,62 +32,83 @@ export default function EventCertificate({ event }: EventCertificateProps) {
     }
 
     return (
-        <div id="event-certificate" className="bg-white text-gray-800 p-4 sm:p-6 rounded-lg font-sans">
-             <div className="grid grid-cols-12 gap-6 relative">
-                {/* Background watermark */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <Image 
-                        src="/selo-watermark.png" 
-                        alt="Selo de Certificação"
-                        layout="fill"
-                        objectFit="contain"
-                        objectPosition="center"
-                        className="opacity-5"
-                    />
-                </div>
-                
-                {/* Main Content */}
-                <div className="col-span-12 md:col-span-8 space-y-4 z-10">
-                    <h2 className="text-2xl font-bold text-primary border-b-2 border-primary/50 pb-2">
-                        {t('title')}
-                    </h2>
-                    
-                    <div className="text-sm space-y-1">
-                        <p><strong>{t('holder')}:</strong> {formData.eventName}</p>
-                        <p><strong>{t('operationDate')}:</strong> {formatDate(timestamp)}</p>
-                        <p><strong>{t('product')}:</strong> {t('productName')}</p>
-                        <p><strong>{t('acquiredQuantity')}:</strong> {results.totalUCS} {t('ucsUnit')}</p>
-                    </div>
+        <div id="event-certificate" className="bg-white text-gray-800 aspect-[1/1.414] w-full max-w-full mx-auto p-4 sm:p-6 shadow-2xl relative flex flex-col font-serif">
+             {/* Watermark */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                <Image 
+                    src="/selo.png" 
+                    alt={t('watermarkAlt')}
+                    width={400}
+                    height={400}
+                    className="opacity-[0.03]"
+                />
+            </div>
 
-                    <p className="text-xs italic py-4">
+            {/* Decorative Border */}
+            <div className="absolute inset-0 border-4 border-primary/80 m-1 z-10 pointer-events-none"></div>
+            <div className="absolute inset-0 border-2 border-primary/50 m-3 z-10 pointer-events-none"></div>
+
+            <div className="relative z-20 flex-grow flex flex-col p-4 sm:p-8">
+                {/* Header */}
+                <header className="text-center mb-6">
+                    <div className="flex justify-center items-center gap-4">
+                        <Image src="/logo-tesouro-verde.png" alt="Tesouro Verde Logo" width={140} height={70} className="object-contain" />
+                    </div>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-primary mt-4 font-headline">
+                        {t('title')}
+                    </h1>
+                </header>
+
+                {/* Main Content */}
+                <main className="flex-grow text-center space-y-4">
+                    <p className="text-lg sm:text-xl">
                         {t('certificationStatement')}
                     </p>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-700 pt-2">
+                        {formData.eventName}
+                    </h2>
+                    <div className="text-base sm:text-lg text-gray-600">
+                        <p><strong>{t('acquiredQuantity')}:</strong> {results.totalUCS} {t('ucsUnit')}</p>
+                        <p><strong>{t('operationDate')}:</strong> {formatDate(timestamp)}</p>
+                    </div>
 
-                    <div className="border-t pt-4">
-                        <h3 className="font-bold text-lg mb-2">{t('benefits.title')}</h3>
-                        <p className="text-xs text-gray-600 mb-4">{t('benefits.intro')}</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                            {benefitItems.map(item => (
-                                <div key={item.label}>
-                                    <strong>{item.label}:</strong> {formatNumber(item.value)} {item.unit}
+                     <p className="text-sm italic max-w-2xl mx-auto pt-4">
+                        {t('productDescription')}
+                    </p>
+                </main>
+
+                 {/* Benefits Section */}
+                <section className="mt-6 border-t-2 border-gray-200 pt-4">
+                    <h3 className="font-bold text-xl text-center mb-4 text-primary font-headline">{t('benefits.title')}</h3>
+                    <p className="text-xs text-gray-500 text-center mb-4">{t('benefits.intro')}</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 text-sm">
+                        {benefitItems.map(item => (
+                             <div key={item.label} className="flex items-start">
+                                <span className="text-primary mr-2">✔</span>
+                                <div>
+                                    <span className="font-semibold">{item.label}:</span>
+                                    <p className="text-gray-600">{formatNumber(item.value)} {item.unit}</p>
                                 </div>
-                            ))}
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+
+                {/* Footer */}
+                <footer className="mt-auto pt-6 text-xs text-center text-gray-500 space-y-2">
+                    <Separator className="bg-gray-300" />
+                     <div className="flex justify-between items-center pt-2">
+                        <div className="text-left">
+                            <strong>{t('verification.title')}:</strong>
+                            <p className="break-all font-mono">{id}</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                             <Image src="/logo-bmtca.png" alt="BMTCA Logo" width={80} height={27} className="object-contain" />
+                             <Image src="/logo-bmv.png" alt="BMV Logo" width={80} height={27} className="object-contain" />
                         </div>
                     </div>
-
-                     <div className="border-t pt-4 mt-4">
-                        <h3 className="font-bold text-lg mb-2">{t('verification.title')}</h3>
-                        <p className="text-xs break-all"><strong>{t('verification.registrationNumber')}:</strong> {id}</p>
-                    </div>
-                </div>
-
-                {/* Right Sidebar */}
-                <div className="col-span-12 md:col-span-4 flex flex-col items-center justify-between space-y-6 bg-gray-50 p-4 rounded-lg z-10">
-                    <Image src="/logo-tesouro-verde.png" alt="Tesouro Verde Logo" width={150} height={75} />
-                    <Image src="/logo-bmtca.png" alt="BMTCA Logo" width={150} height={50} />
-                    <Image src="/logo-bmv.png" alt="BMV Logo" width={150} height={50} />
-                    <Image src="/selo.png" alt="Selo" width={120} height={120} />
-                </div>
+                </footer>
             </div>
         </div>
     );

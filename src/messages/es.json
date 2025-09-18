@@ -216,26 +216,29 @@
     "viewReport": "Ver Informe"
   },
   "EventCertificate": {
-    "title": "Sello de Sostenibilidad",
+    "title": "Certificado de Sostenibilidad",
+    "watermarkAlt": "Sello de Certificación",
     "holder": "Titular",
     "operationDate": "Fecha de Operación",
     "product": "Producto",
     "productName": "Sello de Sostenibilidad Tesoro Verde",
+    "productDescription": "Este sello certifica el compromiso del evento con la sostenibilidad, mediante la adquisición de Unidades de Crédito de Sostenibilidad (UCS) para compensar su impacto socioambiental.",
     "acquiredQuantity": "Cantidad Adquirida",
     "ucsUnit": "UCS (Unidades de Crédito de Sostenibilidad)",
-    "certificationStatement": "Esta certificación acredita la inversión en la protección y preservación de bosque nativo a través de la adquisición de Crédito Forestal.",
+    "certificationStatement": "Certificamos que el evento",
     "benefits": {
-      "title": "Declaración de Ética Ambiental",
-      "intro": "La inversión generó los siguientes beneficios:",
+      "title": "Beneficios Ambientales Generados",
+      "intro": "La inversión en las Unidades de Crédito de Sostenibilidad generó los siguientes impactos positivos:",
       "preservedNativeForestArea": "Área de Bosque Nativo Preservado",
       "carbonEmissionAvoided": "Emisión de Carbono Evitada (Carbono Almacenado)",
       "storedWood": "Madera Almacenada",
-      "faunaSpeciesPreservation": "Preservación de Especies de Fauna por Hectárea",
-      "floraSpeciesPreservation": "Preservación de Especies de Flora por Hectárea",
-      "hydrologicalFlowPreservation": "Preservación de Flujo Hidrológico"
+      "faunaSpeciesPreservation": "Preservación de Especies de Fauna",
+      "floraSpeciesPreservation": "Preservación de Especies de Flora",
+      "hydrologicalFlowPreservation": "Preservación del Flujo Hidrológico",
+      "speciesUnit": "especies/ha"
     },
     "verification": {
-      "title": "Datos de Verificación",
+      "title": "Número de Registro para Verificación",
       "registrationNumber": "Número de Registro"
     }
   },

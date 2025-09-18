@@ -216,26 +216,29 @@
     "viewReport": "Ver Relatório"
   },
   "EventCertificate": {
-    "title": "Selo de Sustentabilidade",
+    "title": "Certificado de Sustentabilidade",
+    "watermarkAlt": "Selo de Certificação",
     "holder": "Titular",
     "operationDate": "Data da Operação",
     "product": "Produto",
     "productName": "Selo Sustentabilidade Tesouro Verde",
+    "productDescription": "Este selo atesta o compromisso do evento com a sustentabilidade, por meio da aquisição de Unidades de Crédito de Sustentabilidade (UCS) para compensar seu impacto socioambiental.",
     "acquiredQuantity": "Quantidade Adquirida",
     "ucsUnit": "UCS (Unidades de Crédito de Sustentabilidade)",
-    "certificationStatement": "Esta certificação atesta o investimento em proteção e preservação de floresta nativa realizado por meio da aquisição de Crédito de Floresta.",
+    "certificationStatement": "Certificamos que o evento",
     "benefits": {
-      "title": "Atestado de Ética Ambiental",
-      "intro": "O investimento gerou os seguintes benefícios:",
-      "preservedNativeForestArea": "Área Preservada de Florestas Nativas",
-      "carbonEmissionAvoided": "Emissão Evitada de Carbono (Carbono Estocado)",
+      "title": "Benefícios Ambientais Gerados",
+      "intro": "O investimento nas Unidades de Crédito de Sustentabilidade gerou os seguintes impactos positivos:",
+      "preservedNativeForestArea": "Área de Floresta Nativa Preservada",
+      "carbonEmissionAvoided": "Emissão de Carbono Evitada (Carbono Estocado)",
       "storedWood": "Madeira Armazenada",
-      "faunaSpeciesPreservation": "Preservação de Espécies de Fauna Por Hectare",
-      "floraSpeciesPreservation": "Preservação de Espécies de Flora Por Hectare",
-      "hydrologicalFlowPreservation": "Preservação de Fluxo Hidrológico"
+      "faunaSpeciesPreservation": "Preservação de Espécies da Fauna",
+      "floraSpeciesPreservation": "Preservação de Espécies da Flora",
+      "hydrologicalFlowPreservation": "Preservação do Fluxo Hidrológico",
+      "speciesUnit": "espécies/ha"
     },
     "verification": {
-      "title": "Dados de Verificação",
+      "title": "Número de Registro para Verificação",
       "registrationNumber": "Número do Registro"
     }
   },

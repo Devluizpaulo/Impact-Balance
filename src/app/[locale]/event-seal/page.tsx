@@ -99,11 +99,11 @@ export default function EventSealPage() {
             </div>
              {selectedEvent && (
                 <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
-                    <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
+                    <DialogContent className="max-w-5xl w-full h-[95vh] bg-gray-200 p-4 sm:p-8 overflow-hidden">
                         <DialogHeader>
                             <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
                         </DialogHeader>
-                        <div className="flex-grow overflow-y-auto pr-6 -mt-4">
+                        <div className="w-full h-full overflow-y-auto">
                            <EventCertificate event={selectedEvent} />
                         </div>
                     </DialogContent>
