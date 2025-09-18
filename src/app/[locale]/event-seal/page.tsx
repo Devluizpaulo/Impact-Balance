@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, Loader2, Award } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import EventCertificate from "@/components/event-certificate";
+import CertificateActions from "@/components/certificate-actions";
 
 
 export default function EventSealPage() {
@@ -99,11 +100,12 @@ export default function EventSealPage() {
             </div>
              {selectedEvent && (
                 <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
-                    <DialogContent className="max-w-5xl w-full h-[95vh] bg-gray-200 p-4 sm:p-8 overflow-hidden">
-                        <DialogHeader>
+                    <DialogContent className="max-w-5xl w-full h-[95vh] bg-gray-200 p-4 sm:p-8 overflow-y-auto">
+                         <DialogHeader>
                             <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
                         </DialogHeader>
-                        <div className="w-full h-full overflow-y-auto">
+                        <div className="flex flex-col gap-4">
+                           <CertificateActions event={selectedEvent} />
                            <EventCertificate event={selectedEvent} />
                         </div>
                     </DialogContent>
