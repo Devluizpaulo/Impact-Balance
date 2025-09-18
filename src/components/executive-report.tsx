@@ -134,7 +134,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                     <div className="space-y-2 text-right md:text-right self-end">
                           <div className="flex justify-between items-baseline">
                             <span className="text-gray-600 text-base">{t_report('totals.totalToCompensate')}</span>
-                            <span className="font-mono font-bold text-lg text-primary">{Math.ceil(results.totalUCS)} UCS</span>
+                            <span className="font-mono font-bold text-lg text-primary">{results.totalUCS} UCS</span>
                         </div>
                           <div className="flex justify-between items-baseline">
                             <span className="text-gray-600 text-base">{t_report('totals.totalBudgetBRL')}</span>
@@ -163,3 +163,5 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
       </div>
     );
 }
+
+    

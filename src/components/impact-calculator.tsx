@@ -165,8 +165,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 totalParticipantHours += visitorTotalHours;
                 const visitorDaysEquivalent = visitorTotalHours / 8;
                 totalParticipantDays += visitorDaysEquivalent;
-                
-                ucs = (visitorCount * duration) / 24;
+                ucs = (visitorCount * duration * perCapitaFactors.hourlyUcsConsumption);
                 cost = ucs * equivalences.ucsQuotationValue;
             }
         }
@@ -186,20 +185,14 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    // Indirect Costs (monetary only)
     const indirectBreakdown: { category: string; cost: number }[] = [];
-    
-    // Calculate "Ownership Registration" based on 1.5% of total direct cost
     const ownershipRegistrationCost = directCost * 0.015;
     indirectBreakdown.push({ category: "ownershipRegistration", cost: ownershipRegistrationCost });
-    
-    // Get other indirect costs from settings
     indirectBreakdown.push({ category: "certificateIssuance", cost: indirectCostsSettings.certificateIssuance });
     indirectBreakdown.push({ category: "websitePage", cost: indirectCostsSettings.websitePage });
-    
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    const totalUCS = directUcs;
+    const totalUCS = Math.ceil(directUcs);
     const totalCost = directCost + indirectCost;
 
     const maxDays = Math.max(
@@ -227,7 +220,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       },
     };
     
-    // Fetch currency rates and add to results
     try {
         const currencyData = await getCurrencyRates();
         if (currencyData.rates.USD) {
@@ -387,4 +379,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   );
 }
 
+    
     
