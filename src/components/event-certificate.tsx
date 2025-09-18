@@ -33,20 +33,32 @@ export default function EventCertificate({ event }: EventCertificateProps) {
 
     return (
         <div id="event-certificate" className="bg-white text-gray-800 aspect-[1/1.414] w-full max-w-full mx-auto p-4 sm:p-6 shadow-2xl relative flex flex-col font-serif">
-             {/* Watermark */}
+            {/* Wavy lines background */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="wavy-lines" patternUnits="userSpaceOnUse" width="100" height="20">
+                           <path d="M0 10 Q 25 0, 50 10 T 100 10" stroke="hsl(var(--primary) / 0.1)" fill="none" strokeWidth="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#wavy-lines)"/>
+                </svg>
+            </div>
+
+            {/* Watermark */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
                 <Image 
-                    src="/selo.png" 
+                    src="/logo.png" 
                     alt={t('watermarkAlt')}
                     width={400}
                     height={400}
-                    className="opacity-[0.03]"
+                    className="opacity-[0.03] scale-125"
                 />
             </div>
 
             {/* Decorative Border */}
-            <div className="absolute inset-0 border-4 border-primary/80 m-1 z-10 pointer-events-none"></div>
-            <div className="absolute inset-0 border-2 border-primary/50 m-3 z-10 pointer-events-none"></div>
+            <div className="absolute inset-0 border-[6px] border-primary/80 m-1 z-10 pointer-events-none rounded-sm"></div>
+            <div className="absolute inset-0 border-2 border-primary/50 m-3 z-10 pointer-events-none rounded-sm"></div>
 
             <div className="relative z-20 flex-grow flex flex-col p-4 sm:p-8">
                 {/* Header */}
@@ -54,17 +66,17 @@ export default function EventCertificate({ event }: EventCertificateProps) {
                     <div className="flex justify-center items-center gap-4">
                         <Image src="/logo-tesouro-verde.png" alt="Tesouro Verde Logo" width={140} height={70} className="object-contain" />
                     </div>
-                    <h1 className="text-3xl sm:text-4xl font-bold text-primary mt-4 font-headline">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-primary mt-4 font-headline tracking-tight">
                         {t('title')}
                     </h1>
                 </header>
 
                 {/* Main Content */}
                 <main className="flex-grow text-center space-y-4">
-                    <p className="text-lg sm:text-xl">
+                    <p className="text-lg sm:text-xl leading-relaxed">
                         {t('certificationStatement')}
                     </p>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-700 pt-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 pt-2 tracking-wide">
                         {formData.eventName}
                     </h2>
                     <div className="text-base sm:text-lg text-gray-600">
@@ -72,7 +84,7 @@ export default function EventCertificate({ event }: EventCertificateProps) {
                         <p><strong>{t('operationDate')}:</strong> {formatDate(timestamp)}</p>
                     </div>
 
-                     <p className="text-sm italic max-w-2xl mx-auto pt-4">
+                     <p className="text-sm italic max-w-2xl mx-auto pt-4 text-gray-500">
                         {t('productDescription')}
                     </p>
                 </main>
@@ -84,7 +96,7 @@ export default function EventCertificate({ event }: EventCertificateProps) {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 text-sm">
                         {benefitItems.map(item => (
                              <div key={item.label} className="flex items-start">
-                                <span className="text-primary mr-2">✔</span>
+                                <span className="text-primary mr-2 text-base">✓</span>
                                 <div>
                                     <span className="font-semibold">{item.label}:</span>
                                     <p className="text-gray-600">{formatNumber(item.value)} {item.unit}</p>
@@ -101,7 +113,7 @@ export default function EventCertificate({ event }: EventCertificateProps) {
                      <div className="flex justify-between items-center pt-2">
                         <div className="text-left">
                             <strong>{t('verification.title')}:</strong>
-                            <p className="break-all font-mono">{id}</p>
+                            <p className="break-all font-mono text-[10px]">{id}</p>
                         </div>
                         <div className="flex items-center gap-4">
                              <Image src="/logo-bmtca.png" alt="BMTCA Logo" width={80} height={27} className="object-contain" />
