@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import { useState } from "react";
@@ -116,7 +115,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 participantCategories[item.category] || item.category,
                 item.quantity,
                 `${item.duration} ${t_calc(`participants.${item.durationUnit}` as any)}`,
-                item.ucs.toFixed(4),
+                Math.ceil(item.ucs).toString(),
                 formatCurrency(item.cost)
             ]);
 
@@ -156,7 +155,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             ];
 
             const totalsItems = [
-                [t_report('totals.totalToCompensate'), `${results.totalUCS.toFixed(4)} UCS`],
+                [t_report('totals.totalToCompensate'), `${Math.ceil(results.totalUCS)} UCS`],
                 [t_report('totals.totalBudget'), formatCurrency(results.totalCost)],
             ];
 
@@ -183,7 +182,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                     0: { cellWidth: 'auto', fontStyle: 'bold' }, 
                     1: { halign: 'right', fontStyle: 'bold' } 
                 },
-                margin: { left: margin }
+                margin: { left: margin, right: margin }
             });
 
 
