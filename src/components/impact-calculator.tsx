@@ -22,6 +22,10 @@ import { useSettings } from "@/lib/settings";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { addEvent } from "@/lib/event-storage";
+import { getCurrencyRates } from "@/ai/flows/currency-converter";
+import { useToast } from "@/hooks/use-toast";
+
 
 interface ImpactCalculatorProps {
   onCalculate: (data: CalculationResult, formData: FormData) => void;
@@ -82,6 +86,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   const t = useTranslations('ImpactCalculator');
   const { settings } = useSettings();
   const [visitorUnit, setVisitorUnit] = useState<'hours' | 'days'>('hours');
+  const { toast } = useToast();
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema(t)),
@@ -102,17 +107,12 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         hours: undefined,
         days: undefined,
       },
-      indirectCosts: {
-        ownershipRegistration: undefined,
-        certificateIssuance: undefined,
-        websitePage: undefined,
-      }
     },
   });
 
- function onSubmit(values: FormData) {
-    const { perCapitaFactors, equivalences } = settings;
-    const { participants, visitors, indirectCosts } = values;
+ async function onSubmit(values: FormData) {
+    const { perCapitaFactors, equivalences, indirectCosts: indirectCostsSettings } = settings;
+    const { participants, visitors } = values;
 
     const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsCount = 0;
@@ -166,7 +166,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 const visitorDaysEquivalent = visitorTotalHours / 8;
                 totalParticipantDays += visitorDaysEquivalent;
                 
-                // Use fractional UCS for hours
                 ucs = (visitorCount * duration) / 24;
                 cost = ucs * equivalences.ucsQuotationValue;
             }
@@ -186,24 +185,19 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     // Indirect Costs (monetary only)
     const indirectBreakdown: { category: string; cost: number }[] = [];
-    if (indirectCosts) {
-      if ((indirectCosts.ownershipRegistration || 0) > 0) {
-        indirectBreakdown.push({ category: "ownershipRegistration", cost: indirectCosts.ownershipRegistration! });
-      }
-      if ((indirectCosts.certificateIssuance || 0) > 0) {
-        indirectBreakdown.push({ category: "certificateIssuance", cost: indirectCosts.certificateIssuance! });
-      }
-      if ((indirectCosts.websitePage || 0) > 0) {
-        indirectBreakdown.push({ category: "websitePage", cost: indirectCosts.websitePage! });
-      }
-    }
     
+    // Automatic calculation for indirect costs based on settings
+    const ownershipRegistrationCost = 1.5 * settings.equivalences.equivalenceValuePerYear;
+    indirectBreakdown.push({ category: "ownershipRegistration", cost: ownershipRegistrationCost });
+    indirectBreakdown.push({ category: "certificateIssuance", cost: indirectCostsSettings.certificateIssuance });
+    indirectBreakdown.push({ category: "websitePage", cost: indirectCostsSettings.websitePage });
+
     const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    const totalUCS = directUcs; // Indirect costs do not contribute to UCS
+    const totalUCS = directUcs;
     const totalCost = directCost + indirectCost;
 
     const maxDays = Math.max(
@@ -211,8 +205,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       (visitors?.unit === 'days' ? (visitors.days || 0) : (visitors?.hours || 0) / 8)
     );
     const totalEventHours = maxDays > 0 ? maxDays * 24 : 0;
-
-    const results: CalculationResult = {
+    
+    let results: CalculationResult = {
       totalUCS,
       totalCost,
       directUcs,
@@ -230,6 +224,28 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         gdpPercentage: settings.equivalences.gdpPerCapita > 0 ? (totalCost / settings.equivalences.gdpPerCapita) * 100 : 0,
       },
     };
+    
+    // Fetch currency rates and add to results
+    try {
+        const currencyData = await getCurrencyRates();
+        results.totalCostUSD = totalCost * currencyData.rates.USD;
+        results.totalCostEUR = totalCost * currencyData.rates.EUR;
+    } catch (error) {
+        console.error("Could not fetch currency rates", error);
+        toast({
+            variant: "destructive",
+            title: "Erro de Câmbio",
+            description: "Não foi possível obter as taxas de câmbio. Os valores em outras moedas não estarão disponíveis.",
+        });
+    }
+
+
+    addEvent({
+      id: new Date().toISOString(),
+      timestamp: Date.now(),
+      formData: values,
+      results
+    });
 
     onCalculate(results, values);
   }
@@ -352,50 +368,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
               )}
             />
 
-
-            <Separator />
-            <p className="font-medium">{t('indirectCosts.title')}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="indirectCosts.ownershipRegistration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center"><FileText className="w-4 h-4 mr-2" />{t('indirectCosts.ownershipRegistration')}</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} className="no-spinner" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="indirectCosts.certificateIssuance"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center"><Award className="w-4 h-4 mr-2" />{t('indirectCosts.certificateIssuance')}</FormLabel>
-                     <FormControl>
-                       <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} className="no-spinner" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="indirectCosts.websitePage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center"><Globe className="w-4 h-4 mr-2" />{t('indirectCosts.websitePage')}</FormLabel>                     <FormControl>
-                       <Input type="number" placeholder="0,00" {...field} value={field.value ?? ''} className="no-spinner" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            
             <div className="flex gap-2 justify-end">
               <Button type="button" variant="outline" onClick={handleResetClick}>
                 {t('resetButton')}
@@ -408,7 +380,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-    
-
-    

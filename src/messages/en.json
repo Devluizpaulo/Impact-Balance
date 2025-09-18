@@ -19,6 +19,7 @@
     "countryResults": "Country Results",
     "documentation": "Documentation",
     "scientificReview": "Scientific Review",
+    "eventSeal": "Event Seal",
     "logout": "Logout"
   },
   "HomePage": {
@@ -46,7 +47,9 @@
       "directUCScost": "Direct SCU Cost per Footprint",
       "indirectUCScost": "Indirect SCU Costs per Footprint",
       "totalToCompensate": "Total to Compensate with SCU",
-      "totalBudget": "Total Budget",
+      "totalBudgetBRL": "Total Budget (BRL)",
+      "totalBudgetUSD": "Total Budget (USD)",
+      "totalBudgetEUR": "Total Budget (EUR)",
       "costPerParticipantDay": "Compensation per Participant-Day",
       "costPerParticipantHour": "Compensation per Participant-Hour"
     }
@@ -120,7 +123,9 @@
       "totalUCSToCompensate": "Total SCU to Compensate",
       "totalDirectCost": "Total Direct Cost",
       "totalIndirectCost": "Total Indirect Cost",
-      "totalBudget": "Total Budget",
+      "totalBudgetBRL": "Total Budget (BRL)",
+      "totalBudgetUSD": "Total Budget (USD)",
+      "totalBudgetEUR": "Total Budget (EUR)",
       "category": "Category",
       "quantity": "Quantity",
       "duration": "Duration",
@@ -184,6 +189,19 @@
         "description": "Parameters have been reset to their default values."
       }
     }
+  },
+  "EventSealPage": {
+    "title": "Event Seal",
+    "description": "Manage and view seals for calculated events.",
+    "noEvents": "No events have been calculated yet.",
+    "table": {
+      "eventName": "Event Name",
+      "date": "Date",
+      "totalUCS": "Total UCS",
+      "totalCost": "Total Cost (BRL)",
+      "actions": "Actions"
+    },
+    "viewReport": "View Report"
   },
   "DocumentationPage": {
     "title": "Documentation",

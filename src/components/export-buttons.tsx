@@ -34,6 +34,9 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
     const [isExporting, setIsExporting] = useState(false);
 
     const formatCurrency = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    const formatCurrencyUSD = (value: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+    const formatCurrencyEUR = (value: number) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
+
 
     const participantCategories: Record<string, string> = {
         organizers: t_calc('participants.organizersAndPromoters'), assemblers: t_calc('participants.assemblers'),
@@ -154,10 +157,18 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
               [t_report('totals.costPerParticipantHour'), formatCurrency(results.costPerParticipantHour)],
             ];
 
-            const totalsItems = [
+            let totalsItems = [
                 [t_report('totals.totalToCompensate'), `${Math.ceil(results.totalUCS)} UCS`],
-                [t_report('totals.totalBudget'), formatCurrency(results.totalCost)],
+                [t_report('totals.totalBudgetBRL'), formatCurrency(results.totalCost)],
             ];
+
+            if (results.totalCostUSD) {
+                totalsItems.push([t_report('totals.totalBudgetUSD'), formatCurrencyUSD(results.totalCostUSD)]);
+            }
+            if (results.totalCostEUR) {
+                totalsItems.push([t_report('totals.totalBudgetEUR'), formatCurrencyEUR(results.totalCostEUR)]);
+            }
+
 
             doc.autoTable({
                 startY: finalY,
@@ -207,16 +218,27 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const wb = XLSX.utils.book_new();
 
             // Summary Sheet
-            const summaryData = [
+            const summaryData: { Item: string, Value: string | number | undefined }[] = [
                 { Item: t('excel.eventName'), Value: formData.eventName },
                 {},
                 { Item: t('excel.totalUCSToCompensate'), Value: results.totalUCS },
                 { Item: t('excel.totalDirectCost'), Value: results.directCost },
                 { Item: t('excel.totalIndirectCost'), Value: results.indirectCost },
-                { Item: t('excel.totalBudget'), Value: results.totalCost },
+                { Item: t('excel.totalBudgetBRL'), Value: results.totalCost },
+            ];
+
+            if (results.totalCostUSD) {
+                summaryData.push({ Item: t('excel.totalBudgetUSD'), Value: results.totalCostUSD });
+            }
+            if (results.totalCostEUR) {
+                summaryData.push({ Item: t('excel.totalBudgetEUR'), Value: results.totalCostEUR });
+            }
+
+            summaryData.push(
                 { Item: t_report('totals.costPerParticipantDay'), Value: results.costPerParticipantDay },
                 { Item: t_report('totals.costPerParticipantHour'), Value: results.costPerParticipantHour },
-            ];
+            );
+
             const wsSummary = XLSX.utils.json_to_sheet(summaryData, { skipHeader: true });
             XLSX.utils.book_append_sheet(wb, wsSummary, t('excel.summarySheet'));
 
@@ -239,7 +261,9 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
 
             const wsDetails = XLSX.utils.json_to_sheet([...directData, ...indirectData]);
             // Set column widths
-            wsDetails['!cols'] = [ {wch:30}, {wch:10}, {wch:15}, {wch:15}, {wch:15} ];
+            const colWidths = [ {wch:30}, {wch:10}, {wch:15}, {wch:15}, {wch:15} ];
+            wsDetails['!cols'] = colWidths;
+
             XLSX.utils.book_append_sheet(wb, wsDetails, t('excel.detailsSheet'));
 
             const fileName = `${formData.eventName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_impact_report.xlsx`;

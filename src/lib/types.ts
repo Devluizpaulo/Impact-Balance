@@ -49,6 +49,8 @@ export type FormData = z.infer<ReturnType<typeof formSchema>>;
 export type CalculationResult = {
   totalUCS: number;
   totalCost: number;
+  totalCostUSD?: number;
+  totalCostEUR?: number;
   directUcs: number;
   directCost: number;
   indirectCost: number; // Indirect costs are purely monetary
@@ -74,3 +76,11 @@ export type CalculationResult = {
     gdpPercentage: number;
   };
 };
+
+// Represents a stored event record
+export interface EventRecord {
+  id: string;
+  timestamp: number;
+  formData: FormData;
+  results: CalculationResult;
+}

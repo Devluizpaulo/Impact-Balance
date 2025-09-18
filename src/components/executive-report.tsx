@@ -18,8 +18,14 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
     const t_calc = useTranslations("ImpactCalculator");
     const t_report = useTranslations("ExecutiveReport");
 
-    const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    const formatCurrency = (value: number, currency = 'BRL') => {
+        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(value);
+    }
+    const formatCurrencyUSD = (value: number) => {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+    }
+    const formatCurrencyEUR = (value: number) => {
+        return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
     }
     
     const participantCategories: Record<string, string> = {
@@ -131,9 +137,21 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                             <span className="font-mono font-bold text-lg text-primary">{Math.ceil(results.totalUCS)} UCS</span>
                         </div>
                           <div className="flex justify-between items-baseline">
-                            <span className="text-gray-600 text-base">{t_report('totals.totalBudget')}</span>
-                            <span className="font-mono font-bold text-lg text-primary">{formatCurrency(results.totalCost)}</span>
+                            <span className="text-gray-600 text-base">{t_report('totals.totalBudgetBRL')}</span>
+                            <span className="font-mono font-bold text-lg text-primary">{formatCurrency(results.totalCost, 'BRL')}</span>
                         </div>
+                        {results.totalCostUSD && (
+                            <div className="flex justify-between items-baseline">
+                                <span className="text-gray-600 text-base">{t_report('totals.totalBudgetUSD')}</span>
+                                <span className="font-mono font-bold text-lg text-primary">{formatCurrencyUSD(results.totalCostUSD)}</span>
+                            </div>
+                        )}
+                        {results.totalCostEUR && (
+                            <div className="flex justify-between items-baseline">
+                                <span className="text-gray-600 text-base">{t_report('totals.totalBudgetEUR')}</span>
+                                <span className="font-mono font-bold text-lg text-primary">{formatCurrencyEUR(results.totalCostEUR)}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

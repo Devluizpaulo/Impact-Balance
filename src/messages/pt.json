@@ -19,6 +19,7 @@
     "countryResults": "Resultados por País",
     "documentation": "Documentação",
     "scientificReview": "Revisão Científica",
+    "eventSeal": "Selo de Eventos",
     "logout": "Sair"
   },
   "HomePage": {
@@ -46,7 +47,9 @@
       "directUCScost": "Custo Direto de UCS por Pegada",
       "indirectUCScost": "Custos Indiretos de UCS por Pegada",
       "totalToCompensate": "Total a Compensar com UCS",
-      "totalBudget": "Orçamento Total",
+      "totalBudgetBRL": "Orçamento Total (BRL)",
+      "totalBudgetUSD": "Orçamento Total (USD)",
+      "totalBudgetEUR": "Orçamento Total (EUR)",
       "costPerParticipantDay": "Compensação por Participante-Dia",
       "costPerParticipantHour": "Compensação por Participante-Hora"
     }
@@ -120,7 +123,9 @@
       "totalUCSToCompensate": "Total de UCS a Compensar",
       "totalDirectCost": "Custo Direto Total",
       "totalIndirectCost": "Custo Indireto Total",
-      "totalBudget": "Orçamento Total",
+      "totalBudgetBRL": "Orçamento Total (BRL)",
+      "totalBudgetUSD": "Orçamento Total (USD)",
+      "totalBudgetEUR": "Orçamento Total (EUR)",
       "category": "Categoria",
       "quantity": "Quantidade",
       "duration": "Duração",
@@ -184,6 +189,19 @@
         "description": "Os parâmetros foram redefinidos para os valores padrão."
       }
     }
+  },
+    "EventSealPage": {
+    "title": "Selo de Eventos",
+    "description": "Gerencie e visualize os selos para os eventos calculados.",
+    "noEvents": "Nenhum evento foi calculado ainda.",
+    "table": {
+      "eventName": "Nome do Evento",
+      "date": "Data",
+      "totalUCS": "Total UCS",
+      "totalCost": "Custo Total (BRL)",
+      "actions": "Ações"
+    },
+    "viewReport": "Ver Relatório"
   },
   "DocumentationPage": {
     "title": "Documentação",
