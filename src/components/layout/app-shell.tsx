@@ -24,46 +24,44 @@ type NavItem = {
   icon: React.ReactNode;
   translationKey: string;
   isProtected?: boolean;
-  subItems?: NavItem[];
 }
 
-const navItemsConfig: NavItem[] = [
+const publicNavItems: NavItem[] = [
   { 
     href: "/", 
     icon: <Calculator className="h-5 w-5" />, 
     translationKey: 'calculator' 
   },
+];
+
+const adminNavItems: NavItem[] = [
   { 
     href: "/parameters", 
     icon: <Settings className="h-5 w-5" />, 
     translationKey: 'parameters',
-    isProtected: true,
   },
   {
     href: "/scientific-review",
     icon: <FileText className="h-5 w-5" />,
     translationKey: 'scientificReview',
-    isProtected: true,
   },
   {
     href: "/data-figures", 
     icon: <FilePieChart className="h-5 w-5" />, 
     translationKey: 'dataFigures',
-    isProtected: true,
   },
   { 
     href: "/country-results", 
     icon: <Globe2 className="h-5 w-5" />, 
     translationKey: 'countryResults',
-    isProtected: true,
   },
     { 
     href: "/event-seal", 
     icon: <Award className="h-5 w-5" />, 
     translationKey: 'eventSeal',
-    isProtected: true,
   },
 ];
+
 
 function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSubItem?: boolean, isCollapsed: boolean }) {
   const { isAdmin, promptLogin } = useAuth();
@@ -119,23 +117,17 @@ function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSu
 
 
 function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
-  const pathname = usePathname();
   const t = useTranslations("AppShell");
   const { isAdmin, logout } = useAuth();
-
-  const getAccordionTriggerClass = (item: NavItem) => {
-    return cn(
-        "flex items-center w-full justify-between rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:no-underline font-medium",
-        item.subItems?.some(sub => pathname === sub.href) && "text-primary",
-        isCollapsed ? "justify-center" : "justify-between"
-    );
-  }
 
   return (
     <nav className="flex flex-col h-full">
       <div className="flex-1 px-2 space-y-1">
-        {navItemsConfig.map((item) => (
-          <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
+        {publicNavItems.map((item) => (
+          <NavLink key={item.href} item={{...item, isProtected: false}} isCollapsed={isCollapsed} />
+        ))}
+         {isAdmin && adminNavItems.map((item) => (
+          <NavLink key={item.href} item={{...item, isProtected: true}} isCollapsed={isCollapsed} />
         ))}
       </div>
       {isAdmin && (
@@ -165,6 +157,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
 
 function MobileNav() {
   const t = useTranslations("AppShell");
+  const { isAdmin } = useAuth();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -182,8 +175,11 @@ function MobileNav() {
         <div className="flex-1 overflow-y-auto py-2">
            <nav className="flex flex-col h-full">
               <div className="flex-1 px-2 space-y-1">
-                {navItemsConfig.map((item) => (
-                  <NavLink key={item.href} item={item} isCollapsed={false} />
+                {publicNavItems.map((item) => (
+                  <NavLink key={item.href} item={{...item, isProtected: false}} isCollapsed={false} />
+                ))}
+                {isAdmin && adminNavItems.map((item) => (
+                  <NavLink key={item.href} item={{...item, isProtected: true}} isCollapsed={false} />
                 ))}
               </div>
           </nav>
