@@ -52,18 +52,18 @@ export const defaultSettings: SystemSettings = {
         perCapitaFactors: {
             averageUcsPerHectare: 760,
             perCapitaConsumptionHa: 2.389,
-            ucsConsumption73years: 1816,
-            annualUcsConsumption: 25,
-            dailyUcsConsumption: 0.068,
-            hourlyUcsConsumption: 0.003,
+            ucsConsumption73years: 0, // Calculated
+            annualUcsConsumption: 0, // Calculated
+            dailyUcsConsumption: 0, // Calculated
+            hourlyUcsConsumption: 0, // Calculated
         },
         equivalences: {
             ucsQuotationValue: 168.85,
             gdpPerCapita: 99706.20,
-            equivalenceValuePerYear: 4199.60,
-            gdpPercentage: 4.212,
-            equivalenceValuePerDay: 11.51,
-            equivalenceValuePerHour: 0.48,
+            equivalenceValuePerYear: 0, // Calculated
+            gdpPercentage: 0, // Calculated
+            equivalenceValuePerDay: 0, // Calculated
+            equivalenceValuePerHour: 0, // Calculated
         },
         indirectCosts: {
             ownershipRegistration: 1.5,
@@ -105,7 +105,7 @@ const calculateDerivedSettings = (baseSettings: SystemSettings): SystemSettings 
 // Define the shape of the context
 interface SettingsContextType {
     settings: SystemSettings;
-    setSettings: React.Dispatch<React.SetStateAction<SystemSettings>>;
+    setSettings: (newSettings: SystemSettings) => void;
     saveSettings: () => Promise<void>;
     resetSettings: () => Promise<void>;
     isLoading: boolean;
@@ -117,16 +117,16 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 // Create the provider component
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
-    const [settings, setSettings] = useState<SystemSettings>(defaultSettings);
+    const [settings, setSettings] = useState<SystemSettings>(() => calculateDerivedSettings(defaultSettings));
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const { toast } = useToast();
     const { isAdmin } = useAuth();
     const t = useTranslations("ParametersPage.toasts" as any);
 
-    // Recalculate derived values whenever base values change
-    const updateAndRecalculate = useCallback((newSettings: SystemSettings) => {
-        const recalculatedSettings = calculateDerivedSettings(newSettings);
+    // This function will receive the new base settings and will trigger a recalculation.
+    const updateAndRecalculate = useCallback((newBaseSettings: SystemSettings) => {
+        const recalculatedSettings = calculateDerivedSettings(newBaseSettings);
         setSettings(recalculatedSettings);
     }, []);
 
@@ -152,7 +152,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
       loadSettings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [t, toast]);
+    }, [t, toast, updateAndRecalculate]);
 
 
     const saveSettings = async () => {
