@@ -236,7 +236,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
 
             const wsDetails = XLSX.utils.json_to_sheet([...directData, ...indirectData]);
             // Set number format for UCS and Cost columns
-            wsDetails['!cols'] = [ {wch:30}, {wch:10}, {wch:15}, {wch:15, z: '0.0000'}, {wch:15, z: '"R$"#,##0.00'} ];
+            wsDetails['!cols'] = [ {wch:30}, {wch:10}, {wch:15}, {wch:15}, {wch:15} ];
             XLSX.utils.book_append_sheet(wb, wsDetails, t('excel.detailsSheet'));
 
             const fileName = `${formData.eventName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_impact_report.xlsx`;
@@ -287,5 +287,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
     
 
 
+
+    
 
     
