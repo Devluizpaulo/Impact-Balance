@@ -89,7 +89,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                                     <TableCell className="font-sans font-medium text-gray-800">{participantCategories[item.category] || item.category}</TableCell>
                                     <TableCell className="text-right text-gray-700">{item.quantity}</TableCell>
                                     <TableCell className="text-right text-gray-700">{item.duration} <span className="text-xs text-gray-500">{t_calc(`participants.${item.durationUnit}` as any)}</span></TableCell>
-                                    <TableCell className="text-right text-primary font-semibold">{Math.ceil(item.ucs)}</TableCell>
+                                    <TableCell className="text-right text-primary font-semibold">{(item.ucs).toFixed(3)}</TableCell>
                                     <TableCell className="text-right text-primary/90 font-semibold">{formatCurrency(item.cost)}</TableCell>
                                 </TableRow>
                             ))}
