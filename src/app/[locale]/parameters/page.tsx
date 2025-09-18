@@ -120,6 +120,7 @@ function DocumentationContent() {
 
 export default function ParametersPage() {
   const t = useTranslations("ParametersPage");
+  const t_calc = useTranslations("ImpactCalculator");
   const t_docs = useTranslations("DocumentationPage");
   const { settings, setSettings, saveSettings, resetSettings, isClient } = useSettings();
   const { isAdmin } = useAuth();
@@ -245,7 +246,7 @@ export default function ParametersPage() {
                 <TableBody>
                   {indirectCosts.map(([key, value]) => (
                     <TableRow key={key}>
-                      <TableCell>{t(`indirectCostsLabels.${key}` as any)}</TableCell>
+                      <TableCell>{t_calc(`indirectCosts.${key}` as any)}</TableCell>
                       <TableCell>
                         <Input type="number" name={`indirectCosts.${key}`} value={value as number} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
                       </TableCell>
@@ -301,3 +302,5 @@ export default function ParametersPage() {
     </AppShell>
   );
 }
+
+    

@@ -77,6 +77,12 @@
       "hours": "Hours",
       "durationUnit": "Duration Unit"
     },
+     "indirectCosts": {
+      "title": "Indirect Costs",
+      "ownershipRegistration": "Ownership Registration (%)",
+      "certificateIssuance": "Certificate Issuance",
+      "websitePage": "Website Page"
+    },
     "resetButton": "Reset",
     "calculateButton": "Calculate Impact",
     "formValidation": {
@@ -157,11 +163,6 @@
       "annualUcsConsumption": "Annual UCS Consumption",
       "dailyUcsConsumption": "Daily UCS Consumption",
       "hourlyUcsConsumption": "Hourly UCS Consumption"
-    },
-    "indirectCostsLabels": {
-      "ownershipRegistration": "Ownership Registration (%)",
-      "certificateIssuance": "Certificate Issuance",
-      "websitePage": "Website Page"
     },
     "equivalences": {
       "ucsQuotationValue": "UCS Quotation Value",
@@ -277,3 +278,5 @@
     }
   }
 }
+
+    
