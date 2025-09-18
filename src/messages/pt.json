@@ -9,12 +9,11 @@
     }
   },
   "Footer": {
-    "copyright": "Balanço de Impacto. Todos os Direitos Reservados.",
-    "parametersLink": "Parâmetros do Sistema"
+    "copyright": "Balanço de Impacto. Todos os Direitos Reservados."
   },
   "AppShell": {
     "calculator": "Calculadora",
-    "parameters": "Parâmetros",
+    "configurations": "Configurações",
     "dataFigures": "Dados Mundiais",
     "countryResults": "Resultados por País",
     "documentation": "Documentação",
@@ -278,5 +277,3 @@
     }
   }
 }
-
-    

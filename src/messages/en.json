@@ -9,12 +9,11 @@
     }
   },
   "Footer": {
-    "copyright": "Impact Balance. All Rights Reserved.",
-    "parametersLink": "System Parameters"
+    "copyright": "Impact Balance. All Rights Reserved."
   },
   "AppShell": {
     "calculator": "Calculator",
-    "parameters": "Parameters",
+    "configurations": "Settings",
     "dataFigures": "World Data",
     "countryResults": "Country Results",
     "documentation": "Documentation",
@@ -278,5 +277,3 @@
     }
   }
 }
-
-    

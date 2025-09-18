@@ -35,30 +35,35 @@ const publicNavItems: NavItem[] = [
 ];
 
 const adminNavItems: NavItem[] = [
-  { 
+    { 
     href: "/parameters", 
-    icon: <Settings className="h-5 w-5" />, 
-    translationKey: 'parameters',
+    icon: <Lock className="h-5 w-5" />, 
+    translationKey: 'configurations',
+    isProtected: true,
   },
   {
     href: "/scientific-review",
     icon: <FileText className="h-5 w-5" />,
     translationKey: 'scientificReview',
+    isProtected: true,
   },
   {
     href: "/data-figures", 
     icon: <FilePieChart className="h-5 w-5" />, 
     translationKey: 'dataFigures',
+    isProtected: true,
   },
   { 
     href: "/country-results", 
     icon: <Globe2 className="h-5 w-5" />, 
     translationKey: 'countryResults',
+    isProtected: true,
   },
     { 
     href: "/event-seal", 
     icon: <Award className="h-5 w-5" />, 
     translationKey: 'eventSeal',
+    isProtected: true,
   },
 ];
 
@@ -127,7 +132,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
           <NavLink key={item.href} item={{...item, isProtected: false}} isCollapsed={isCollapsed} />
         ))}
          {isAdmin && adminNavItems.map((item) => (
-          <NavLink key={item.href} item={{...item, isProtected: true}} isCollapsed={isCollapsed} />
+          <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
       </div>
       {isAdmin && (
@@ -179,7 +184,7 @@ function MobileNav() {
                   <NavLink key={item.href} item={{...item, isProtected: false}} isCollapsed={false} />
                 ))}
                 {isAdmin && adminNavItems.map((item) => (
-                  <NavLink key={item.href} item={{...item, isProtected: true}} isCollapsed={false} />
+                  <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
               </div>
           </nav>
@@ -218,5 +223,3 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
-    
