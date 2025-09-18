@@ -165,8 +165,10 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 body: summaryItems,
                 theme: 'plain',
                 styles: { fontSize: 10, fillColor: false },
-                columnStyles: { 0: { cellWidth: 70 }, 1: { halign: 'right' } },
-                tableWidth: 100,
+                columnStyles: { 
+                    0: { cellWidth: 'auto' }, 
+                    1: { halign: 'right' } 
+                },
                 margin: { left: margin }
             });
             
@@ -177,8 +179,10 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 body: totalsItems,
                 theme: 'plain',
                 styles: { fontSize: 12, fontStyle: 'bold', fillColor: false },
-                columnStyles: { 0: { cellWidth: 70, fontStyle: 'bold' }, 1: { halign: 'right', fontStyle: 'bold' } },
-                tableWidth: 100,
+                columnStyles: { 
+                    0: { cellWidth: 'auto', fontStyle: 'bold' }, 
+                    1: { halign: 'right', fontStyle: 'bold' } 
+                },
                 margin: { left: margin }
             });
 
@@ -235,7 +239,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             }));
 
             const wsDetails = XLSX.utils.json_to_sheet([...directData, ...indirectData]);
-            // Set number format for UCS and Cost columns
+            // Set column widths
             wsDetails['!cols'] = [ {wch:30}, {wch:10}, {wch:15}, {wch:15}, {wch:15} ];
             XLSX.utils.book_append_sheet(wb, wsDetails, t('excel.detailsSheet'));
 
@@ -281,13 +285,3 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         </div>
     );
 }
-
-    
-
-    
-
-
-
-    
-
-    

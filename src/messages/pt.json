@@ -45,7 +45,7 @@
     "totals": {
       "directUCScost": "Custo Direto de UCS por Pegada",
       "indirectUCScost": "Custos Indiretos de UCS por Pegada",
-      "totalToCompensate": "Total a Compensar com UC",
+      "totalToCompensate": "Total a Compensar com UCS",
       "totalBudget": "Orçamento Total",
       "costPerParticipantDay": "Compensação por Participante-Dia",
       "costPerParticipantHour": "Compensação por Participante-Hora"
