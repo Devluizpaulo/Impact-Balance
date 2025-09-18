@@ -256,9 +256,11 @@
   "Auth": {
     "modal": {
       "title": "Acesso de Administrador Necessário",
-      "description": "Por favor, insira a senha de administrador para acessar esta seção.",
+      "description": "Por favor, insira as credenciais de administrador para acessar esta seção.",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "Digite seu e-mail...",
       "passwordLabel": "Senha",
-      "passwordPlaceholder": "Digite a senha...",
+      "passwordPlaceholder": "Digite a senha de 6 dígitos...",
       "cancel": "Cancelar",
       "login": "Entrar"
     },
@@ -268,20 +270,10 @@
     },
     "loginError": {
       "title": "Falha no Login",
-      "description": "A senha que você digitou está incorreta."
+      "description": "As credenciais que você digitou estão incorretas."
     },
     "logoutSuccess": {
       "title": "Logout Bem-sucedido"
-    }
-  },
-  "AiSuggestions": {
-    "title": "Sugestões com IA",
-    "description": "Recomendações práticas para reduzir a pegada do seu evento.",
-    "loading": "Gerando sugestões...",
-    "error": {
-      "title": "Erro",
-      "description": "Não foi possível obter sugestões da IA no momento.",
-      "loadFail": "Falha ao carregar sugestões. Por favor, recalcule."
     }
   }
 }

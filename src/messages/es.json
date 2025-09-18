@@ -256,9 +256,11 @@
   "Auth": {
     "modal": {
       "title": "Acceso de Administrador Requerido",
-      "description": "Por favor, ingrese la contraseña de administrador para acceder a esta sección.",
+      "description": "Por favor, ingrese las credenciales de administrador para acceder a esta sección.",
+      "emailLabel": "Correo Electrónico",
+      "emailPlaceholder": "Ingrese su correo electrónico...",
       "passwordLabel": "Contraseña",
-      "passwordPlaceholder": "Ingrese la contraseña...",
+      "passwordPlaceholder": "Ingrese la contraseña de 6 dígitos...",
       "cancel": "Cancelar",
       "login": "Iniciar Sesión"
     },
@@ -268,20 +270,10 @@
     },
     "loginError": {
       "title": "Error de Inicio de Sesión",
-      "description": "La contraseña que ingresó es incorrecta."
+      "description": "Las credenciales que ingresó son incorrectas."
     },
     "logoutSuccess": {
       "title": "Cierre de Sesión Exitoso"
-    }
-  },
-  "AiSuggestions": {
-    "title": "Sugerencias con IA",
-    "description": "Recomendaciones prácticas para reducir la huella de su evento.",
-    "loading": "Generando sugerencias...",
-    "error": {
-      "title": "Error",
-      "description": "No se pudieron recuperar las sugerencias de la IA en este momento.",
-      "loadFail": "Error al cargar las sugerencias. Por favor, vuelva a calcular."
     }
   }
 }

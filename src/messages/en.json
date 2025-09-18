@@ -256,9 +256,11 @@
   "Auth": {
     "modal": {
       "title": "Admin Access Required",
-      "description": "Please enter the admin password to access this section.",
+      "description": "Please enter the admin credentials to access this section.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email...",
       "passwordLabel": "Password",
-      "passwordPlaceholder": "Enter password...",
+      "passwordPlaceholder": "Enter 6-digit password...",
       "cancel": "Cancel",
       "login": "Login"
     },
@@ -268,20 +270,10 @@
     },
     "loginError": {
       "title": "Login Failed",
-      "description": "The password you entered is incorrect."
+      "description": "The credentials you entered are incorrect."
     },
     "logoutSuccess": {
       "title": "Logout Successful"
-    }
-  },
-  "AiSuggestions": {
-    "title": "AI-Powered Suggestions",
-    "description": "Actionable recommendations to reduce your event's footprint.",
-    "loading": "Generating suggestions...",
-    "error": {
-      "title": "Error",
-      "description": "Could not retrieve AI suggestions at this time.",
-      "loadFail": "Failed to load suggestions. Please try recalculating."
     }
   }
 }

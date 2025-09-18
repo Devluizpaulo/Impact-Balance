@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
@@ -18,7 +19,7 @@ import { useTranslations } from 'next-intl';
 
 interface AuthContextType {
   isAdmin: boolean;
-  login: (password: string) => boolean;
+  login: (email: string, pass: string) => boolean;
   logout: () => void;
   promptLogin: () => void;
 }
@@ -28,15 +29,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
   const t = useTranslations("Auth");
 
-  const login = (pass: string): boolean => {
-    // Simple password check. In a real app, use a proper auth system.
-    if (pass === '1234') {
+  const login = (emailInput: string, pass: string): boolean => {
+    // Simple credential check. In a real app, use a proper auth system.
+    if (emailInput === 'admin@impactbalance.com' && pass === '123456') {
       setIsAdmin(true);
       setIsLoginPromptOpen(false);
+      setEmail('');
       setPassword('');
       toast({ title: t('loginSuccess.title'), description: t('loginSuccess.description') });
       return true;
@@ -57,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const handleLoginAttempt = () => {
-    login(password);
+    login(email, password);
   }
   
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -65,6 +68,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       handleLoginAttempt();
     }
   }
+
+  const handleCancel = () => {
+    setEmail('');
+    setPassword('');
+  }
+
 
   return (
     <AuthContext.Provider value={{ isAdmin, login, logout, promptLogin }}>
@@ -75,19 +84,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             <AlertDialogTitle>{t('modal.title')}</AlertDialogTitle>
             <AlertDialogDescription>{t('modal.description')}</AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="password">{t('modal.passwordLabel')}</Label>
-            <Input 
-              id="password" 
-              type="password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={t('modal.passwordPlaceholder')}
-            />
+          <div className="space-y-4">
+             <div className="space-y-2">
+                <Label htmlFor="email">{t('modal.emailLabel')}</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder={t('modal.emailPlaceholder')}
+                />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">{t('modal.passwordLabel')}</Label>
+              <Input 
+                id="password" 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={t('modal.passwordPlaceholder')}
+                maxLength={6}
+              />
+            </div>
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setPassword('')}>{t('modal.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel onClick={handleCancel}>{t('modal.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleLoginAttempt}>{t('modal.login')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
