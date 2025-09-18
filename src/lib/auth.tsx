@@ -2,6 +2,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useRouter } from '@/navigation';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -40,6 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [password, setPassword] = useState('');
   const { toast } = useToast();
   const t = useTranslations("Auth");
+  const router = useRouter();
 
   const isAdmin = !!user;
 
@@ -59,6 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setEmail('');
       setPassword('');
       toast({ title: t('loginSuccess.title'), description: t('loginSuccess.description') });
+      router.push('/parameters');
       return true;
     } catch (error) {
       console.error("Firebase Auth Error:", error);
@@ -71,6 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await signOut(auth);
       toast({ title: t('logoutSuccess.title') });
+      router.push('/');
     } catch (error) {
       console.error("Firebase Signout Error:", error);
     }
