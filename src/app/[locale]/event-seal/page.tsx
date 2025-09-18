@@ -10,11 +10,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Eye, Loader2 } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ExecutiveReport from "@/components/executive-report";
 
 export default function EventSealPage() {
     const t = useTranslations("EventSealPage");
+    const t_report = useTranslations("ExecutiveReport");
     const [events, setEvents] = useState<EventRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedEvent, setSelectedEvent] = useState<EventRecord | null>(null);
@@ -95,6 +96,9 @@ export default function EventSealPage() {
              {selectedEvent && (
                 <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
                     <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
+                        <DialogHeader>
+                            <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
+                        </DialogHeader>
                         <div className="flex-grow overflow-y-auto pr-6 -mt-4">
                            <ExecutiveReport results={selectedEvent.results} formData={selectedEvent.formData} />
                         </div>
@@ -104,4 +108,3 @@ export default function EventSealPage() {
         </AppShell>
     );
 }
-
