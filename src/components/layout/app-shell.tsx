@@ -1,6 +1,7 @@
+
 "use client"
 
-import { BookText, Calculator, Map, Settings, PanelLeft, Lock, LogOut, FilePieChart, Globe2, FileText } from "lucide-react";
+import { BookText, Calculator, Map, Settings, PanelLeft, Lock, LogOut, FilePieChart, Globe2, FileText, Award } from "lucide-react";
 import { Link, usePathname, useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -57,6 +58,11 @@ const navItemsConfig: NavItem[] = [
     href: "/country-results", 
     icon: <Globe2 className="h-5 w-5" />, 
     translationKey: 'countryResults' 
+  },
+    { 
+    href: "/event-seal", 
+    icon: <Award className="h-5 w-5" />, 
+    translationKey: 'eventSeal' 
   },
 ];
 

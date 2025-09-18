@@ -195,6 +195,8 @@
     "description": "Manage and view seals for calculated events.",
     "noEvents": "No events have been calculated yet.",
     "table": {
+      "title": "Saved Events",
+      "description": "List of all events calculated and saved in the system.",
       "eventName": "Event Name",
       "date": "Date",
       "totalUCS": "Total UCS",

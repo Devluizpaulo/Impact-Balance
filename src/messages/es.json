@@ -195,6 +195,8 @@
     "description": "Administre y vea los sellos de los eventos calculados.",
     "noEvents": "Aún no se han calculado eventos.",
     "table": {
+      "title": "Eventos Guardados",
+      "description": "Lista de todos los eventos calculados y guardados en el sistema.",
       "eventName": "Nombre del Evento",
       "date": "Fecha",
       "totalUCS": "Total UCS",

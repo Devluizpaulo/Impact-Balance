@@ -1,36 +1,35 @@
 
 "use client";
 
+import { db } from './firebase';
+import { collection, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import type { EventRecord } from './types';
 
-const STORAGE_KEY = 'impactBalanceEvents';
+const EVENTS_COLLECTION = 'events';
 
-// Function to get all stored events
-export const getEvents = (): EventRecord[] => {
-    if (typeof window === 'undefined') {
+// Function to get all stored events from Firestore
+export const getEvents = async (): Promise<EventRecord[]> => {
+    try {
+        const eventsCollection = collection(db, EVENTS_COLLECTION);
+        const q = query(eventsCollection, orderBy('timestamp', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const events: EventRecord[] = [];
+        querySnapshot.forEach((doc) => {
+            events.push({ id: doc.id, ...doc.data() } as EventRecord);
+        });
+        return events;
+    } catch (error) {
+        console.error("Error reading events from Firestore", error);
         return [];
     }
-    try {
-        const storedEvents = window.localStorage.getItem(STORAGE_KEY);
-        if (storedEvents) {
-            return JSON.parse(storedEvents) as EventRecord[];
-        }
-    } catch (error) {
-        console.error("Error reading events from localStorage", error);
-    }
-    return [];
 };
 
-// Function to add a new event
-export const addEvent = (newEvent: EventRecord): void => {
-     if (typeof window === 'undefined') {
-        return;
-    }
+// Function to add a new event to Firestore
+export const addEvent = async (newEvent: Omit<EventRecord, 'id'>): Promise<void> => {
     try {
-        const events = getEvents();
-        events.unshift(newEvent); // Add new event to the beginning of the array
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+        const eventsCollection = collection(db, EVENTS_COLLECTION);
+        await addDoc(eventsCollection, newEvent);
     } catch (error) {
-        console.error("Error saving event to localStorage", error);
+        console.error("Error saving event to Firestore", error);
     }
 };

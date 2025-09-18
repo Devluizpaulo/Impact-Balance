@@ -154,7 +154,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 totalParticipantDays += visitorCount * duration;
                 totalParticipantHours += visitorCount * duration * 8;
-                ucs = Math.ceil(visitorCount * duration * perCapitaFactors.dailyUcsConsumption);
+                ucs = (visitorCount * duration * perCapitaFactors.dailyUcsConsumption);
                 cost = ucs * equivalences.ucsQuotationValue;
             }
         } else { // hours
@@ -242,8 +242,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     }
 
 
-    addEvent({
-      id: new Date().toISOString(),
+    await addEvent({
       timestamp: Date.now(),
       formData: values,
       results
@@ -382,7 +381,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-    
-    
-    

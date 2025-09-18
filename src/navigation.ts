@@ -1,3 +1,4 @@
+
 import {
   createLocalizedPathnamesNavigation,
   Pathnames,
@@ -11,6 +12,7 @@ export const pathnames = {
   '/country-results': '/country-results',
   '/documentation': '/documentation',
   '/scientific-review': '/scientific-review',
+  '/event-seal': '/event-seal',
 } satisfies Pathnames<typeof locales>;
 
 export const {Link, redirect, usePathname, useRouter} =
