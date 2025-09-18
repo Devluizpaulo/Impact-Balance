@@ -113,9 +113,16 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
  async function onSubmit(values: FormData) {
     // --- Data Sanitization ---
     const sanitizedValues = JSON.parse(JSON.stringify(values, (key, value) => {
-        return value === undefined ? 0 : value;
+        if (value === undefined || value === null || isNaN(value)) {
+          // For numeric fields that are empty/invalid, treat as 0
+          if (['count', 'days', 'hours'].includes(key)) {
+            return 0;
+          }
+        }
+        return value;
     }));
     
+    // Ensure only the relevant unit for visitors has a value
     if (sanitizedValues.visitors) {
       if (sanitizedValues.visitors.unit === 'hours') {
         sanitizedValues.visitors.days = 0;
