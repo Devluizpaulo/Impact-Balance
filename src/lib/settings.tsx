@@ -41,33 +41,33 @@ export interface SystemSettings {
 // Define the default settings
 const defaultSettings: SystemSettings = {
     perCapitaFactors: {
-      averageUcsPerHectare: 760,
-      perCapitaConsumptionHa: 2.389,
-      ucsConsumption73years: 1816,
-      annualUcsConsumption: 25,
-      dailyUcsConsumption: 0.068,
-      hourlyUcsConsumption: 0.003,
+      averageUcsPerHectare: 0,
+      perCapitaConsumptionHa: 0,
+      ucsConsumption73years: 0,
+      annualUcsConsumption: 0,
+      dailyUcsConsumption: 0,
+      hourlyUcsConsumption: 0,
     },
     equivalences: {
-      ucsQuotationValue: 168.85,
-      gdpPerCapita: 99706.20,
-      equivalenceValuePerYear: 4199.60,
-      gdpPercentage: 4.212,
-      equivalenceValuePerDay: 11.51,
-      equivalenceValuePerHour: 0.48,
+      ucsQuotationValue: 0,
+      gdpPerCapita: 0,
+      equivalenceValuePerYear: 0,
+      gdpPercentage: 0,
+      equivalenceValuePerDay: 0,
+      equivalenceValuePerHour: 0,
     },
     indirectCosts: {
-      ownershipRegistration: 1.5, // Default percentage
-      certificateIssuance: 200,
-      websitePage: 300,
+      ownershipRegistration: 0,
+      certificateIssuance: 0,
+      websitePage: 0,
     },
     sealParameters: {
-      preservedNativeForestArea: "3197.37 m²",
-      carbonEmissionAvoided: "243 tCO2e",
-      storedWood: "83.79 m³",
-      faunaSpeciesPreservation: "1749",
-      floraSpeciesPreservation: "546",
-      hydrologicalFlowPreservation: "10503.36",
+      preservedNativeForestArea: "",
+      carbonEmissionAvoided: "",
+      storedWood: "",
+      faunaSpeciesPreservation: "",
+      floraSpeciesPreservation: "",
+      hydrologicalFlowPreservation: "",
     }
 };
 
