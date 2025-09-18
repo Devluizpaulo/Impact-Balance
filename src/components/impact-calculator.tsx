@@ -182,18 +182,20 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             });
         }
     }
-
+    
+    const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
+    const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
+    
     // Indirect Costs (monetary only)
     const indirectBreakdown: { category: string; cost: number }[] = [];
     
-    // Automatic calculation for indirect costs based on settings
-    const ownershipRegistrationCost = 1.5 * settings.equivalences.equivalenceValuePerYear;
+    // Calculate "Ownership Registration" based on 1.5% of total direct cost
+    const ownershipRegistrationCost = directCost * 0.015;
     indirectBreakdown.push({ category: "ownershipRegistration", cost: ownershipRegistrationCost });
+    
+    // Get other indirect costs from settings
     indirectBreakdown.push({ category: "certificateIssuance", cost: indirectCostsSettings.certificateIssuance });
     indirectBreakdown.push({ category: "websitePage", cost: indirectCostsSettings.websitePage });
-
-    const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
-    const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
@@ -228,8 +230,12 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     // Fetch currency rates and add to results
     try {
         const currencyData = await getCurrencyRates();
-        results.totalCostUSD = totalCost * currencyData.rates.USD;
-        results.totalCostEUR = totalCost * currencyData.rates.EUR;
+        if (currencyData.rates.USD) {
+            results.totalCostUSD = totalCost * currencyData.rates.USD;
+        }
+        if (currencyData.rates.EUR) {
+            results.totalCostEUR = totalCost * currencyData.rates.EUR;
+        }
     } catch (error) {
         console.error("Could not fetch currency rates", error);
         toast({
@@ -380,3 +386,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
