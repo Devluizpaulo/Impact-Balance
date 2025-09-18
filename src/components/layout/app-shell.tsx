@@ -32,15 +32,15 @@ const publicNavItems: NavItem[] = [
     icon: <Calculator className="h-5 w-5" />, 
     translationKey: 'calculator' 
   },
-];
-
-const adminNavItems: NavItem[] = [
-    { 
+   { 
     href: "/parameters", 
     icon: <Lock className="h-5 w-5" />, 
     translationKey: 'configurations',
     isProtected: true,
   },
+];
+
+const adminNavItems: NavItem[] = [
   {
     href: "/scientific-review",
     icon: <FileText className="h-5 w-5" />,
@@ -129,7 +129,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
     <nav className="flex flex-col h-full">
       <div className="flex-1 px-2 space-y-1">
         {publicNavItems.map((item) => (
-          <NavLink key={item.href} item={{...item, isProtected: false}} isCollapsed={isCollapsed} />
+          <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
          {isAdmin && adminNavItems.map((item) => (
           <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
@@ -181,7 +181,7 @@ function MobileNav() {
            <nav className="flex flex-col h-full">
               <div className="flex-1 px-2 space-y-1">
                 {publicNavItems.map((item) => (
-                  <NavLink key={item.href} item={{...item, isProtected: false}} isCollapsed={false} />
+                  <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
                 {isAdmin && adminNavItems.map((item) => (
                   <NavLink key={item.href} item={item} isCollapsed={false} />
