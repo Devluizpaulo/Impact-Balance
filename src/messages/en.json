@@ -148,8 +148,14 @@
     "perCapitaBasis": "Per Capita Calculation Basis",
     "indirectCosts": "Indirect Costs",
     "equivalencesAndCosts": "Equivalences and Costs",
-    "sealParametersCard": {
-      "title": "Seal Parameters (Investment Benefits)"
+    "benefitFactors": {
+      "title": "UCS Benefit Factors",
+      "preservedNativeForestArea": "Preserved Forest (m²/UCS)",
+      "carbonEmissionAvoided": "Carbon Avoided (tCO2e/UCS)",
+      "storedWood": "Stored Wood (m³/UCS)",
+      "faunaSpeciesPreservation": "Fauna Preservation (spp/UCS)",
+      "floraSpeciesPreservation": "Flora Preservation (spp/UCS)",
+      "hydrologicalFlowPreservation": "Water Flow (L/yr/UCS)"
     },
     "table": {
       "parameter": "Parameter",
@@ -170,14 +176,6 @@
       "gdpPercentage": "Equivalence to GDP (%)",
       "equivalenceValuePerDay": "Equivalence Value per Day",
       "equivalenceValuePerHour": "Equivalence Value per Hour"
-    },
-    "sealParameters": {
-      "preservedNativeForestArea": "Preserved Native Forest Area (m²)",
-      "carbonEmissionAvoided": "Carbon Emission Avoided (tCO2e)",
-      "storedWood": "Stored Wood (m³)",
-      "faunaSpeciesPreservation": "Fauna Species Preservation (per Hectare)",
-      "floraSpeciesPreservation": "Flora Species Preservation (per Hectare)",
-      "hydrologicalFlowPreservation": "Hydrological Flow Preservation (Liters/Year)"
     },
     "toasts": {
       "saveSuccess": {
@@ -216,6 +214,30 @@
       "actions": "Actions"
     },
     "viewReport": "View Report"
+  },
+   "EventCertificate": {
+    "title": "Sustainability Seal",
+    "holder": "Holder",
+    "operationDate": "Operation Date",
+    "product": "Product",
+    "productName": "Green Treasury Sustainability Seal",
+    "acquiredQuantity": "Acquired Quantity",
+    "ucsUnit": "UCS (Sustainability Credit Units)",
+    "certificationStatement": "This certification attests to the investment in the protection and preservation of native forest through the acquisition of Forest Credit.",
+    "benefits": {
+      "title": "Environmental Ethics Statement",
+      "intro": "The investment generated the following benefits:",
+      "preservedNativeForestArea": "Preserved Native Forest Area",
+      "carbonEmissionAvoided": "Carbon Emission Avoided (Stored Carbon)",
+      "storedWood": "Stored Wood",
+      "faunaSpeciesPreservation": "Preservation of Fauna Species per Hectare",
+      "floraSpeciesPreservation": "Preservation of Flora Species per Hectare",
+      "hydrologicalFlowPreservation": "Preservation of Hydrological Flow"
+    },
+    "verification": {
+      "title": "Verification Data",
+      "registrationNumber": "Registration Number"
+    }
   },
   "DocumentationPage": {
     "title": "Documentation",

@@ -26,10 +26,10 @@ const mergeWithDefault = (loadedSettings: Partial<SystemSettings>): SystemSettin
                 ...defaultSettings.calculation.indirectCosts,
                 ...(calculationSettings.indirectCosts || {}),
             },
-        },
-        sealParameters: {
-            ...defaultSettings.sealParameters,
-            ...(loadedSettings.sealParameters || {}),
+            benefits: {
+                ...defaultSettings.calculation.benefits,
+                ...(calculationSettings.benefits || {}),
+            },
         },
     };
 };
@@ -66,5 +66,3 @@ export const saveSettings = async (settings: SystemSettings): Promise<void> => {
         throw error;
     }
 };
-
-    

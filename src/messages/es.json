@@ -148,8 +148,14 @@
     "perCapitaBasis": "Base de Cálculo Per Cápita",
     "indirectCosts": "Costos Indirectos",
     "equivalencesAndCosts": "Equivalencias y Costos",
-    "sealParametersCard": {
-      "title": "Parámetros del Sello (Beneficios de la Inversión)"
+    "benefitFactors": {
+      "title": "Factores de Beneficio UCS",
+      "preservedNativeForestArea": "Bosque Preservado (m²/UCS)",
+      "carbonEmissionAvoided": "Carbono Evitado (tCO2e/UCS)",
+      "storedWood": "Madera Almacenada (m³/UCS)",
+      "faunaSpeciesPreservation": "Preservación Fauna (spp/UCS)",
+      "floraSpeciesPreservation": "Preservación Flora (spp/UCS)",
+      "hydrologicalFlowPreservation": "Flujo de Agua (L/año/UCS)"
     },
     "table": {
       "parameter": "Parámetro",
@@ -170,14 +176,6 @@
       "gdpPercentage": "Equivalencia al PIB (%)",
       "equivalenceValuePerDay": "Valor de Equivalencia por Día",
       "equivalenceValuePerHour": "Valor de Equivalencia por Hora"
-    },
-     "sealParameters": {
-      "preservedNativeForestArea": "Área de Bosque Nativo Preservado (m²)",
-      "carbonEmissionAvoided": "Emisión de Carbono Evitada (tCO2e)",
-      "storedWood": "Madera Almacenada (m³)",
-      "faunaSpeciesPreservation": "Preservación de Especies de Fauna (por Hectárea)",
-      "floraSpeciesPreservation": "Preservación de Especies de Flora (por Hectárea)",
-      "hydrologicalFlowPreservation": "Preservación de Flujo Hidrológico (Litros/Año)"
     },
     "toasts": {
       "saveSuccess": {
@@ -216,6 +214,30 @@
       "actions": "Acciones"
     },
     "viewReport": "Ver Informe"
+  },
+  "EventCertificate": {
+    "title": "Sello de Sostenibilidad",
+    "holder": "Titular",
+    "operationDate": "Fecha de Operación",
+    "product": "Producto",
+    "productName": "Sello de Sostenibilidad Tesoro Verde",
+    "acquiredQuantity": "Cantidad Adquirida",
+    "ucsUnit": "UCS (Unidades de Crédito de Sostenibilidad)",
+    "certificationStatement": "Esta certificación acredita la inversión en la protección y preservación de bosque nativo a través de la adquisición de Crédito Forestal.",
+    "benefits": {
+      "title": "Declaración de Ética Ambiental",
+      "intro": "La inversión generó los siguientes beneficios:",
+      "preservedNativeForestArea": "Área de Bosque Nativo Preservado",
+      "carbonEmissionAvoided": "Emisión de Carbono Evitada (Carbono Almacenado)",
+      "storedWood": "Madera Almacenada",
+      "faunaSpeciesPreservation": "Preservación de Especies de Fauna por Hectárea",
+      "floraSpeciesPreservation": "Preservación de Especies de Flora por Hectárea",
+      "hydrologicalFlowPreservation": "Preservación de Flujo Hidrológico"
+    },
+    "verification": {
+      "title": "Datos de Verificación",
+      "registrationNumber": "Número de Registro"
+    }
   },
   "DocumentationPage": {
     "title": "Documentación",

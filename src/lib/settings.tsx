@@ -35,14 +35,14 @@ export interface SystemSettings {
           certificateIssuance: number;
           websitePage: number;
         };
-    };
-    sealParameters: {
-      preservedNativeForestArea: string;
-      carbonEmissionAvoided: string;
-      storedWood: string;
-      faunaSpeciesPreservation: string;
-      floraSpeciesPreservation: string;
-      hydrologicalFlowPreservation: string;
+        benefits: {
+            preservedNativeForestArea: number; // m² per UCS
+            carbonEmissionAvoided: number; // tCO2e per UCS
+            storedWood: number; // m³ per UCS
+            faunaSpeciesPreservation: number; // species per Ha per UCS
+            floraSpeciesPreservation: number; // species per Ha per UCS
+            hydrologicalFlowPreservation: number; // Liters/Year per UCS
+        };
     };
 }
 
@@ -70,15 +70,15 @@ export const defaultSettings: SystemSettings = {
             certificateIssuance: 200,
             websitePage: 300,
         },
+        benefits: {
+            preservedNativeForestArea: 13.16,
+            carbonEmissionAvoided: 1,
+            storedWood: 0.34,
+            faunaSpeciesPreservation: 1749,
+            floraSpeciesPreservation: 546,
+            hydrologicalFlowPreservation: 10503.36,
+        }
     },
-    sealParameters: {
-        preservedNativeForestArea: "",
-        carbonEmissionAvoided: "",
-        storedWood: "",
-        faunaSpeciesPreservation: "",
-        floraSpeciesPreservation: "",
-        hydrologicalFlowPreservation: "",
-    }
 };
 
 // Function to calculate derived settings based on base values

@@ -159,6 +159,19 @@ export default function ParametersPage() {
     const { name, value: rawValue } = e.target;
     const keys = name.split('.');
     
+    // Allow direct string update for non-calculation fields
+    if (keys[0] !== 'calculation') {
+        const newSettings = JSON.parse(JSON.stringify(settings));
+        let current = newSettings;
+        for (let i = 0; i < keys.length - 1; i++) {
+            current = current[keys[i]];
+        }
+        current[keys[keys.length - 1]] = rawValue;
+        setSettings(newSettings);
+        return;
+    }
+
+
     // Clean the value for parsing: remove thousand separators, replace comma with dot
     const cleanedValue = rawValue.replace(/\./g, '').replace(',', '.');
     const parsedValue = parseFloat(cleanedValue);
@@ -355,20 +368,27 @@ export default function ParametersPage() {
               </Table>
             </CardContent>
           </Card>
-
+          
            <Card>
             <CardHeader>
-              <CardTitle>{t('sealParametersCard.title')}</CardTitle>
+              <CardTitle>{t('benefitFactors.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {Object.entries(settings.sealParameters).map(([key, value]) => (
+                  {Object.entries(settings.calculation.benefits).map(([key, value]) => (
                     <TableRow key={key}>
-                      <TableCell>{t(`sealParameters.${key}` as any)}</TableCell>
+                      <TableCell>{t(`benefitFactors.${key}` as any)}</TableCell>
                       <TableCell>
-                        <Input type="text" name={`sealParameters.${key}`} value={value as string} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
+                         <ParameterInput 
+                          name={`calculation.benefits.${key}`} 
+                          value={value as number} 
+                          onChange={handleNestedChange} 
+                          disabled={!isAdmin} 
+                          adornment={"/ UCS"}
+                          precision={2}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}

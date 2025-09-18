@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 
 type FormTranslations = {
@@ -46,6 +47,15 @@ export const formSchema = (t: (key: keyof FormTranslations) => string) => z.obje
 
 export type FormData = z.infer<ReturnType<typeof formSchema>>;
 
+export type Benefits = {
+  preservedNativeForestArea: number;
+  carbonEmissionAvoided: number;
+  storedWood: number;
+  faunaSpeciesPreservation: number;
+  floraSpeciesPreservation: number;
+  hydrologicalFlowPreservation: number;
+}
+
 export type CalculationResult = {
   totalUCS: number;
   totalCost: number;
@@ -75,6 +85,7 @@ export type CalculationResult = {
     hourlyUCS: number;
     gdpPercentage: number;
   };
+  benefits: Benefits;
 };
 
 // Represents a stored event record

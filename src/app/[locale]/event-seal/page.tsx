@@ -9,9 +9,10 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye, Loader2 } from "lucide-react";
+import { Eye, Loader2, Award } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import ExecutiveReport from "@/components/executive-report";
+import EventCertificate from "@/components/event-certificate";
+
 
 export default function EventSealPage() {
     const t = useTranslations("EventSealPage");
@@ -76,7 +77,10 @@ export default function EventSealPage() {
                                 <TableBody>
                                     {events.map((event) => (
                                         <TableRow key={event.id}>
-                                            <TableCell className="font-medium">{event.formData.eventName}</TableCell>
+                                            <TableCell className="font-medium flex items-center">
+                                                <Award className="h-4 w-4 mr-2 text-primary/70" />
+                                                {event.formData.eventName}
+                                            </TableCell>
                                             <TableCell>{new Date(event.timestamp).toLocaleDateString()}</TableCell>
                                             <TableCell className="text-right font-mono">{event.results.totalUCS}</TableCell>
                                             <TableCell className="text-right font-mono">{formatCurrency(event.results.totalCost)}</TableCell>
@@ -100,7 +104,7 @@ export default function EventSealPage() {
                             <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
                         </DialogHeader>
                         <div className="flex-grow overflow-y-auto pr-6 -mt-4">
-                           <ExecutiveReport results={selectedEvent.results} formData={selectedEvent.formData} />
+                           <EventCertificate event={selectedEvent} />
                         </div>
                     </DialogContent>
                 </Dialog>

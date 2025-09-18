@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { formSchema, type FormData, type CalculationResult } from "@/lib/types";
+import { formSchema, type FormData, type CalculationResult, type Benefits } from "@/lib/types";
 import { Calculator, Users, Clock, UserCog, Wrench, Briefcase, Building2, Headset, User, Handshake, FileText, Award, Globe, CalendarDays } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
@@ -50,6 +50,7 @@ const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData
                   type="number"
                   placeholder={t('participants.quantity')}
                   {...field}
+                  onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
                   value={field.value ?? ''}
                   className="no-spinner"
                 />
@@ -69,6 +70,7 @@ const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData
                   type="number"
                   placeholder={t('participants.days')}
                   {...field}
+                  onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)}
                   value={field.value ?? ''}
                   className="no-spinner"
                 />
@@ -186,8 +188,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 const visitorTotalHours = visitorCount * duration;
                 totalParticipantHours += visitorTotalHours;
-                totalParticipantDays += visitorTotalHours / 8;
+                // The logic from the spreadsheet
                 ucs = Math.ceil(Math.ceil(visitorCount * duration / 8) * calculation.perCapitaFactors.dailyUcsConsumption);
+                totalParticipantDays += (visitorCount * duration / 8);
             }
         }
 
@@ -219,6 +222,16 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const totalUCS = directUcs;
     const totalCost = directCost + indirectCost;
 
+    // Calculate benefits based on total UCS
+    const benefits: Benefits = {
+        preservedNativeForestArea: totalUCS * calculation.benefits.preservedNativeForestArea,
+        carbonEmissionAvoided: totalUCS * calculation.benefits.carbonEmissionAvoided,
+        storedWood: totalUCS * calculation.benefits.storedWood,
+        faunaSpeciesPreservation: totalUCS * calculation.benefits.faunaSpeciesPreservation,
+        floraSpeciesPreservation: totalUCS * calculation.benefits.floraSpeciesPreservation,
+        hydrologicalFlowPreservation: totalUCS * calculation.benefits.hydrologicalFlowPreservation,
+    };
+
     const maxDays = Math.max(
       ...Object.values(participants).map(p => (p as {days?: number})?.days || 0),
       (visitors?.unit === 'days' ? (visitors.days || 0) : (visitors?.hours || 0) / 8)
@@ -237,6 +250,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       costPerParticipantHour: totalParticipantHours > 0 ? totalCost / totalParticipantHours : 0,
       breakdown,
       indirectBreakdown,
+      benefits,
       equivalences: {
         dailyUCS: maxDays > 0 ? totalUCS / maxDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
@@ -344,7 +358,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                   <FormItem>
                     <FormLabel className="flex items-center gap-2"><Users className="w-5 h-5"/>{t('participants.quantity')}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={t('participants.quantity')} {...field} value={field.value ?? ''} className="no-spinner" />
+                      <Input type="number" placeholder={t('participants.quantity')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -369,7 +383,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 <FormItem className={cn(visitorUnit === 'days' && 'hidden')}>
                   <FormLabel className="flex items-center gap-2"><Clock className="w-5 h-5"/>{t('participants.hours')}</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder={t('participants.hours')} {...field} value={field.value ?? ''} className="no-spinner" />
+                    <Input type="number" placeholder={t('participants.hours')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -383,7 +397,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 <FormItem className={cn(visitorUnit === 'hours' && 'hidden')}>
                   <FormLabel className="flex items-center gap-2"><CalendarDays className="w-5 h-5"/>{t('participants.days')}</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder={t('participants.days')} {...field} value={field.value ?? ''} className="no-spinner" />
+                    <Input type="number" placeholder={t('participants.days')} {...field} value={field.value ?? ''} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} className="no-spinner" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -402,5 +416,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-    
