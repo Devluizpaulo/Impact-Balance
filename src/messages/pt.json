@@ -252,7 +252,7 @@
       "title": "Acesso de Administrador Necessário",
       "description": "Por favor, insira a senha de administrador para acessar esta seção.",
       "passwordLabel": "Senha",
-      "placeholder": "Digite a senha...",
+      "passwordPlaceholder": "Digite a senha...",
       "cancel": "Cancelar",
       "login": "Entrar"
     },
@@ -279,5 +279,3 @@
     }
   }
 }
-
-    
