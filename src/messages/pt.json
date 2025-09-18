@@ -77,12 +77,6 @@
       "hours": "Horas",
       "durationUnit": "Unidade de Duração"
     },
-    "indirectCosts": {
-      "title": "Custos Indiretos",
-      "ownershipRegistration": "Registro de Titularidade (%)",
-      "certificateIssuance": "Emissão de Certificado",
-      "websitePage": "Página do Site"
-    },
     "resetButton": "Redefinir",
     "calculateButton": "Calcular Impacto",
     "formValidation": {
@@ -149,7 +143,6 @@
     "perCapitaBasis": "Base de Cálculo Per Capita",
     "indirectCosts": "Custos Indiretos",
     "equivalencesAndCosts": "Equivalências e Custos",
-    "costPerUcs": "Custo por Unidade UCS (Evento)",
     "table": {
       "parameter": "Parâmetro",
       "value": "Valor"
@@ -160,7 +153,7 @@
       "ucsConsumption73years": "Consumo de UCS por 73 anos",
       "annualUcsConsumption": "Consumo Anual de UCS",
       "dailyUcsConsumption": "Consumo Diário de UCS",
-      "hourlyUcsConsumption": "Consumo Por hora de UC"
+      "hourlyUcsConsumption": "Consumo Por hora de UCS"
     },
     "indirectCostsLabels": {
       "ownershipRegistration": "Registro de Titularidade (%)",

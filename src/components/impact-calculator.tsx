@@ -165,7 +165,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 totalParticipantHours += visitorTotalHours;
                 const visitorDaysEquivalent = visitorTotalHours / 8;
                 totalParticipantDays += visitorDaysEquivalent;
-                // Fraction of daily consumption
                 ucs = (visitorCount * duration * perCapitaFactors.hourlyUcsConsumption);
                 cost = ucs * equivalences.ucsQuotationValue;
             }
@@ -186,7 +185,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    // Calculate indirect costs based on settings and direct cost
+    // Calculate indirect costs
     const indirectBreakdown: { category: string; cost: number }[] = [];
     const ownershipRegistrationCost = directCost * (indirectCostsSettings.ownershipRegistration / 100);
     
@@ -220,7 +219,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       equivalences: {
         dailyUCS: maxDays > 0 ? totalUCS / maxDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
-        gdpPercentage: settings.equivalences.gdpPerCapita > 0 ? (totalCost / settings.equivalences.gdpPerCapita) * 100 : 0,
+        gdpPercentage: equivalences.gdpPerCapita > 0 ? (totalCost / equivalences.gdpPerCapita) * 100 : 0,
       },
     };
     

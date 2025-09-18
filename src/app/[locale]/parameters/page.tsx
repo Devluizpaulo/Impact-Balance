@@ -34,14 +34,7 @@ export default function ParametersPage() {
       }
     }
   };
-
-  const handleUcsCostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSettings({
-      ...settings,
-      ucsCostPerUnit: Number(e.target.value) || 0
-    });
-  }
-
+  
   if (!isClient) {
     return (
       <AppShell>
@@ -114,6 +107,27 @@ export default function ParametersPage() {
           
           <Card>
             <CardHeader>
+              <CardTitle>{t('equivalencesAndCosts')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
+                <TableBody>
+                  {equivalences.map(([key, value]) => (
+                     <TableRow key={key}>
+                      <TableCell>{t(`equivalences.${key}` as any)}</TableCell>
+                      <TableCell>
+                        <Input type="number" name={`equivalences.${key}`} value={value} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
               <CardTitle>{t('indirectCosts')}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -133,36 +147,8 @@ export default function ParametersPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('equivalencesAndCosts')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
-                <TableBody>
-                  {equivalences.map(([key, value]) => (
-                     <TableRow key={key}>
-                      <TableCell>{t(`equivalences.${key}` as any)}</TableCell>
-                      <TableCell>
-                        <Input type="number" name={`equivalences.${key}`} value={value} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  <TableRow>
-                    <TableCell>{t('costPerUcs')}</TableCell>
-                    <TableCell>
-                      <Input type="number" name="ucsCostPerUnit" value={settings.ucsCostPerUnit} onChange={handleUcsCostChange} className="text-right" disabled={!isAdmin} />
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </AppShell>
   );
 }
-
-    

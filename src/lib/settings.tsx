@@ -24,11 +24,10 @@ export interface SystemSettings {
       equivalenceValuePerHour: number;
     };
     indirectCosts: {
-      ownershipRegistration: number; // This is now a percentage
+      ownershipRegistration: number; // This is a percentage
       certificateIssuance: number;
       websitePage: number;
     };
-    ucsCostPerUnit: number;
 }
 
 // Define the default settings
@@ -54,7 +53,6 @@ const defaultSettings: SystemSettings = {
       certificateIssuance: 200,
       websitePage: 300,
     },
-    ucsCostPerUnit: 15,
 };
 
 // Define the shape of the context
@@ -156,5 +154,3 @@ export const useSettings = () => {
     }
     return context;
 };
-
-    

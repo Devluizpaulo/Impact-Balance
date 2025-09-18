@@ -1,3 +1,4 @@
+
 "use client";
 
 import AppShell from "@/components/layout/app-shell";
@@ -6,6 +7,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 export default function DocumentationPage() {
   const t = useTranslations("DocumentationPage");
@@ -77,6 +79,21 @@ export default function DocumentationPage() {
               <p>
                 Note that the comparison against global average biocapacity provides a global overview. This approach can be further extended by comparing Footprints also against local biocapacity. For most countries, local availability of biocapacity (and the financial means to access biocapacity from elsewhere) is a more significant determinant of resource access than the global average.
               </p>
+
+              <Separator className="my-8" />
+              
+              <h2 id="system-parameters">System Parameters and Calculation Logic</h2>
+              <p>
+                This application features a dynamic calculation engine. All variables and factors used in determining the socio-environmental impact are managed through the <strong>Parameters</strong> panel. This design choice ensures that the methodology can be updated and refined over time without requiring code changes, providing maximum flexibility.
+              </p>
+              <p>
+                The formulas for calculating the Total Sustainability Credit Units (UCS) and the associated financial costs are derived directly from the values set in this administrative panel. This includes per capita consumption rates, monetary conversion values, and indirect cost percentages. Any adjustments made in the Parameters panel by an administrator are instantly reflected in all subsequent calculations performed by the application.
+              </p>
+              <p>
+                For a detailed view of the current values being used, please visit the <Link href="/parameters">Parameters page</Link> (requires admin access).
+              </p>
+
+              <Separator className="my-8" />
 
               <h3>Appendix: Background on Ecological Footprint</h3>
               <p>Simple introductions to Footprint accounting:</p>

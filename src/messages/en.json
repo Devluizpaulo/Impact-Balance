@@ -77,12 +77,6 @@
       "hours": "Hours",
       "durationUnit": "Duration Unit"
     },
-    "indirectCosts": {
-      "title": "Indirect Costs",
-      "ownershipRegistration": "Ownership Registration (%)",
-      "certificateIssuance": "Certificate Issuance",
-      "websitePage": "Website Page"
-    },
     "resetButton": "Reset",
     "calculateButton": "Calculate Impact",
     "formValidation": {
@@ -149,18 +143,17 @@
     "perCapitaBasis": "Per Capita Calculation Basis",
     "indirectCosts": "Indirect Costs",
     "equivalencesAndCosts": "Equivalences and Costs",
-    "costPerUcs": "Cost per SCU Unit (Event)",
     "table": {
       "parameter": "Parameter",
       "value": "Value"
     },
     "perCapitaFactors": {
-      "averageUcsPerHectare": "Average SCU per Hectare",
+      "averageUcsPerHectare": "Average UCS per Hectare",
       "perCapitaConsumptionHa": "Per Capita Consumption (Ha)",
-      "ucsConsumption73years": "SCU Consumption (73 years)",
-      "annualUcsConsumption": "Annual SCU Consumption",
-      "dailyUcsConsumption": "Daily SCU Consumption",
-      "hourlyUcsConsumption": "Hourly SCU Consumption"
+      "ucsConsumption73years": "UCS Consumption (73 years)",
+      "annualUcsConsumption": "Annual UCS Consumption",
+      "dailyUcsConsumption": "Daily UCS Consumption",
+      "hourlyUcsConsumption": "Hourly UCS Consumption"
     },
     "indirectCostsLabels": {
       "ownershipRegistration": "Ownership Registration (%)",
@@ -168,7 +161,7 @@
       "websitePage": "Website Page"
     },
     "equivalences": {
-      "ucsQuotationValue": "SCU Quotation Value",
+      "ucsQuotationValue": "UCS Quotation Value",
       "gdpPerCapita": "GDP per Capita",
       "equivalenceValuePerYear": "Equivalence Value per Year",
       "gdpPercentage": "Equivalence to GDP (%)",
