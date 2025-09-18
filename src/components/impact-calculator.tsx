@@ -112,7 +112,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
  async function onSubmit(values: FormData) {
     // --- Data Sanitization ---
-    // Firestore does not accept `undefined`. We must clean the data before saving.
     const sanitizedValues = JSON.parse(JSON.stringify(values, (key, value) => {
         return value === undefined ? 0 : value;
     }));
@@ -136,8 +135,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     // Calculate staff UCS
     Object.entries(participants).forEach(([key, p]) => {
-      const count = p?.count || 0;
-      const days = p?.days || 0;
+      const participantData = p as { count?: number; days?: number };
+      const count = participantData?.count || 0;
+      const days = participantData?.days || 0;
       if (count > 0 && days > 0) {
         totalParticipantsCount += count;
         totalParticipantDays += count * days;
@@ -214,7 +214,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const totalCost = directCost + indirectCost;
 
     const maxDays = Math.max(
-      ...Object.values(participants).map(p => p?.days || 0),
+      ...Object.values(participants).map(p => (p as {days?: number})?.days || 0),
       (visitors?.unit === 'days' ? (visitors.days || 0) : (visitors?.hours || 0) / 8)
     );
     const totalEventHours = maxDays > 0 ? maxDays * 24 : 0;
@@ -395,3 +395,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    

@@ -11,7 +11,7 @@ const SETTINGS_DOC_ID = 'default';
 
 // Helper to deep merge settings to ensure new properties are not missing on load
 const mergeWithDefault = (loadedSettings: Partial<SystemSettings>): SystemSettings => {
-    const calculationSettings = loadedSettings.calculation || {};
+    const calculationSettings = loadedSettings.calculation || {} as Partial<SystemSettings['calculation']>;
     return {
         calculation: {
             perCapitaFactors: {
@@ -66,3 +66,5 @@ export const saveSettings = async (settings: SystemSettings): Promise<void> => {
         throw error;
     }
 };
+
+    
