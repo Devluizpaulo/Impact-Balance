@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -16,10 +16,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
+import { auth } from '@/lib/firebase/config';
+import { 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  User
+} from "firebase/auth";
 
 interface AuthContextType {
   isAdmin: boolean;
-  login: (email: string, pass: string) => boolean;
+  login: (email: string, pass: string) => Promise<boolean>;
   logout: () => void;
   promptLogin: () => void;
 }
@@ -27,30 +34,46 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoginPromptOpen, setIsLoginPromptOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
   const t = useTranslations("Auth");
 
-  const login = (emailInput: string, pass: string): boolean => {
-    // Simple credential check. In a real app, use a proper auth system.
-    if (emailInput === 'admin@impactbalance.com' && pass === '123456') {
-      setIsAdmin(true);
+  const isAdmin = !!user;
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+
+  const login = async (emailInput: string, pass: string): Promise<boolean> => {
+    try {
+      await signInWithEmailAndPassword(auth, emailInput, pass);
       setIsLoginPromptOpen(false);
       setEmail('');
       setPassword('');
       toast({ title: t('loginSuccess.title'), description: t('loginSuccess.description') });
       return true;
+    } catch (error) {
+      console.error("Firebase Auth Error:", error);
+      toast({ variant: 'destructive', title: t('loginError.title'), description: t('loginError.description') });
+      return false;
     }
-    toast({ variant: 'destructive', title: t('loginError.title'), description: t('loginError.description') });
-    return false;
   };
 
-  const logout = () => {
-    setIsAdmin(false);
-    toast({ title: t('logoutSuccess.title') });
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      toast({ title: t('logoutSuccess.title') });
+    } catch (error) {
+      console.error("Firebase Signout Error:", error);
+    }
   };
   
   const promptLogin = () => {
@@ -106,7 +129,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={t('modal.passwordPlaceholder')}
-                maxLength={6}
+                maxLength={60}
               />
             </div>
           </div>
