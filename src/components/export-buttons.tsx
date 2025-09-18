@@ -66,7 +66,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             await new Promise(resolve => { seloImg.onload = resolve; });
 
              // --- Add Seal Watermark ---
-            const seloWidth = 140; // Increased size for PDF
+            const seloWidth = 180; // Increased size for PDF
             const seloHeight = (seloImg.height * seloWidth) / seloImg.width;
             const seloX = (pageWidth - seloWidth) / 2;
             const seloY = (pageHeight - seloHeight) / 2; // Center it
