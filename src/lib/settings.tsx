@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
 import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb } from './settings-storage';
@@ -11,16 +11,20 @@ import { useAuth } from './auth';
 export interface SystemSettings {
     calculation: {
         perCapitaFactors: {
+          // Base
           averageUcsPerHectare: number;
           perCapitaConsumptionHa: number;
+          // Derived
           ucsConsumption73years: number;
           annualUcsConsumption: number;
           dailyUcsConsumption: number;
           hourlyUcsConsumption: number;
         };
         equivalences: {
+          // Base
           ucsQuotationValue: number;
           gdpPerCapita: number;
+          // Derived
           equivalenceValuePerYear: number;
           gdpPercentage: number;
           equivalenceValuePerDay: number;
@@ -46,25 +50,25 @@ export interface SystemSettings {
 export const defaultSettings: SystemSettings = {
     calculation: {
         perCapitaFactors: {
-            averageUcsPerHectare: 0,
-            perCapitaConsumptionHa: 0,
-            ucsConsumption73years: 0,
-            annualUcsConsumption: 0,
-            dailyUcsConsumption: 0,
-            hourlyUcsConsumption: 0,
+            averageUcsPerHectare: 760,
+            perCapitaConsumptionHa: 2.389,
+            ucsConsumption73years: 1816,
+            annualUcsConsumption: 25,
+            dailyUcsConsumption: 0.068,
+            hourlyUcsConsumption: 0.003,
         },
         equivalences: {
-            ucsQuotationValue: 0,
-            gdpPerCapita: 0,
-            equivalenceValuePerYear: 0,
-            gdpPercentage: 0,
-            equivalenceValuePerDay: 0,
-            equivalenceValuePerHour: 0,
+            ucsQuotationValue: 168.85,
+            gdpPerCapita: 99706.20,
+            equivalenceValuePerYear: 4199.60,
+            gdpPercentage: 4.212,
+            equivalenceValuePerDay: 11.51,
+            equivalenceValuePerHour: 0.48,
         },
         indirectCosts: {
-            ownershipRegistration: 0,
-            certificateIssuance: 0,
-            websitePage: 0,
+            ownershipRegistration: 1.5,
+            certificateIssuance: 200,
+            websitePage: 300,
         },
     },
     sealParameters: {
@@ -76,6 +80,27 @@ export const defaultSettings: SystemSettings = {
         hydrologicalFlowPreservation: "",
     }
 };
+
+// Function to calculate derived settings based on base values
+const calculateDerivedSettings = (baseSettings: SystemSettings): SystemSettings => {
+    const calculated = JSON.parse(JSON.stringify(baseSettings)); // Deep copy
+    const { perCapitaFactors, equivalences } = calculated.calculation;
+
+    // Calculate per capita factors
+    perCapitaFactors.ucsConsumption73years = perCapitaFactors.averageUcsPerHectare * perCapitaFactors.perCapitaConsumptionHa;
+    perCapitaFactors.annualUcsConsumption = perCapitaFactors.ucsConsumption73years / 73;
+    perCapitaFactors.dailyUcsConsumption = perCapitaFactors.annualUcsConsumption / 365;
+    perCapitaFactors.hourlyUcsConsumption = perCapitaFactors.dailyUcsConsumption / 24;
+
+    // Calculate equivalences
+    equivalences.equivalenceValuePerYear = equivalences.ucsQuotationValue * perCapitaFactors.annualUcsConsumption;
+    equivalences.gdpPercentage = equivalences.gdpPerCapita > 0 ? (equivalences.equivalenceValuePerYear / equivalences.gdpPerCapita) * 100 : 0;
+    equivalences.equivalenceValuePerDay = equivalences.equivalenceValuePerYear / 365;
+    equivalences.equivalenceValuePerHour = equivalences.equivalenceValuePerDay / 24;
+
+    return calculated;
+};
+
 
 // Define the shape of the context
 interface SettingsContextType {
@@ -99,12 +124,19 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     const { isAdmin } = useAuth();
     const t = useTranslations("ParametersPage.toasts" as any);
 
+    // Recalculate derived values whenever base values change
+    const updateAndRecalculate = useCallback((newSettings: SystemSettings) => {
+        const recalculatedSettings = calculateDerivedSettings(newSettings);
+        setSettings(recalculatedSettings);
+    }, []);
+
+
     useEffect(() => {
       const loadSettings = async () => {
         setIsLoading(true);
         try {
           const dbSettings = await getSettingsFromDb();
-          setSettings(dbSettings);
+          updateAndRecalculate(dbSettings); // Recalculate on initial load
         } catch (error) {
           console.error("Failed to load settings from Firestore", error);
           toast({
@@ -112,12 +144,14 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
               title: t('loadError.title'),
               description: t('loadError.description'),
           });
+          updateAndRecalculate(defaultSettings);
         } finally {
           setIsLoading(false);
         }
       };
 
       loadSettings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [t, toast]);
 
 
@@ -128,7 +162,10 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         }
         setIsSaving(true);
         try {
-            await saveSettingsToDb(settings);
+            // Ensure settings are recalculated before saving
+            const recalculated = calculateDerivedSettings(settings);
+            setSettings(recalculated);
+            await saveSettingsToDb(recalculated);
             toast({
                 title: t('saveSuccess.title'),
                 description: t('saveSuccess.description'),
@@ -150,9 +187,10 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             toast({ variant: 'destructive', title: t('unauthorized.title') });
             return;
         }
-        setSettings(defaultSettings);
+        const recalculatedDefaults = calculateDerivedSettings(defaultSettings);
+        setSettings(recalculatedDefaults);
         // Also save the reset state to the database
-        await saveSettingsToDb(defaultSettings);
+        await saveSettingsToDb(recalculatedDefaults);
         toast({
             title: t('resetSuccess.title'),
             description: t('resetSuccess.description'),
@@ -160,7 +198,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <SettingsContext.Provider value={{ settings, setSettings, saveSettings, resetSettings, isLoading, isSaving }}>
+        <SettingsContext.Provider value={{ settings, setSettings: updateAndRecalculate, saveSettings, resetSettings, isLoading, isSaving }}>
             {children}
         </SettingsContext.Provider>
     );

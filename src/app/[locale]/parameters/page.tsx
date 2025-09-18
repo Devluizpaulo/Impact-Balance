@@ -117,7 +117,8 @@ function DocumentationContent() {
   )
 }
 
-const ParameterInput = ({ name, value, onChange, disabled, adornment }: { name: string, value: string | number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean, adornment: React.ReactNode }) => {
+const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly = false, precision }: { name: string, value: string | number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean, adornment: React.ReactNode, readOnly?: boolean, precision?: number }) => {
+    const displayValue = typeof value === 'number' && precision !== undefined ? value.toFixed(precision) : value;
     return (
         <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -126,10 +127,11 @@ const ParameterInput = ({ name, value, onChange, disabled, adornment }: { name: 
             <Input
                 type="number"
                 name={name}
-                value={value}
+                value={displayValue}
                 onChange={onChange}
                 className="text-right pl-8"
                 disabled={disabled}
+                readOnly={readOnly}
             />
         </div>
     );
@@ -147,15 +149,18 @@ export default function ParametersPage() {
     const { name, value, type } = e.target;
     const keys = name.split('.');
     
-    setSettings(prevSettings => {
-      const newSettings = JSON.parse(JSON.stringify(prevSettings));
-      let current = newSettings;
-      for (let i = 0; i < keys.length - 1; i++) {
+    // Create a deep copy to avoid direct state mutation
+    const newSettings = JSON.parse(JSON.stringify(settings));
+
+    let current = newSettings;
+    for (let i = 0; i < keys.length - 1; i++) {
         current = current[keys[i]];
-      }
-      current[keys[keys.length - 1]] = type === 'number' ? Number(value) || 0 : value;
-      return newSettings;
-    });
+    }
+    
+    current[keys[keys.length - 1]] = type === 'number' ? Number(value) || 0 : value;
+
+    // Use the callback from useSettings to trigger recalculation
+    setSettings(newSettings);
   };
   
   if (isLoading) {
@@ -212,14 +217,42 @@ export default function ParametersPage() {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {Object.entries(settings.calculation.perCapitaFactors).map(([key, value]) => (
-                    <TableRow key={key}>
-                      <TableCell>{t(`perCapitaFactors.${key}` as any)}</TableCell>
+                    <TableRow>
+                      <TableCell>{t('perCapitaFactors.averageUcsPerHectare')}</TableCell>
                       <TableCell>
-                         <ParameterInput name={`calculation.perCapitaFactors.${key}`} value={value as number} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} />
+                         <ParameterInput name="calculation.perCapitaFactors.averageUcsPerHectare" value={settings.calculation.perCapitaFactors.averageUcsPerHectare} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} />
                       </TableCell>
                     </TableRow>
-                  ))}
+                    <TableRow>
+                      <TableCell>{t('perCapitaFactors.perCapitaConsumptionHa')}</TableCell>
+                      <TableCell>
+                         <ParameterInput name="calculation.perCapitaFactors.perCapitaConsumptionHa" value={settings.calculation.perCapitaFactors.perCapitaConsumptionHa} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} precision={3} />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{t('perCapitaFactors.ucsConsumption73years')}</TableCell>
+                      <TableCell>
+                         <ParameterInput name="calculation.perCapitaFactors.ucsConsumption73years" value={settings.calculation.perCapitaFactors.ucsConsumption73years} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} readOnly={true} precision={0} />
+                      </TableCell>
+                    </TableRow>
+                     <TableRow>
+                      <TableCell>{t('perCapitaFactors.annualUcsConsumption')}</TableCell>
+                      <TableCell>
+                         <ParameterInput name="calculation.perCapitaFactors.annualUcsConsumption" value={settings.calculation.perCapitaFactors.annualUcsConsumption} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} readOnly={true} precision={0} />
+                      </TableCell>
+                    </TableRow>
+                     <TableRow>
+                      <TableCell>{t('perCapitaFactors.dailyUcsConsumption')}</TableCell>
+                      <TableCell>
+                         <ParameterInput name="calculation.perCapitaFactors.dailyUcsConsumption" value={settings.calculation.perCapitaFactors.dailyUcsConsumption} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} readOnly={true} precision={3} />
+                      </TableCell>
+                    </TableRow>
+                     <TableRow>
+                      <TableCell>{t('perCapitaFactors.hourlyUcsConsumption')}</TableCell>
+                      <TableCell>
+                         <ParameterInput name="calculation.perCapitaFactors.hourlyUcsConsumption" value={settings.calculation.perCapitaFactors.hourlyUcsConsumption} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} readOnly={true} precision={3} />
+                      </TableCell>
+                    </TableRow>
                 </TableBody>
               </Table>
             </CardContent>
@@ -233,20 +266,42 @@ export default function ParametersPage() {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {Object.entries(settings.calculation.equivalences).map(([key, value]) => (
-                     <TableRow key={key}>
-                      <TableCell>{t(`equivalences.${key}` as any)}</TableCell>
+                    <TableRow>
+                      <TableCell>{t('equivalences.ucsQuotationValue')}</TableCell>
                       <TableCell>
-                        <ParameterInput 
-                          name={`calculation.equivalences.${key}`} 
-                          value={value as number} 
-                          onChange={handleNestedChange} 
-                          disabled={!isAdmin} 
-                          adornment={key === 'gdpPercentage' ? '%' : 'R$'} 
-                        />
+                        <ParameterInput name="calculation.equivalences.ucsQuotationValue" value={settings.calculation.equivalences.ucsQuotationValue} onChange={handleNestedChange} disabled={!isAdmin} adornment={'R$'} precision={2} />
                       </TableCell>
                     </TableRow>
-                  ))}
+                    <TableRow>
+                      <TableCell>{t('equivalences.gdpPerCapita')}</TableCell>
+                      <TableCell>
+                        <ParameterInput name="calculation.equivalences.gdpPerCapita" value={settings.calculation.equivalences.gdpPerCapita} onChange={handleNestedChange} disabled={!isAdmin} adornment={'R$'} precision={2} />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{t('equivalences.equivalenceValuePerYear')}</TableCell>
+                      <TableCell>
+                        <ParameterInput name="calculation.equivalences.equivalenceValuePerYear" value={settings.calculation.equivalences.equivalenceValuePerYear} onChange={handleNestedChange} disabled={!isAdmin} adornment={'R$'} readOnly={true} precision={2} />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{t('equivalences.gdpPercentage')}</TableCell>
+                      <TableCell>
+                        <ParameterInput name="calculation.equivalences.gdpPercentage" value={settings.calculation.equivalences.gdpPercentage} onChange={handleNestedChange} disabled={!isAdmin} adornment={'%'} readOnly={true} precision={3} />
+                      </TableCell>
+                    </TableRow>
+                     <TableRow>
+                      <TableCell>{t('equivalences.equivalenceValuePerDay')}</TableCell>
+                      <TableCell>
+                        <ParameterInput name="calculation.equivalences.equivalenceValuePerDay" value={settings.calculation.equivalences.equivalenceValuePerDay} onChange={handleNestedChange} disabled={!isAdmin} adornment={'R$'} readOnly={true} precision={2} />
+                      </TableCell>
+                    </TableRow>
+                     <TableRow>
+                      <TableCell>{t('equivalences.equivalenceValuePerHour')}</TableCell>
+                      <TableCell>
+                        <ParameterInput name="calculation.equivalences.equivalenceValuePerHour" value={settings.calculation.equivalences.equivalenceValuePerHour} onChange={handleNestedChange} disabled={!isAdmin} adornment={'R$'} readOnly={true} precision={2} />
+                      </TableCell>
+                    </TableRow>
                 </TableBody>
               </Table>
             </CardContent>
