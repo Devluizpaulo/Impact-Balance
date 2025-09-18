@@ -111,8 +111,23 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
  async function onSubmit(values: FormData) {
+    // --- Data Sanitization ---
+    // Firestore does not accept `undefined`. We must clean the data before saving.
+    const sanitizedValues = JSON.parse(JSON.stringify(values, (key, value) => {
+        return value === undefined ? 0 : value;
+    }));
+    
+    if (sanitizedValues.visitors) {
+      if (sanitizedValues.visitors.unit === 'hours') {
+        sanitizedValues.visitors.days = 0;
+      } else {
+        sanitizedValues.visitors.hours = 0;
+      }
+    }
+    // --- End Data Sanitization ---
+  
     const { perCapitaFactors, equivalences, indirectCosts: indirectCostsSettings } = settings;
-    const { participants, visitors } = values;
+    const { participants, visitors } = sanitizedValues;
 
     const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsCount = 0;
@@ -243,11 +258,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     await addEvent({
       timestamp: Date.now(),
-      formData: values,
+      formData: sanitizedValues,
       results
     });
 
-    onCalculate(results, values);
+    onCalculate(results, sanitizedValues);
   }
 
 
