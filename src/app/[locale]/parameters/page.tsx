@@ -118,14 +118,23 @@ function DocumentationContent() {
 }
 
 const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly = false, precision }: { name: string, value: string | number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean, adornment: React.ReactNode, readOnly?: boolean, precision?: number }) => {
-    const displayValue = typeof value === 'number' && precision !== undefined ? value.toFixed(precision) : value;
+    
+    const formatNumber = (num: number, fracDigits: number) => {
+        return new Intl.NumberFormat('pt-BR', {
+            minimumFractionDigits: fracDigits,
+            maximumFractionDigits: fracDigits,
+        }).format(num);
+    }
+
+    const displayValue = typeof value === 'number' && precision !== undefined ? formatNumber(value, precision) : value;
+
     return (
         <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <span className="text-muted-foreground sm:text-sm">{adornment}</span>
             </div>
             <Input
-                type="number"
+                type="text" // Use text to allow for formatted values
                 name={name}
                 value={displayValue}
                 onChange={onChange}
@@ -146,9 +155,20 @@ export default function ParametersPage() {
   const { isAdmin } = useAuth();
 
   const handleNestedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = e.target;
+    const { name, value: rawValue } = e.target;
     const keys = name.split('.');
     
+    // Clean the value for parsing: remove thousand separators, replace comma with dot
+    const cleanedValue = rawValue.replace(/\./g, '').replace(',', '.');
+    const parsedValue = parseFloat(cleanedValue);
+
+    // If parsing fails, don't update state to avoid NaN
+    if (isNaN(parsedValue) && cleanedValue.trim() !== '') {
+        return;
+    }
+    
+    const finalValue = isNaN(parsedValue) ? 0 : parsedValue;
+
     // Create a deep copy to avoid direct state mutation
     const newSettings = JSON.parse(JSON.stringify(settings));
 
@@ -157,7 +177,7 @@ export default function ParametersPage() {
         current = current[keys[i]];
     }
     
-    current[keys[keys.length - 1]] = type === 'number' ? Number(value) || 0 : value;
+    current[keys[keys.length - 1]] = finalValue;
 
     // Use the callback from useSettings to trigger recalculation
     setSettings(newSettings);
@@ -220,7 +240,7 @@ export default function ParametersPage() {
                     <TableRow>
                       <TableCell>{t('perCapitaFactors.averageUcsPerHectare')}</TableCell>
                       <TableCell>
-                         <ParameterInput name="calculation.perCapitaFactors.averageUcsPerHectare" value={settings.calculation.perCapitaFactors.averageUcsPerHectare} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} />
+                         <ParameterInput name="calculation.perCapitaFactors.averageUcsPerHectare" value={settings.calculation.perCapitaFactors.averageUcsPerHectare} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} precision={0}/>
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -325,11 +345,12 @@ export default function ParametersPage() {
                           onChange={handleNestedChange} 
                           disabled={!isAdmin} 
                           adornment={key === 'ownershipRegistration' ? '%' : 'R$'} 
+                          precision={key === 'ownershipRegistration' ? 1 : 2}
                         />
                       </TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
+                </Body>
               </Table>
             </CardContent>
           </Card>
@@ -379,3 +400,5 @@ export default function ParametersPage() {
     </AppShell>
   );
 }
+
+    
