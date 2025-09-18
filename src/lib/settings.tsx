@@ -4,6 +4,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
+import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb } from './settings-storage';
+import { useAuth } from './auth';
 
 // Define the shape of your settings
 export interface SystemSettings {
@@ -39,7 +41,7 @@ export interface SystemSettings {
 }
 
 // Define the default settings
-const defaultSettings: SystemSettings = {
+export const defaultSettings: SystemSettings = {
     perCapitaFactors: {
       averageUcsPerHectare: 0,
       perCapitaConsumptionHa: 0,
@@ -75,94 +77,86 @@ const defaultSettings: SystemSettings = {
 interface SettingsContextType {
     settings: SystemSettings;
     setSettings: (settings: SystemSettings) => void;
-    saveSettings: () => void;
-    resetSettings: () => void;
-    isClient: boolean;
+    saveSettings: () => Promise<void>;
+    resetSettings: () => Promise<void>;
+    isLoading: boolean;
+    isSaving: boolean;
 }
 
 // Create the context
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
-// Helper to deep merge settings
-const mergeSettings = (base: SystemSettings, updates: Partial<SystemSettings>): SystemSettings => {
-    const safeUpdates = updates || {};
-    return {
-        perCapitaFactors: {
-          ...base.perCapitaFactors,
-          ...safeUpdates.perCapitaFactors,
-        },
-        equivalences: {
-          ...base.equivalences,
-          ...safeUpdates.equivalences
-        },
-        indirectCosts: {
-          ...base.indirectCosts,
-          ...safeUpdates.indirectCosts
-        },
-        sealParameters: {
-          ...base.sealParameters,
-          ...safeUpdates.sealParameters
-        }
-    };
-};
-
-
 // Create the provider component
 export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     const [settings, setSettings] = useState<SystemSettings>(defaultSettings);
-    const [isClient, setIsClient] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const { toast } = useToast();
+    const { isAdmin } = useAuth();
     const t = useTranslations("ParametersPage.toasts" as any);
 
-
-    // Ensure code only runs on the client
     useEffect(() => {
-        setIsClient(true);
+      const loadSettings = async () => {
+        setIsLoading(true);
         try {
-            const savedSettings = localStorage.getItem('systemSettings');
-            if (savedSettings) {
-                const parsedSettings = JSON.parse(savedSettings);
-                // Merge saved settings with defaults to avoid missing keys
-                setSettings(prevSettings => mergeSettings(prevSettings, parsedSettings));
-            }
+          const dbSettings = await getSettingsFromDb();
+          setSettings(dbSettings);
         } catch (error) {
-            console.error("Failed to load settings from localStorage", error);
-            setSettings(defaultSettings);
+          console.error("Failed to load settings from Firestore", error);
+          toast({
+              variant: 'destructive',
+              title: t('loadError.title'),
+              description: t('loadError.description'),
+          });
+        } finally {
+          setIsLoading(false);
         }
-    }, []);
+      };
 
-    const saveSettings = () => {
+      loadSettings();
+    }, [t]);
+
+
+    const saveSettings = async () => {
+        if (!isAdmin) {
+            toast({ variant: 'destructive', title: t('unauthorized.title') });
+            return;
+        }
+        setIsSaving(true);
         try {
-            localStorage.setItem('systemSettings', JSON.stringify(settings));
+            await saveSettingsToDb(settings);
             toast({
                 title: t('saveSuccess.title'),
                 description: t('saveSuccess.description'),
             });
         } catch (error) {
-            console.error("Failed to save settings to localStorage", error);
+            console.error("Failed to save settings to Firestore", error);
              toast({
                 variant: 'destructive',
                 title: t('saveError.title'),
                 description: t('saveError.description'),
             });
+        } finally {
+            setIsSaving(false);
         }
     };
 
-    const resetSettings = () => {
-        localStorage.removeItem('systemSettings');
+    const resetSettings = async () => {
+       if (!isAdmin) {
+            toast({ variant: 'destructive', title: t('unauthorized.title') });
+            return;
+        }
         setSettings(defaultSettings);
+        // Also save the reset state to the database
+        await saveSettingsToDb(defaultSettings);
         toast({
             title: t('resetSuccess.title'),
             description: t('resetSuccess.description'),
         });
     };
 
-    const handleSetSettings = (newSettings: SystemSettings) => {
-      setSettings(mergeSettings(settings, newSettings));
-    }
-
     return (
-        <SettingsContext.Provider value={{ settings, setSettings: handleSetSettings, saveSettings, resetSettings, isClient }}>
+        <SettingsContext.Provider value={{ settings, setSettings, saveSettings, resetSettings, isLoading, isSaving }}>
             {children}
         </SettingsContext.Provider>
     );

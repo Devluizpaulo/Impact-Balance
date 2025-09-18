@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useSettings, type SystemSettings } from "@/lib/settings";
 import { useAuth } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCcw, Save } from "lucide-react";
+import { RefreshCcw, Save, Loader2 } from "lucide-react";
 import AppShell from "@/components/layout/app-shell";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Link from "next/link";
@@ -122,7 +122,7 @@ export default function ParametersPage() {
   const t = useTranslations("ParametersPage");
   const t_calc = useTranslations("ImpactCalculator");
   const t_docs = useTranslations("DocumentationPage");
-  const { settings, setSettings, saveSettings, resetSettings, isClient } = useSettings();
+  const { settings, setSettings, saveSettings, resetSettings, isLoading, isSaving } = useSettings();
   const { isAdmin } = useAuth();
 
   const handleNestedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +143,7 @@ export default function ParametersPage() {
     }
   };
   
-  if (!isClient) {
+  if (isLoading) {
     return (
       <AppShell>
         <div className="container mx-auto px-4 py-8 md:py-12">
@@ -183,11 +183,11 @@ export default function ParametersPage() {
             </div>
             {isAdmin && (
               <div className="flex gap-2">
-                <Button onClick={resetSettings} variant="outline">
+                <Button onClick={resetSettings} variant="outline" disabled={isSaving}>
                   <RefreshCcw /> {t('resetButton')}
                 </Button>
-                <Button onClick={saveSettings}>
-                  <Save /> {t('saveButton')}
+                <Button onClick={saveSettings} disabled={isSaving}>
+                  {isSaving ? <Loader2 className="animate-spin" /> : <Save />} {t('saveButton')}
                 </Button>
               </div>
             )}
@@ -302,5 +302,3 @@ export default function ParametersPage() {
     </AppShell>
   );
 }
-
-    

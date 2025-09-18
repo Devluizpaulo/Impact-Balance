@@ -142,7 +142,7 @@
   },
   "ParametersPage": {
     "title": "Parâmetros do Sistema",
-    "description": "Os valores utilizados para o cálculo de impacto. As alterações são salvas localmente no seu navegador.",
+    "description": "Os valores utilizados para o cálculo de impacto. As alterações são salvas no banco de dados central.",
     "saveButton": "Salvar Alterações",
     "resetButton": "Restaurar Padrões",
     "perCapitaBasis": "Base de Cálculo Per Capita",
@@ -182,7 +182,7 @@
     "toasts": {
       "saveSuccess": {
         "title": "Configurações Salvas",
-        "description": "Seus parâmetros personalizados foram salvos."
+        "description": "Seus parâmetros personalizados foram salvos no banco de dados."
       },
       "saveError": {
         "title": "Falha ao Salvar",
@@ -190,7 +190,15 @@
       },
       "resetSuccess": {
         "title": "Configurações Redefinidas",
-        "description": "Os parâmetros foram redefinidos para os valores padrão."
+        "description": "Os parâmetros foram redefinidos para os valores padrão no banco de dados."
+      },
+       "loadError": {
+        "title": "Falha ao Carregar",
+        "description": "Não foi possível carregar as configurações do banco de dados. Usando padrões locais."
+      },
+      "unauthorized": {
+        "title": "Não Autorizado",
+        "description": "Você deve ser um administrador para executar esta ação."
       }
     }
   },
