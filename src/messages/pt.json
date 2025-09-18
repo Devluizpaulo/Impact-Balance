@@ -79,7 +79,7 @@
     },
     "indirectCosts": {
       "title": "Custos Indiretos",
-      "ownershipRegistration": "Registro de Titularidade",
+      "ownershipRegistration": "Registro de Titularidade (%)",
       "certificateIssuance": "Emissão de Certificado",
       "websitePage": "Página do Site"
     },
@@ -163,7 +163,7 @@
       "hourlyUcsConsumption": "Consumo Por hora de UC"
     },
     "indirectCostsLabels": {
-      "ownershipRegistration": "Registro de Titularidade",
+      "ownershipRegistration": "Registro de Titularidade (%)",
       "certificateIssuance": "Emissão de Certificado",
       "websitePage": "Página do Site"
     },
@@ -252,7 +252,7 @@
       "title": "Acesso de Administrador Necessário",
       "description": "Por favor, insira a senha de administrador para acessar esta seção.",
       "passwordLabel": "Senha",
-      "passwordPlaceholder": "Digite a senha...",
+      "placeholder": "Digite a senha...",
       "cancel": "Cancelar",
       "login": "Entrar"
     },
@@ -279,3 +279,5 @@
     }
   }
 }
+
+    

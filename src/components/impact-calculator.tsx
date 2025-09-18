@@ -127,7 +127,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         totalParticipantsCount += count;
         totalParticipantDays += count * days;
         totalParticipantHours += count * days * 8; // Assuming 8-hour day
-        const ucs = Math.ceil(count * days * perCapitaFactors.dailyUcsConsumption);
+        const ucs = count * days * perCapitaFactors.dailyUcsConsumption;
         breakdown.push({
           category: key,
           ucs,
@@ -165,6 +165,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 totalParticipantHours += visitorTotalHours;
                 const visitorDaysEquivalent = visitorTotalHours / 8;
                 totalParticipantDays += visitorDaysEquivalent;
+                // Fraction of daily consumption
                 ucs = (visitorCount * duration * perCapitaFactors.hourlyUcsConsumption);
                 cost = ucs * equivalences.ucsQuotationValue;
             }
@@ -185,11 +186,14 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
     const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
+    // Calculate indirect costs based on settings and direct cost
     const indirectBreakdown: { category: string; cost: number }[] = [];
-    const ownershipRegistrationCost = directCost * 0.015;
+    const ownershipRegistrationCost = directCost * (indirectCostsSettings.ownershipRegistration / 100);
+    
     indirectBreakdown.push({ category: "ownershipRegistration", cost: ownershipRegistrationCost });
     indirectBreakdown.push({ category: "certificateIssuance", cost: indirectCostsSettings.certificateIssuance });
     indirectBreakdown.push({ category: "websitePage", cost: indirectCostsSettings.websitePage });
+    
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
     const totalUCS = Math.ceil(directUcs);
@@ -379,5 +383,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   );
 }
 
+    
     
     

@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -23,7 +24,7 @@ export interface SystemSettings {
       equivalenceValuePerHour: number;
     };
     indirectCosts: {
-      ownershipRegistration: number;
+      ownershipRegistration: number; // This is now a percentage
       certificateIssuance: number;
       websitePage: number;
     };
@@ -49,9 +50,9 @@ const defaultSettings: SystemSettings = {
       equivalenceValuePerHour: 0.48,
     },
     indirectCosts: {
-      ownershipRegistration: 10,
-      certificateIssuance: 5,
-      websitePage: 2,
+      ownershipRegistration: 1.5, // Default percentage
+      certificateIssuance: 200,
+      websitePage: 300,
     },
     ucsCostPerUnit: 15,
 };
@@ -155,3 +156,5 @@ export const useSettings = () => {
     }
     return context;
 };
+
+    

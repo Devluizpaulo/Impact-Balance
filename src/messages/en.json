@@ -79,7 +79,7 @@
     },
     "indirectCosts": {
       "title": "Indirect Costs",
-      "ownershipRegistration": "Ownership Registration",
+      "ownershipRegistration": "Ownership Registration (%)",
       "certificateIssuance": "Certificate Issuance",
       "websitePage": "Website Page"
     },
@@ -163,7 +163,7 @@
       "hourlyUcsConsumption": "Hourly SCU Consumption"
     },
     "indirectCostsLabels": {
-      "ownershipRegistration": "Ownership Registration",
+      "ownershipRegistration": "Ownership Registration (%)",
       "certificateIssuance": "Certificate Issuance",
       "websitePage": "Website Page"
     },
@@ -279,3 +279,5 @@
     }
   }
 }
+
+    

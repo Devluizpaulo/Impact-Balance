@@ -79,7 +79,7 @@
     },
     "indirectCosts": {
       "title": "Costos Indirectos",
-      "ownershipRegistration": "Registro de Propiedad",
+      "ownershipRegistration": "Registro de Propiedad (%)",
       "certificateIssuance": "Emisión de Certificado",
       "websitePage": "Página del Sitio Web"
     },
@@ -163,7 +163,7 @@
       "hourlyUcsConsumption": "Consumo por Hora de UC"
     },
     "indirectCostsLabels": {
-      "ownershipRegistration": "Registro de Propiedad",
+      "ownershipRegistration": "Registro de Propiedad (%)",
       "certificateIssuance": "Emisión de Certificado",
       "websitePage": "Página del Sitio Web"
     },
@@ -279,3 +279,5 @@
     }
   }
 }
+
+    
