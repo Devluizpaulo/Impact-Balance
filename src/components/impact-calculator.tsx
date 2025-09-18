@@ -111,27 +111,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   });
 
  async function onSubmit(values: FormData) {
-    // --- Data Sanitization ---
-    const sanitizedValues = JSON.parse(JSON.stringify(values, (key, value) => {
-        if (value === undefined || value === null || (typeof value === 'number' && isNaN(value))) {
-          if (['count', 'days', 'hours'].includes(key)) {
-            return 0;
-          }
-        }
-        return value;
-    }));
-    
-    if (sanitizedValues.visitors) {
-      if (sanitizedValues.visitors.unit === 'hours') {
-        sanitizedValues.visitors.days = 0;
-      } else {
-        sanitizedValues.visitors.hours = 0;
-      }
-    }
-    // --- End Data Sanitization ---
-  
     const { calculation } = settings;
-    const { participants, visitors } = sanitizedValues;
+    const { participants, visitors } = values;
 
     const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsCount = 0;
@@ -189,7 +170,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             }
         }
 
-        if (duration > 0) {
+        if (ucs > 0) {
             breakdown.push({
                 category: 'visitors',
                 ucs,
@@ -214,7 +195,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    const totalUCS = directUcs; // Already summed up from ceiled values
+    const totalUCS = directUcs;
     const totalCost = directCost + indirectCost;
 
     const maxDays = Math.max(
@@ -262,11 +243,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     await addEvent({
       timestamp: Date.now(),
-      formData: sanitizedValues,
+      formData: values,
       results
     });
 
-    onCalculate(results, sanitizedValues);
+    onCalculate(results, values);
   }
 
 
