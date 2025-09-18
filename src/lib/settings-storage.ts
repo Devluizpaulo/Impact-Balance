@@ -11,18 +11,21 @@ const SETTINGS_DOC_ID = 'default';
 
 // Helper to deep merge settings to ensure new properties are not missing on load
 const mergeWithDefault = (loadedSettings: Partial<SystemSettings>): SystemSettings => {
+    const calculationSettings = loadedSettings.calculation || {};
     return {
-        perCapitaFactors: {
-            ...defaultSettings.perCapitaFactors,
-            ...(loadedSettings.perCapitaFactors || {}),
-        },
-        equivalences: {
-            ...defaultSettings.equivalences,
-            ...(loadedSettings.equivalences || {}),
-        },
-        indirectCosts: {
-            ...defaultSettings.indirectCosts,
-            ...(loadedSettings.indirectCosts || {}),
+        calculation: {
+            perCapitaFactors: {
+                ...defaultSettings.calculation.perCapitaFactors,
+                ...(calculationSettings.perCapitaFactors || {}),
+            },
+            equivalences: {
+                ...defaultSettings.calculation.equivalences,
+                ...(calculationSettings.equivalences || {}),
+            },
+            indirectCosts: {
+                ...defaultSettings.calculation.indirectCosts,
+                ...(calculationSettings.indirectCosts || {}),
+            },
         },
         sealParameters: {
             ...defaultSettings.sealParameters,

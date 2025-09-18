@@ -126,7 +126,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     }
     // --- End Data Sanitization ---
   
-    const { perCapitaFactors, equivalences, indirectCosts: indirectCostsSettings } = settings;
+    const { calculation } = settings;
     const { participants, visitors } = sanitizedValues;
 
     const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
@@ -142,11 +142,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         totalParticipantsCount += count;
         totalParticipantDays += count * days;
         totalParticipantHours += count * days * 8; // Assuming 8-hour day
-        const ucs = count * days * perCapitaFactors.dailyUcsConsumption;
+        const ucs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
         breakdown.push({
           category: key,
           ucs,
-          cost: ucs * equivalences.ucsQuotationValue,
+          cost: ucs * calculation.equivalences.ucsQuotationValue,
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -169,8 +169,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 totalParticipantDays += visitorCount * duration;
                 totalParticipantHours += visitorCount * duration * 8;
-                ucs = (visitorCount * duration * perCapitaFactors.dailyUcsConsumption);
-                cost = ucs * equivalences.ucsQuotationValue;
+                ucs = (visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption);
+                cost = ucs * calculation.equivalences.ucsQuotationValue;
             }
         } else { // hours
             duration = visitors.hours || 0;
@@ -180,8 +180,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 totalParticipantHours += visitorTotalHours;
                 const visitorDaysEquivalent = visitorTotalHours / 8;
                 totalParticipantDays += visitorDaysEquivalent;
-                ucs = (visitorCount * duration * perCapitaFactors.hourlyUcsConsumption);
-                cost = ucs * equivalences.ucsQuotationValue;
+                ucs = (visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption);
+                cost = ucs * calculation.equivalences.ucsQuotationValue;
             }
         }
 
@@ -202,11 +202,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     
     // Calculate indirect costs
     const indirectBreakdown: { category: string; cost: number }[] = [];
-    const ownershipRegistrationCost = directCost * (indirectCostsSettings.ownershipRegistration / 100);
+    const ownershipRegistrationCost = directCost * (calculation.indirectCosts.ownershipRegistration / 100);
     
     indirectBreakdown.push({ category: "ownershipRegistration", cost: ownershipRegistrationCost });
-    indirectBreakdown.push({ category: "certificateIssuance", cost: indirectCostsSettings.certificateIssuance });
-    indirectBreakdown.push({ category: "websitePage", cost: indirectCostsSettings.websitePage });
+    indirectBreakdown.push({ category: "certificateIssuance", cost: calculation.indirectCosts.certificateIssuance });
+    indirectBreakdown.push({ category: "websitePage", cost: calculation.indirectCosts.websitePage });
     
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
@@ -234,7 +234,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       equivalences: {
         dailyUCS: maxDays > 0 ? totalUCS / maxDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
-        gdpPercentage: equivalences.gdpPerCapita > 0 ? (totalCost / equivalences.gdpPerCapita) * 100 : 0,
+        gdpPercentage: calculation.equivalences.gdpPerCapita > 0 ? (totalCost / calculation.equivalences.gdpPerCapita) * 100 : 0,
       },
     };
     

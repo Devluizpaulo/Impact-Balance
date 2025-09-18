@@ -145,20 +145,17 @@ export default function ParametersPage() {
 
   const handleNestedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
-    const [group, key] = name.split('.') as [keyof SystemSettings, string];
-
-    if (group && key && group in settings) {
-      const groupSettings = settings[group];
-      if (typeof groupSettings === 'object' && groupSettings !== null) {
-        setSettings({
-          ...settings,
-          [group]: {
-            ...(groupSettings as object),
-            [key]: type === 'number' ? Number(value) || 0 : value,
-          },
-        });
+    const keys = name.split('.');
+    
+    setSettings(prevSettings => {
+      const newSettings = JSON.parse(JSON.stringify(prevSettings));
+      let current = newSettings;
+      for (let i = 0; i < keys.length - 1; i++) {
+        current = current[keys[i]];
       }
-    }
+      current[keys[keys.length - 1]] = type === 'number' ? Number(value) || 0 : value;
+      return newSettings;
+    });
   };
   
   if (isLoading) {
@@ -215,11 +212,11 @@ export default function ParametersPage() {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {Object.entries(settings.perCapitaFactors).map(([key, value]) => (
+                  {Object.entries(settings.calculation.perCapitaFactors).map(([key, value]) => (
                     <TableRow key={key}>
                       <TableCell>{t(`perCapitaFactors.${key}` as any)}</TableCell>
                       <TableCell>
-                         <ParameterInput name={`perCapitaFactors.${key}`} value={value as number} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} />
+                         <ParameterInput name={`calculation.perCapitaFactors.${key}`} value={value as number} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -236,12 +233,12 @@ export default function ParametersPage() {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {Object.entries(settings.equivalences).map(([key, value]) => (
+                  {Object.entries(settings.calculation.equivalences).map(([key, value]) => (
                      <TableRow key={key}>
                       <TableCell>{t(`equivalences.${key}` as any)}</TableCell>
                       <TableCell>
                         <ParameterInput 
-                          name={`equivalences.${key}`} 
+                          name={`calculation.equivalences.${key}`} 
                           value={value as number} 
                           onChange={handleNestedChange} 
                           disabled={!isAdmin} 
@@ -263,12 +260,12 @@ export default function ParametersPage() {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {Object.entries(settings.indirectCosts).map(([key, value]) => (
+                  {Object.entries(settings.calculation.indirectCosts).map(([key, value]) => (
                     <TableRow key={key}>
                       <TableCell>{t_calc(`indirectCosts.${key}` as any)}</TableCell>
                       <TableCell>
                          <ParameterInput 
-                          name={`indirectCosts.${key}`} 
+                          name={`calculation.indirectCosts.${key}`} 
                           value={value as number} 
                           onChange={handleNestedChange} 
                           disabled={!isAdmin} 
@@ -327,5 +324,3 @@ export default function ParametersPage() {
     </AppShell>
   );
 }
-
-    

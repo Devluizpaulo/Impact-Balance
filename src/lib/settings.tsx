@@ -9,26 +9,28 @@ import { useAuth } from './auth';
 
 // Define the shape of your settings
 export interface SystemSettings {
-    perCapitaFactors: {
-      averageUcsPerHectare: number;
-      perCapitaConsumptionHa: number;
-      ucsConsumption73years: number;
-      annualUcsConsumption: number;
-      dailyUcsConsumption: number;
-      hourlyUcsConsumption: number;
-    };
-    equivalences: {
-      ucsQuotationValue: number;
-      gdpPerCapita: number;
-      equivalenceValuePerYear: number;
-      gdpPercentage: number;
-      equivalenceValuePerDay: number;
-      equivalenceValuePerHour: number;
-    };
-    indirectCosts: {
-      ownershipRegistration: number; // This is a percentage
-      certificateIssuance: number;
-      websitePage: number;
+    calculation: {
+        perCapitaFactors: {
+          averageUcsPerHectare: number;
+          perCapitaConsumptionHa: number;
+          ucsConsumption73years: number;
+          annualUcsConsumption: number;
+          dailyUcsConsumption: number;
+          hourlyUcsConsumption: number;
+        };
+        equivalences: {
+          ucsQuotationValue: number;
+          gdpPerCapita: number;
+          equivalenceValuePerYear: number;
+          gdpPercentage: number;
+          equivalenceValuePerDay: number;
+          equivalenceValuePerHour: number;
+        };
+        indirectCosts: {
+          ownershipRegistration: number; // This is a percentage
+          certificateIssuance: number;
+          websitePage: number;
+        };
     };
     sealParameters: {
       preservedNativeForestArea: string;
@@ -42,41 +44,43 @@ export interface SystemSettings {
 
 // Define the default settings
 export const defaultSettings: SystemSettings = {
-    perCapitaFactors: {
-      averageUcsPerHectare: 0,
-      perCapitaConsumptionHa: 0,
-      ucsConsumption73years: 0,
-      annualUcsConsumption: 0,
-      dailyUcsConsumption: 0,
-      hourlyUcsConsumption: 0,
-    },
-    equivalences: {
-      ucsQuotationValue: 0,
-      gdpPerCapita: 0,
-      equivalenceValuePerYear: 0,
-      gdpPercentage: 0,
-      equivalenceValuePerDay: 0,
-      equivalenceValuePerHour: 0,
-    },
-    indirectCosts: {
-      ownershipRegistration: 0,
-      certificateIssuance: 0,
-      websitePage: 0,
+    calculation: {
+        perCapitaFactors: {
+            averageUcsPerHectare: 0,
+            perCapitaConsumptionHa: 0,
+            ucsConsumption73years: 0,
+            annualUcsConsumption: 0,
+            dailyUcsConsumption: 0,
+            hourlyUcsConsumption: 0,
+        },
+        equivalences: {
+            ucsQuotationValue: 0,
+            gdpPerCapita: 0,
+            equivalenceValuePerYear: 0,
+            gdpPercentage: 0,
+            equivalenceValuePerDay: 0,
+            equivalenceValuePerHour: 0,
+        },
+        indirectCosts: {
+            ownershipRegistration: 0,
+            certificateIssuance: 0,
+            websitePage: 0,
+        },
     },
     sealParameters: {
-      preservedNativeForestArea: "",
-      carbonEmissionAvoided: "",
-      storedWood: "",
-      faunaSpeciesPreservation: "",
-      floraSpeciesPreservation: "",
-      hydrologicalFlowPreservation: "",
+        preservedNativeForestArea: "",
+        carbonEmissionAvoided: "",
+        storedWood: "",
+        faunaSpeciesPreservation: "",
+        floraSpeciesPreservation: "",
+        hydrologicalFlowPreservation: "",
     }
 };
 
 // Define the shape of the context
 interface SettingsContextType {
     settings: SystemSettings;
-    setSettings: (settings: SystemSettings) => void;
+    setSettings: React.Dispatch<React.SetStateAction<SystemSettings>>;
     saveSettings: () => Promise<void>;
     resetSettings: () => Promise<void>;
     isLoading: boolean;
@@ -114,7 +118,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       };
 
       loadSettings();
-    }, [t]);
+    }, [t, toast]);
 
 
     const saveSettings = async () => {
