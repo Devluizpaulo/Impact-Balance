@@ -149,7 +149,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         totalParticipantDays += count * days;
         totalParticipantHours += count * days * 8; // Assuming 8-hour day
 
-        const ucs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
+        const ucs = Math.ceil(count * days * calculation.perCapitaFactors.dailyUcsConsumption);
         
         breakdown.push({
           category: key,
@@ -176,7 +176,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 totalParticipantDays += visitorCount * duration;
                 totalParticipantHours += visitorCount * duration * 8;
-                ucs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
+                ucs = Math.ceil(visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption);
             }
         } else { // hours
             duration = visitors.hours || 0;
@@ -185,7 +185,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 const visitorTotalHours = visitorCount * duration;
                 totalParticipantHours += visitorTotalHours;
                 totalParticipantDays += visitorTotalHours / 8;
-                ucs = visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption;
+                ucs = Math.ceil(visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption);
             }
         }
 
@@ -214,7 +214,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
-    const totalUCS = Math.ceil(directUcs);
+    const totalUCS = directUcs; // Already summed up from ceiled values
     const totalCost = directCost + indirectCost;
 
     const maxDays = Math.max(
@@ -399,3 +399,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
