@@ -188,8 +188,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 const visitorTotalHours = visitorCount * duration;
                 totalParticipantHours += visitorTotalHours;
-                // The logic from the spreadsheet
-                ucs = Math.ceil(Math.ceil(visitorCount * duration / 8) * calculation.perCapitaFactors.dailyUcsConsumption);
+                ucs = Math.ceil((visitorCount * duration / 8) * calculation.perCapitaFactors.dailyUcsConsumption);
                 totalParticipantDays += (visitorCount * duration / 8);
             }
         }
