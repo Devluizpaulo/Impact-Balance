@@ -76,7 +76,7 @@ function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSu
     if (item.isProtected && !isAdmin) {
       promptLogin();
     } else {
-      router.push(item.href);
+      router.push(item.href as any);
     }
   };
 
@@ -218,3 +218,5 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+
+    

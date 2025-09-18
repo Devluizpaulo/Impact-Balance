@@ -218,9 +218,8 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const wb = XLSX.utils.book_new();
 
             // Summary Sheet
-            const summaryData: { Item: string, Value: string | number | undefined }[] = [
+            const summaryData: { Item: string; Value: string | number | undefined }[] = [
                 { Item: t('excel.eventName'), Value: formData.eventName },
-                {},
                 { Item: t('excel.totalUCSToCompensate'), Value: results.totalUCS },
                 { Item: t('excel.totalDirectCost'), Value: results.directCost },
                 { Item: t('excel.totalIndirectCost'), Value: results.indirectCost },
@@ -308,3 +307,5 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         </div>
     );
 }
+
+    

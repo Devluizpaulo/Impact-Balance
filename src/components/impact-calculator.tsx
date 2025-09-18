@@ -141,7 +141,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     // Calculate visitor UCS
     const visitorCount = visitors?.count || 0;
-    if (visitorCount > 0) {
+    if (visitorCount > 0 && visitors) {
         totalParticipantsCount += visitorCount;
         let ucs = 0;
         let cost = 0;
@@ -380,3 +380,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
