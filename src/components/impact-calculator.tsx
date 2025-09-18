@@ -166,7 +166,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
                 const visitorTotalHours = visitorCount * duration;
                 totalParticipantHours += visitorTotalHours;
                 totalParticipantDays += visitorTotalHours / 8;
-                ucs = Math.ceil((visitorCount * duration / 8) * calculation.perCapitaFactors.dailyUcsConsumption);
+                // This logic mirrors the user's spreadsheet: convert hours to days, ceil it, then apply daily factor and ceil again.
+                ucs = Math.ceil(Math.ceil(visitorCount * duration / 8) * calculation.perCapitaFactors.dailyUcsConsumption);
             }
         }
 
@@ -384,3 +385,4 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     
 
     
+
