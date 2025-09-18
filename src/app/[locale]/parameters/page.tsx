@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useSettings, type SystemSettings } from "@/lib/settings";
 import { useAuth } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RefreshCcw, Save, Loader2 } from "lucide-react";
+import { RefreshCcw, Save, Loader2, Hash } from "lucide-react";
 import AppShell from "@/components/layout/app-shell";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Link from "next/link";
@@ -117,6 +117,24 @@ function DocumentationContent() {
   )
 }
 
+const ParameterInput = ({ name, value, onChange, disabled, adornment }: { name: string, value: string | number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean, adornment: React.ReactNode }) => {
+    return (
+        <div className="relative">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <span className="text-muted-foreground sm:text-sm">{adornment}</span>
+            </div>
+            <Input
+                type="number"
+                name={name}
+                value={value}
+                onChange={onChange}
+                className="text-right pl-8"
+                disabled={disabled}
+            />
+        </div>
+    );
+};
+
 
 export default function ParametersPage() {
   const t = useTranslations("ParametersPage");
@@ -167,12 +185,7 @@ export default function ParametersPage() {
       </AppShell>
     );
   }
-
-  const perCapitaFactors = Object.entries(settings.perCapitaFactors);
-  const equivalences = Object.entries(settings.equivalences);
-  const indirectCosts = Object.entries(settings.indirectCosts);
-  const sealParameters = Object.entries(settings.sealParameters);
-
+  
   return (
     <AppShell>
       <div className="container mx-auto px-4 py-8 md:py-12">
@@ -202,11 +215,11 @@ export default function ParametersPage() {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {perCapitaFactors.map(([key, value]) => (
+                  {Object.entries(settings.perCapitaFactors).map(([key, value]) => (
                     <TableRow key={key}>
                       <TableCell>{t(`perCapitaFactors.${key}` as any)}</TableCell>
                       <TableCell>
-                        <Input type="number" name={`perCapitaFactors.${key}`} value={value as number} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
+                         <ParameterInput name={`perCapitaFactors.${key}`} value={value as number} onChange={handleNestedChange} disabled={!isAdmin} adornment={<Hash className="w-4 h-4"/>} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -223,11 +236,17 @@ export default function ParametersPage() {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {equivalences.map(([key, value]) => (
+                  {Object.entries(settings.equivalences).map(([key, value]) => (
                      <TableRow key={key}>
                       <TableCell>{t(`equivalences.${key}` as any)}</TableCell>
                       <TableCell>
-                        <Input type="number" name={`equivalences.${key}`} value={value as number} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
+                        <ParameterInput 
+                          name={`equivalences.${key}`} 
+                          value={value as number} 
+                          onChange={handleNestedChange} 
+                          disabled={!isAdmin} 
+                          adornment={key === 'gdpPercentage' ? '%' : 'R$'} 
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -238,17 +257,23 @@ export default function ParametersPage() {
           
           <Card>
             <CardHeader>
-              <CardTitle>{t('indirectCosts')}</CardTitle>
+              <CardTitle>{t_calc('indirectCosts.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {indirectCosts.map(([key, value]) => (
+                  {Object.entries(settings.indirectCosts).map(([key, value]) => (
                     <TableRow key={key}>
                       <TableCell>{t_calc(`indirectCosts.${key}` as any)}</TableCell>
                       <TableCell>
-                        <Input type="number" name={`indirectCosts.${key}`} value={value as number} onChange={handleNestedChange} className="text-right" disabled={!isAdmin} />
+                         <ParameterInput 
+                          name={`indirectCosts.${key}`} 
+                          value={value as number} 
+                          onChange={handleNestedChange} 
+                          disabled={!isAdmin} 
+                          adornment={key === 'ownershipRegistration' ? '%' : 'R$'} 
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -265,7 +290,7 @@ export default function ParametersPage() {
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
-                  {sealParameters.map(([key, value]) => (
+                  {Object.entries(settings.sealParameters).map(([key, value]) => (
                     <TableRow key={key}>
                       <TableCell>{t(`sealParameters.${key}` as any)}</TableCell>
                       <TableCell>
@@ -302,3 +327,5 @@ export default function ParametersPage() {
     </AppShell>
   );
 }
+
+    
