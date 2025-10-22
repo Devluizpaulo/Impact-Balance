@@ -138,7 +138,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { participants, visitors } = values;
 
     let breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
-    let totalParticipants = 0;
+    let totalParticipantsValue = 0;
     
     // Calculate staff UCS (by days)
     Object.entries(participants).forEach(([key, p]) => {
@@ -147,7 +147,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       const days = participantData.days || 0;
 
       if (count > 0 && days > 0) {
-        totalParticipants += count;
+        totalParticipantsValue += count;
         const rawUcs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
         const ucs = Math.ceil(rawUcs);
         
@@ -165,8 +165,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     // Calculate visitor UCS (by hours or days)
     const visitorCount = visitors?.count || 0;
     if (visitorCount > 0 && visitors) {
-        totalParticipants += visitorCount;
-        let rawUcs = 0;
+        totalParticipantsValue += visitorCount;
+        let ucs = 0;
         let duration = 0;
         let durationUnit: 'days' | 'hours' = 'hours';
 
@@ -174,18 +174,19 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             duration = visitors.days || 0;
             durationUnit = 'days';
             if (duration > 0) {
-                rawUcs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
+                const rawUcs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
+                ucs = Math.ceil(rawUcs);
             }
         } else { // hours
             duration = visitors.hours || 0;
             durationUnit = 'hours';
             if (duration > 0) {
-                 rawUcs = visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption;
+                 const personHours = visitorCount * duration;
+                 ucs = Math.ceil(personHours / 14);
             }
         }
         
-        if (rawUcs > 0) {
-            const ucs = Math.ceil(rawUcs);
+        if (ucs > 0) {
             breakdown.push({
                 category: 'visitors',
                 ucs: ucs,
@@ -253,14 +254,14 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const totalEventHours = maxDays > 0 ? maxDays * 24 : 0;
     
     let results: CalculationResult = {
-      totalParticipants,
+      totalParticipants: totalParticipantsValue,
       totalUCS,
       totalCost,
       directUcs,
       directCost,
       indirectCost,
-      ucsPerParticipant: totalParticipants > 0 ? totalUCS / totalParticipants : 0,
-      costPerParticipant: totalParticipants > 0 ? totalCost / totalParticipants : 0,
+      ucsPerParticipant: totalParticipantsValue > 0 ? totalUCS / totalParticipantsValue : 0,
+      costPerParticipant: totalParticipantsValue > 0 ? totalCost / totalParticipantsValue : 0,
       costPerParticipantDay: totalParticipantDays > 0 ? totalCost / totalParticipantDays : 0,
       costPerParticipantHour: totalParticipantHours > 0 ? totalCost / totalParticipantHours : 0,
       breakdown,
@@ -431,5 +432,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-    
