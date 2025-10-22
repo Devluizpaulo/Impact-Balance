@@ -176,12 +176,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 rawUcs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
             }
-        } else { // hours - convert hours to equivalent days (assuming 8-hour workday)
+        } else { // hours
             duration = visitors.hours || 0;
             durationUnit = 'hours';
             if (duration > 0) {
-                const equivalentDays = (visitorCount * duration) / 8;
-                rawUcs = equivalentDays * calculation.perCapitaFactors.dailyUcsConsumption;
+                 rawUcs = visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption;
             }
         }
         
@@ -432,5 +431,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-
