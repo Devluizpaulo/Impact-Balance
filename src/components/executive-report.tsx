@@ -27,13 +27,6 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
     const formatCurrencyEUR = (value: number) => {
         return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
     }
-    const formatUcs = (value: number) => {
-        // Show decimals for fractional values, but integer for whole numbers
-        if (value % 1 === 0) {
-            return value;
-        }
-        return value.toFixed(3);
-    }
     
     const participantCategories: Record<string, string> = {
         organizers: t_calc('participants.organizersAndPromoters'),
@@ -97,7 +90,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                                     <TableCell className="text-right text-gray-700">{item.quantity}</TableCell>
                                     <TableCell className="text-right text-gray-700">{item.duration} <span className="text-xs text-gray-500">{t_calc(`participants.${item.durationUnit}` as any)}</span></TableCell>
                                     <TableCell className="text-right text-primary font-semibold">
-                                       {item.durationUnit === 'hours' ? formatUcs(item.ucs) : Math.ceil(item.ucs)}
+                                       {item.ucs}
                                     </TableCell>
                                     <TableCell className="text-right text-primary/90 font-semibold">{formatCurrency(item.cost)}</TableCell>
                                 </TableRow>
@@ -181,3 +174,5 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
       </div>
     );
 }
+
+    

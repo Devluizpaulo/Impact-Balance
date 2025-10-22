@@ -137,10 +137,10 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { calculation } = settings;
     const { participants, visitors } = values;
 
-    const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
+    let breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsCount = 0;
     
-    // Calculate staff UCS
+    // Calculate staff UCS (by days)
     Object.entries(participants).forEach(([key, p]) => {
       const participantData = p as { count?: number; days?: number };
       const count = participantData.count || 0;
@@ -149,7 +149,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       if (count > 0 && days > 0) {
         totalParticipantsCount += count;
         const rawUcs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
-        const ucs = Math.ceil(rawUcs);
+        const ucs = Math.ceil(rawUcs); // Round up each item
         
         breakdown.push({
           category: key,
@@ -162,12 +162,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       }
     });
 
-    // Calculate visitor UCS
+    // Calculate visitor UCS (by hours or days)
     const visitorCount = visitors?.count || 0;
     if (visitorCount > 0 && visitors) {
         totalParticipantsCount += visitorCount;
         let rawUcs = 0;
-        let ucs = 0;
         let duration = 0;
         let durationUnit: 'days' | 'hours' = 'hours';
 
@@ -176,27 +175,21 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             durationUnit = 'days';
             if (duration > 0) {
                 rawUcs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
-                ucs = Math.ceil(rawUcs);
             }
         } else { // hours
             duration = visitors.hours || 0;
             durationUnit = 'hours';
             if (duration > 0) {
-                // This is the special case: don't round here to allow fractions to accumulate.
                 rawUcs = visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption;
-                ucs = rawUcs; // Keep it fractional
             }
         }
         
         if (rawUcs > 0) {
-             const cost = visitors.unit === 'hours' 
-              ? ucs * calculation.equivalences.ucsQuotationValue // Fractional cost for hours
-              : Math.ceil(ucs) * calculation.equivalences.ucsQuotationValue; // Rounded cost for days
-
+            const ucs = Math.ceil(rawUcs); // Round up the final visitor UCS
             breakdown.push({
                 category: 'visitors',
                 ucs: ucs,
-                cost: cost,
+                cost: ucs * calculation.equivalences.ucsQuotationValue,
                 quantity: visitorCount,
                 duration: duration,
                 durationUnit: durationUnit,
@@ -204,8 +197,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
     }
     
-    const directUcs = Math.ceil(breakdown.reduce((acc, item) => acc + item.ucs, 0));
-    const directCost = directUcs * calculation.equivalences.ucsQuotationValue;
+    const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
+    const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
     // Calculate indirect costs
     const indirectBreakdown: { category: string; cost: number }[] = [];
@@ -260,7 +253,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const totalEventHours = maxDays > 0 ? maxDays * 24 : 0;
     
     let results: CalculationResult = {
-      totalParticipants: totalParticipantsCount,
+      totalParticipants,
       totalUCS,
       totalCost,
       directUcs,
@@ -438,3 +431,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
