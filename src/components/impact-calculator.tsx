@@ -212,9 +212,10 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const totalUCS = Math.ceil(rawTotalUcs);
     const directCost = totalUCS * calculation.equivalences.ucsQuotationValue;
     
-    // Update breakdown with final rounded cost contribution
+    // The individual cost in the breakdown should be proportional to the final cost
     if (rawTotalUcs > 0) {
         breakdown.forEach(item => {
+            // This is the contribution of the item to the total cost
             item.cost = (item.ucs / rawTotalUcs) * directCost;
         });
     }
@@ -261,12 +262,12 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       costPerParticipantHour: totalParticipantHours > 0 ? totalCost / totalParticipantHours : 0,
       breakdown,
       indirectBreakdown,
-      benefits,
       equivalences: {
         dailyUCS: maxDays > 0 ? totalUCS / maxDays : 0,
         hourlyUCS: totalEventHours > 0 ? totalUCS / totalEventHours : 0,
         gdpPercentage: calculation.equivalences.gdpPerCapita > 0 ? (totalCost / calculation.equivalences.gdpPerCapita) * 100 : 0,
       },
+      benefits,
     };
     
     try {
