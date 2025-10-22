@@ -288,6 +288,39 @@
       "title": "Country Data",
       "awaitingData": "Awaiting Data",
       "description": "Please provide data to populate this view."
+    },
+    "population": "Population",
+    "hdi": "HDI",
+    "gdpPerCapita": "GDP/Capita",
+    "lifeExpectancy": "Life Expectancy",
+    "earthsRequired": "Earths Required",
+    "countriesRequired": "Countries Required",
+    "dataQuality": "Data Quality",
+    "deficit": "Deficit",
+    "reserve": "Reserve",
+    "consumption": {
+      "title": "Consumption",
+      "tableTitle": "Consumption Footprint"
+    },
+    "production": {
+      "title": "Production",
+      "tableTitle": "Production Footprint"
+    },
+    "biocapacity": {
+      "title": "Biocapacity",
+      "tableTitle": "Biocapacity"
+    },
+    "footprintTypes": {
+      "component": "Component",
+      "value": "Value (gha/capita)",
+      "cropland": "Cropland",
+      "grazing": "Grazing",
+      "forest": "Forest",
+      "carbon": "Carbon",
+      "fish": "Fish",
+      "fishing": "Fishing",
+      "builtUp": "Built-up Land",
+      "total": "Total"
     }
   },
   "CookieConsent": {

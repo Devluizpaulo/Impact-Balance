@@ -288,6 +288,39 @@
       "title": "Datos del País",
       "awaitingData": "Esperando Datos",
       "description": "Por favor, proporcione datos para poblar esta vista."
+    },
+    "population": "Población",
+    "hdi": "IDH",
+    "gdpPerCapita": "PIB/Cápita",
+    "lifeExpectancy": "Expectativa de Vida",
+    "earthsRequired": "Tierras Requeridas",
+    "countriesRequired": "Países Requeridos",
+    "dataQuality": "Calidad de Datos",
+    "deficit": "Déficit",
+    "reserve": "Reserva",
+    "consumption": {
+      "title": "Consumo",
+      "tableTitle": "Huella de Consumo"
+    },
+    "production": {
+      "title": "Producción",
+      "tableTitle": "Huella de Producción"
+    },
+    "biocapacity": {
+      "title": "Biocapacidad",
+      "tableTitle": "Biocapacidad"
+    },
+    "footprintTypes": {
+      "component": "Componente",
+      "value": "Valor (gha/cápita)",
+      "cropland": "Tierra de Cultivo",
+      "grazing": "Pastoreo",
+      "forest": "Bosque",
+      "carbon": "Carbono",
+      "fish": "Pescado",
+      "fishing": "Pesca",
+      "builtUp": "Área Construida",
+      "total": "Total"
     }
   },
   "CookieConsent": {
