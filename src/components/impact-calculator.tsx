@@ -141,7 +141,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     let totalParticipantsCount = 0;
     let totalParticipantDays = 0;
     let totalParticipantHours = 0;
-    let rawTotalUcs = 0; // Use a raw total to sum up fractions before ceiling
+    let totalUCS = 0;
+    let directCost = 0;
 
     // Calculate staff UCS
     Object.entries(participants).forEach(([key, p]) => {
@@ -154,13 +155,17 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         totalParticipantDays += count * days;
         totalParticipantHours += count * days * 8; // Assuming 8-hour day
 
-        const ucs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
-        rawTotalUcs += ucs;
+        const rawUcs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
+        const ucs = Math.ceil(rawUcs);
+        const cost = ucs * calculation.equivalences.ucsQuotationValue;
         
+        totalUCS += ucs;
+        directCost += cost;
+
         breakdown.push({
           category: key,
           ucs,
-          cost: ucs * calculation.equivalences.ucsQuotationValue,
+          cost,
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -172,7 +177,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const visitorCount = visitors?.count || 0;
     if (visitorCount > 0 && visitors) {
         totalParticipantsCount += visitorCount;
-        let ucs = 0;
+        let rawUcs = 0;
         let duration = 0;
         let durationUnit: 'days' | 'hours' = 'hours';
 
@@ -182,7 +187,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 totalParticipantDays += visitorCount * duration;
                 totalParticipantHours += visitorCount * duration * 8;
-                ucs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
+                rawUcs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
             }
         } else { // hours
             duration = visitors.hours || 0;
@@ -190,18 +195,22 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             if (duration > 0) {
                 const visitorTotalHours = visitorCount * duration;
                 totalParticipantHours += visitorTotalHours;
-                ucs = visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption;
+                rawUcs = visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption;
                 totalParticipantDays += (visitorCount * duration / 8);
             }
         }
         
-        rawTotalUcs += ucs;
+        const ucs = Math.ceil(rawUcs);
+        const cost = ucs * calculation.equivalences.ucsQuotationValue;
 
         if (ucs > 0) {
+            totalUCS += ucs;
+            directCost += cost;
+
             breakdown.push({
                 category: 'visitors',
                 ucs,
-                cost: ucs * calculation.equivalences.ucsQuotationValue,
+                cost,
                 quantity: visitorCount,
                 duration: duration,
                 durationUnit: durationUnit,
@@ -209,17 +218,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
     }
     
-    const totalUCS = Math.ceil(rawTotalUcs);
-    const directCost = totalUCS * calculation.equivalences.ucsQuotationValue;
-    
-    // The individual cost in the breakdown should be proportional to the final cost
-    if (rawTotalUcs > 0) {
-        breakdown.forEach(item => {
-            // This is the contribution of the item to the total cost
-            item.cost = (item.ucs / rawTotalUcs) * directCost;
-        });
-    }
-
     const directUcs = totalUCS;
     
     // Calculate indirect costs
@@ -428,5 +426,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-    
