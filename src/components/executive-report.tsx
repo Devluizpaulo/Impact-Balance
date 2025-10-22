@@ -29,8 +29,6 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
     }
     
     const formatUcs = (value: number) => {
-        if (value === 0) return "0";
-        if (value < 1) return value.toFixed(3);
         return value.toLocaleString('pt-BR');
     }
     

@@ -138,7 +138,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { participants, visitors } = values;
 
     let breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
-    let currentTotalParticipants = 0;
+    let totalParticipants = 0;
     
     // Calculate staff UCS (by days)
     Object.entries(participants).forEach(([key, p]) => {
@@ -147,13 +147,14 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       const days = participantData.days || 0;
 
       if (count > 0 && days > 0) {
-        currentTotalParticipants += count;
+        totalParticipants += count;
         const rawUcs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
+        const ucs = Math.ceil(rawUcs);
         
         breakdown.push({
           category: key,
-          ucs: rawUcs, // Keep it fractional
-          cost: rawUcs * calculation.equivalences.ucsQuotationValue,
+          ucs: ucs, 
+          cost: ucs * calculation.equivalences.ucsQuotationValue,
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -164,7 +165,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     // Calculate visitor UCS (by hours or days)
     const visitorCount = visitors?.count || 0;
     if (visitorCount > 0 && visitors) {
-        currentTotalParticipants += visitorCount;
+        totalParticipants += visitorCount;
         let rawUcs = 0;
         let duration = 0;
         let durationUnit: 'days' | 'hours' = 'hours';
@@ -184,10 +185,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
         
         if (rawUcs > 0) {
+            const ucs = Math.ceil(rawUcs);
             breakdown.push({
                 category: 'visitors',
-                ucs: rawUcs, // Keep it fractional
-                cost: rawUcs * calculation.equivalences.ucsQuotationValue,
+                ucs: ucs,
+                cost: ucs * calculation.equivalences.ucsQuotationValue,
                 quantity: visitorCount,
                 duration: duration,
                 durationUnit: durationUnit,
@@ -195,10 +197,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
     }
     
-    const rawDirectUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
-    const totalUCS = Math.ceil(rawDirectUcs);
-    const directCost = totalUCS * calculation.equivalences.ucsQuotationValue;
-    const directUcs = totalUCS; // Direct UCS is the final rounded total
+    const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
+    const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
     // Calculate indirect costs
     const indirectBreakdown: { category: string; cost: number }[] = [];
@@ -211,6 +211,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
     const totalCost = directCost + indirectCost;
+    const totalUCS = directUcs;
     
     // Calculate total participant duration for averages
     let totalParticipantDays = 0;
@@ -252,14 +253,14 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const totalEventHours = maxDays > 0 ? maxDays * 24 : 0;
     
     let results: CalculationResult = {
-      totalParticipants: currentTotalParticipants,
+      totalParticipants,
       totalUCS,
       totalCost,
       directUcs,
       directCost,
       indirectCost,
-      ucsPerParticipant: currentTotalParticipants > 0 ? totalUCS / currentTotalParticipants : 0,
-      costPerParticipant: currentTotalParticipants > 0 ? totalCost / currentTotalParticipants : 0,
+      ucsPerParticipant: totalParticipants > 0 ? totalUCS / totalParticipants : 0,
+      costPerParticipant: totalParticipants > 0 ? totalCost / totalParticipants : 0,
       costPerParticipantDay: totalParticipantDays > 0 ? totalCost / totalParticipantDays : 0,
       costPerParticipantHour: totalParticipantHours > 0 ? totalCost / totalParticipantHours : 0,
       breakdown,
