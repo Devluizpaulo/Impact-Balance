@@ -149,12 +149,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       if (count > 0 && days > 0) {
         currentTotalParticipants += count;
         const rawUcs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
-        const ucs = Math.ceil(rawUcs);
         
         breakdown.push({
           category: key,
-          ucs: ucs,
-          cost: ucs * calculation.equivalences.ucsQuotationValue,
+          ucs: rawUcs, // Keep it fractional
+          cost: rawUcs * calculation.equivalences.ucsQuotationValue,
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -185,11 +184,10 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
         
         if (rawUcs > 0) {
-            const ucs = Math.ceil(rawUcs);
             breakdown.push({
                 category: 'visitors',
-                ucs: ucs,
-                cost: ucs * calculation.equivalences.ucsQuotationValue,
+                ucs: rawUcs, // Keep it fractional
+                cost: rawUcs * calculation.equivalences.ucsQuotationValue,
                 quantity: visitorCount,
                 duration: duration,
                 durationUnit: durationUnit,
@@ -197,8 +195,10 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
     }
     
-    const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
-    const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
+    const rawDirectUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
+    const totalUCS = Math.ceil(rawDirectUcs);
+    const directCost = totalUCS * calculation.equivalences.ucsQuotationValue;
+    const directUcs = totalUCS; // Direct UCS is the final rounded total
     
     // Calculate indirect costs
     const indirectBreakdown: { category: string; cost: number }[] = [];
@@ -211,8 +211,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
     const totalCost = directCost + indirectCost;
-    const totalUCS = directUcs;
-
+    
     // Calculate total participant duration for averages
     let totalParticipantDays = 0;
     let totalParticipantHours = 0;
@@ -431,3 +430,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+    
