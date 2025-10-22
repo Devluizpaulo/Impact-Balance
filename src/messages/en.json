@@ -50,7 +50,8 @@
       "totalBudgetUSD": "Total Budget (USD)",
       "totalBudgetEUR": "Total Budget (EUR)",
       "costPerParticipantDay": "Compensation per Participant-Day",
-      "costPerParticipantHour": "Compensation per Participant-Hour"
+      "costPerParticipantHour": "Compensation per Participant-Hour",
+      "totalParticipants": "Total Participants"
     }
   },
   "ImpactCalculator": {

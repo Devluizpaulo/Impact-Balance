@@ -50,7 +50,8 @@
       "totalBudgetUSD": "Orçamento Total (USD)",
       "totalBudgetEUR": "Orçamento Total (EUR)",
       "costPerParticipantDay": "Compensação por Participante-Dia",
-      "costPerParticipantHour": "Compensação por Participante-Hora"
+      "costPerParticipantHour": "Compensação por Participante-Hora",
+      "totalParticipants": "Total de Participantes"
     }
   },
   "ImpactCalculator": {
@@ -139,7 +140,7 @@
       "title": "Falha ao Exportar Excel",
       "description": "Ocorreu um erro inesperado ao gerar o arquivo Excel."
     }
-  },
+},
   "ParametersPage": {
     "title": "Parâmetros do Sistema",
     "description": "Os valores utilizados para o cálculo de impacto. As alterações são salvas no banco de dados central.",

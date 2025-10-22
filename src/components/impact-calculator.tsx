@@ -141,8 +141,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     let totalParticipantsCount = 0;
     let totalParticipantDays = 0;
     let totalParticipantHours = 0;
-    let totalUCS = 0;
-    let directCost = 0;
+    
 
     // Calculate staff UCS
     Object.entries(participants).forEach(([key, p]) => {
@@ -159,9 +158,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         const ucs = Math.ceil(rawUcs);
         const cost = ucs * calculation.equivalences.ucsQuotationValue;
         
-        totalUCS += ucs;
-        directCost += cost;
-
         breakdown.push({
           category: key,
           ucs,
@@ -204,9 +200,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         const cost = ucs * calculation.equivalences.ucsQuotationValue;
 
         if (ucs > 0) {
-            totalUCS += ucs;
-            directCost += cost;
-
             breakdown.push({
                 category: 'visitors',
                 ucs,
@@ -218,7 +211,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
     }
     
-    const directUcs = totalUCS;
+    const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
+    const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
     
     // Calculate indirect costs
     const indirectBreakdown: { category: string; cost: number }[] = [];
@@ -231,6 +225,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const indirectCost = indirectBreakdown.reduce((acc, item) => acc + item.cost, 0);
     
     const totalCost = directCost + indirectCost;
+    const totalUCS = directUcs;
 
     // Calculate benefits based on total UCS
     const benefits: Benefits = {
@@ -249,6 +244,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const totalEventHours = maxDays > 0 ? maxDays * 24 : 0;
     
     let results: CalculationResult = {
+      totalParticipants: totalParticipantsCount,
       totalUCS,
       totalCost,
       directUcs,

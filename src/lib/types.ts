@@ -57,6 +57,7 @@ export type Benefits = {
 }
 
 export type CalculationResult = {
+  totalParticipants: number;
   totalUCS: number;
   totalCost: number;
   totalCostUSD?: number;
