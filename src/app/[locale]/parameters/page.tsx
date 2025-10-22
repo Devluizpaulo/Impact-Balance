@@ -37,7 +37,50 @@ function DocumentationContent() {
         <p>
           Biocapacity is a property of the bioproductive surfaces on Earth. It represents the capacity of biologically productive areas to provide for human demand (people&apos;s Footprints). Like Footprint, it is measured in global hectares. It shows the capacity of the biosphere to regenerate and provide natural resources and services for life. Biocapacity is the lens of Footprint and biocapacity accounting. Such accounting enables us to add up the competing human demands on nature, which include natural resources, waste absorption, water renewal, and productive areas dedicated to urban uses. Footprint and biocapacity accounting allows us to determine how large the material metabolism of human economies is compared to what nature can renew.
         </p>
+        
+        <Separator className="my-8" />
 
+        <h3>Impact Calculation Formulas</h3>
+        <p>
+            The system calculates the socio-environmental impact in Sustainability Credit Units (UCS) based on the number of participants and their duration at the event. The calculation is divided into two distinct logics: one for the event staff (calculated in days) and another for visitors (calculated in hours).
+        </p>
+        <h4>1. UCS Calculation for Event Staff (per day)</h4>
+        <p>
+            For each category of the event staff (organizers, assemblers, suppliers, etc.), the impact is calculated based on the number of people and the number of days they participate. The formula is:
+        </p>
+        <pre><code className="language-js">
+            UCS (per category) = Math.ceil( (Quantity * Days) * Daily_UCS_Consumption_Factor )
+        </code></pre>
+        <ul>
+            <li><strong>Quantity:</strong> Number of people in the category.</li>
+            <li><strong>Days:</strong> Number of days of participation.</li>
+            <li><strong>Daily_UCS_Consumption_Factor:</strong> A parameter derived from the per capita ecological footprint data (found in "Per Capita Calculation Basis"). It represents the fraction of UCS consumed by one person in one day.</li>
+            <li><strong>Math.ceil():</strong> A function that rounds any fractional result up to the next whole number. This ensures that any impact, no matter how small, is counted as at least 1 UCS for that category.</li>
+        </ul>
+
+        <h4>2. UCS Calculation for Visitors (per hour)</h4>
+        <p>
+            For visitors, the calculation is based on person-hours and uses a specific simplified rule where every 14 person-hours of impact are converted into one Sustainability Credit Unit. The formula is:
+        </p>
+        <pre><code className="language-js">
+            UCS (for visitors) = Math.ceil( (Visitor_Quantity * Hours) / 14 )
+        </code></pre>
+         <ul>
+            <li><strong>Visitor_Quantity:</strong> Total number of event visitors.</li>
+            <li><strong>Hours:</strong> Duration in hours that visitors stay at the event.</li>
+            <li><strong>/ 14:</strong> This is the specific conversion factor. Every 14 person-hours generate a raw impact that is then rounded up. For example, 15 person-hours result in `ceil(15/14) = 2 UCS`.</li>
+        </ul>
+
+        <h4>3. Total Direct Cost</h4>
+        <p>
+            The total direct cost of compensation is the sum of all UCS calculated for each category, multiplied by the current quotation value of a single UCS.
+        </p>
+        <pre><code className="language-js">
+            Total_Direct_Cost = (Sum of all UCS) * UCS_Quotation_Value
+        </code></pre>
+
+        <Separator className="my-8" />
+        
         <h3>Biocapacity and Footprint Categories</h3>
         <ul>
           <li><strong>Cropland:</strong> Cropland is the most bioproductive of all the land-use types and consists of areas used to produce food and fiber for human consumption, feed for livestock, oil crops, and rubber. Due to lack of globally consistent data sets, current cropland Footprint calculations do not yet take into account the extent to which farming techniques or unsustainable agricultural practices may cause long-term degradation of soil. The cropland Footprint includes crop products allocated to livestock and aquaculture feed mixes, and those used for fibers and materials.</li>
