@@ -138,7 +138,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { participants, visitors } = values;
 
     let breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
-    let totalParticipantsCount = 0;
+    let totalParticipants = 0;
     
     // Calculate staff UCS (by days)
     Object.entries(participants).forEach(([key, p]) => {
@@ -147,9 +147,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       const days = participantData.days || 0;
 
       if (count > 0 && days > 0) {
-        totalParticipantsCount += count;
+        totalParticipants += count;
         const rawUcs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
-        const ucs = Math.ceil(rawUcs); // Round up each item
+        const ucs = Math.ceil(rawUcs);
         
         breakdown.push({
           category: key,
@@ -165,7 +165,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     // Calculate visitor UCS (by hours or days)
     const visitorCount = visitors?.count || 0;
     if (visitorCount > 0 && visitors) {
-        totalParticipantsCount += visitorCount;
+        totalParticipants += visitorCount;
         let rawUcs = 0;
         let duration = 0;
         let durationUnit: 'days' | 'hours' = 'hours';
@@ -185,7 +185,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
         
         if (rawUcs > 0) {
-            const ucs = Math.ceil(rawUcs); // Round up the final visitor UCS
+            const ucs = Math.ceil(rawUcs);
             breakdown.push({
                 category: 'visitors',
                 ucs: ucs,
@@ -259,8 +259,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       directUcs,
       directCost,
       indirectCost,
-      ucsPerParticipant: totalParticipantsCount > 0 ? totalUCS / totalParticipantsCount : 0,
-      costPerParticipant: totalParticipantsCount > 0 ? totalCost / totalParticipantsCount : 0,
+      ucsPerParticipant: totalParticipants > 0 ? totalUCS / totalParticipants : 0,
+      costPerParticipant: totalParticipants > 0 ? totalCost / totalParticipants : 0,
       costPerParticipantDay: totalParticipantDays > 0 ? totalCost / totalParticipantDays : 0,
       costPerParticipantHour: totalParticipantHours > 0 ? totalCost / totalParticipantHours : 0,
       breakdown,
@@ -432,4 +432,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   );
 }
 
-    
