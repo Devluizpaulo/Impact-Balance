@@ -155,13 +155,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         totalParticipantHours += count * days * 8; // Assuming 8-hour day
 
         const rawUcs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
-        const ucs = Math.ceil(rawUcs);
-        const cost = ucs * calculation.equivalences.ucsQuotationValue;
         
         breakdown.push({
           category: key,
-          ucs,
-          cost,
+          ucs: rawUcs,
+          cost: rawUcs * calculation.equivalences.ucsQuotationValue,
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -196,14 +194,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             }
         }
         
-        const ucs = Math.ceil(rawUcs);
-        const cost = ucs * calculation.equivalences.ucsQuotationValue;
-
-        if (ucs > 0) {
+        if (rawUcs > 0) {
             breakdown.push({
                 category: 'visitors',
-                ucs,
-                cost,
+                ucs: rawUcs,
+                cost: rawUcs * calculation.equivalences.ucsQuotationValue,
                 quantity: visitorCount,
                 duration: duration,
                 durationUnit: durationUnit,
@@ -211,8 +206,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
     }
     
-    const directUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
-    const directCost = breakdown.reduce((acc, item) => acc + item.cost, 0);
+    const rawDirectUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
+    const directUcs = Math.ceil(rawDirectUcs);
+    const directCost = directUcs * calculation.equivalences.ucsQuotationValue;
     
     // Calculate indirect costs
     const indirectBreakdown: { category: string; cost: number }[] = [];
