@@ -96,14 +96,17 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                                     <TableCell className="font-sans font-medium text-gray-800">{participantCategories[item.category] || item.category}</TableCell>
                                     <TableCell className="text-right text-gray-700">{item.quantity}</TableCell>
                                     <TableCell className="text-right text-gray-700">{item.duration} <span className="text-xs text-gray-500">{t_calc(`participants.${item.durationUnit}` as any)}</span></TableCell>
-                                    <TableCell className="text-right text-primary font-semibold">{formatUcs(item.ucs)}</TableCell>
+                                    <TableCell className="text-right text-primary font-semibold">
+                                       {item.durationUnit === 'hours' ? formatUcs(item.ucs) : Math.ceil(item.ucs)}
+                                    </TableCell>
                                     <TableCell className="text-right text-primary/90 font-semibold">{formatCurrency(item.cost)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                          <TableFooter>
                             <TableRow>
-                                <TableCell colSpan={3} className="font-bold text-gray-800">{t_report('totals.totalParticipants')}</TableCell>
+                                <TableCell colSpan={2} className="font-bold text-gray-800">{t_report('totals.totalParticipants')}</TableCell>
+                                <TableCell className="text-right font-bold font-mono text-gray-800">{results.totalParticipants}</TableCell>
                                 <TableCell className="text-right font-bold font-mono text-primary">{results.directUcs}</TableCell>
                                 <TableCell className="text-right font-bold font-mono text-primary/90">{formatCurrency(results.directCost)}</TableCell>
                             </TableRow>
@@ -143,10 +146,6 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                         <div className="flex justify-between">
                             <span className="text-gray-600">{t_report('totals.costPerParticipantHour')}</span>
                             <span className="font-mono font-medium text-gray-800">{formatCurrency(results.costPerParticipantHour)}</span>
-                        </div>
-                         <div className="flex justify-between font-medium">
-                            <span className="text-gray-600">{t_report('totals.totalParticipants')}</span>
-                            <span className="font-mono text-gray-800">{results.totalParticipants}</span>
                         </div>
                     </div>
                     <div className="space-y-2 text-right md:text-right self-end">

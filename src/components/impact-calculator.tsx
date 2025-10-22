@@ -139,10 +139,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsCount = 0;
-    let totalParticipantDays = 0;
-    let totalParticipantHours = 0;
     
-
     // Calculate staff UCS
     Object.entries(participants).forEach(([key, p]) => {
       const participantData = p as { count?: number; days?: number };
@@ -151,15 +148,13 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
       if (count > 0 && days > 0) {
         totalParticipantsCount += count;
-        totalParticipantDays += count * days;
-        totalParticipantHours += count * days * 8; // Assuming 8-hour day
-
         const rawUcs = count * days * calculation.perCapitaFactors.dailyUcsConsumption;
+        const ucs = Math.ceil(rawUcs);
         
         breakdown.push({
           category: key,
-          ucs: rawUcs,
-          cost: rawUcs * calculation.equivalences.ucsQuotationValue,
+          ucs: ucs,
+          cost: ucs * calculation.equivalences.ucsQuotationValue,
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -172,6 +167,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     if (visitorCount > 0 && visitors) {
         totalParticipantsCount += visitorCount;
         let rawUcs = 0;
+        let ucs = 0;
         let duration = 0;
         let durationUnit: 'days' | 'hours' = 'hours';
 
@@ -179,26 +175,28 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             duration = visitors.days || 0;
             durationUnit = 'days';
             if (duration > 0) {
-                totalParticipantDays += visitorCount * duration;
-                totalParticipantHours += visitorCount * duration * 8;
                 rawUcs = visitorCount * duration * calculation.perCapitaFactors.dailyUcsConsumption;
+                ucs = Math.ceil(rawUcs);
             }
         } else { // hours
             duration = visitors.hours || 0;
             durationUnit = 'hours';
             if (duration > 0) {
-                const visitorTotalHours = visitorCount * duration;
-                totalParticipantHours += visitorTotalHours;
+                // This is the special case: don't round here to allow fractions to accumulate.
                 rawUcs = visitorCount * duration * calculation.perCapitaFactors.hourlyUcsConsumption;
-                totalParticipantDays += (visitorCount * duration / 8);
+                ucs = rawUcs; // Keep it fractional
             }
         }
         
         if (rawUcs > 0) {
+             const cost = visitors.unit === 'hours' 
+              ? ucs * calculation.equivalences.ucsQuotationValue // Fractional cost for hours
+              : Math.ceil(ucs) * calculation.equivalences.ucsQuotationValue; // Rounded cost for days
+
             breakdown.push({
                 category: 'visitors',
-                ucs: rawUcs,
-                cost: rawUcs * calculation.equivalences.ucsQuotationValue,
+                ucs: ucs,
+                cost: cost,
                 quantity: visitorCount,
                 duration: duration,
                 durationUnit: durationUnit,
@@ -206,8 +204,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         }
     }
     
-    const rawDirectUcs = breakdown.reduce((acc, item) => acc + item.ucs, 0);
-    const directUcs = Math.ceil(rawDirectUcs);
+    const directUcs = Math.ceil(breakdown.reduce((acc, item) => acc + item.ucs, 0));
     const directCost = directUcs * calculation.equivalences.ucsQuotationValue;
     
     // Calculate indirect costs
@@ -222,6 +219,29 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     
     const totalCost = directCost + indirectCost;
     const totalUCS = directUcs;
+
+    // Calculate total participant duration for averages
+    let totalParticipantDays = 0;
+    let totalParticipantHours = 0;
+
+    Object.entries(participants).forEach(([, p]) => {
+      const data = p as { count?: number; days?: number };
+      if (data.count && data.days) {
+        totalParticipantDays += data.count * data.days;
+        totalParticipantHours += data.count * data.days * 8; // Assuming 8-hour day
+      }
+    });
+
+    if (visitors && visitors.count) {
+      if (visitors.unit === 'days' && visitors.days) {
+        totalParticipantDays += visitors.count * visitors.days;
+        totalParticipantHours += visitors.count * visitors.days * 8;
+      } else if (visitors.unit === 'hours' && visitors.hours) {
+        totalParticipantHours += visitors.count * visitors.hours;
+        totalParticipantDays += (visitors.count * visitors.hours) / 8;
+      }
+    }
+
 
     // Calculate benefits based on total UCS
     const benefits: Benefits = {
