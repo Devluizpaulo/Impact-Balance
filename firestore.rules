@@ -1,23 +1,38 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // System settings are public to read for calculations,
-    // but only admins can write/update them.
-    match /systemSettings/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null;
+
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
-    
-    // Anyone can create an event record by using the calculator.
-    // Only admins can view the list of all past events.
-    // No one can update or delete records to maintain data integrity.
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Rules for the 'events' collection
+    // Allow anyone to create an event (from the calculator)
+    // Only admins can read/list/update/delete events
     match /events/{eventId} {
       allow create: if true;
-      allow list: if request.auth != null;
-      allow get: if request.auth != null; // Also allow admin to get single doc
-      allow update, delete: if false;
+      allow read, list, update, delete: if isSignedIn() && isAdmin();
+    }
+
+    // Rules for the 'systemSettings' collection
+    // Allow anyone to read the settings
+    // Only admins can write/update the settings
+    match /systemSettings/{docId} {
+        allow get: if true;
+        allow list: if true;
+        allow create, update, delete: if isSignedIn() && isAdmin();
+    }
+
+    // Rules for the 'roles_admin' collection
+    // Only admins can manage other admins
+    match /roles_admin/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn() && isAdmin();
+      allow create, update, delete: if isSignedIn() && isAdmin();
     }
   }
 }
