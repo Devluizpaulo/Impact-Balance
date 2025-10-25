@@ -8,7 +8,7 @@ import { defaultSettings } from './settings';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
-const SETTINGS_COLLECTION = 'systemSettings';
+const SETTINGS_COLLECTION = 'impact-balance-settings';
 const SETTINGS_DOC_ID = 'default';
 
 // Helper to deep merge settings to ensure new properties are not missing on load

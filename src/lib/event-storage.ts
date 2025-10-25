@@ -7,7 +7,7 @@ import type { EventRecord } from './types';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
-const EVENTS_COLLECTION = 'events';
+const EVENTS_COLLECTION = 'impact-balance-events';
 
 // Function to get all stored events from Firestore
 export const getEvents = async (): Promise<EventRecord[]> => {
