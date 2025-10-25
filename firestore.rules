@@ -1,7 +1,24 @@
+/**
+ * @fileoverview Firestore Security Rules for both UCS Index Tracker and Impact Balance applications.
+ *
+ * This ruleset protects collections from two different projects using the same database.
+ *
+ * UCS Index Tracker Collections:
+ * - /users/{userId}
+ * - /roles_admin/{userId}
+ * - /commodities/{commodityId}
+ * - /ucs_indices/{ucsIndexId}
+ * - /users/{userId}/alerts/{alertId}
+ *
+ * Impact Balance Collections:
+ * - /events/{eventId}
+ * - /systemSettings/{settingsId}
+ */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // --- Shared Helper Functions ---
     function isAdmin() {
       return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
@@ -10,29 +27,84 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Rules for the 'events' collection
-    // Allow anyone to create an event (from the calculator)
-    // Only admins can read/list/update/delete events
+    // --- Rules for Impact Balance Project ---
+
+    /**
+     * @description Manages event calculation results. Anyone can create an event record,
+     *              but only admins can view the full list or manage existing records.
+     * @path /events/{eventId}
+     */
     match /events/{eventId} {
-      allow create: if true;
-      allow read, list, update, delete: if isSignedIn() && isAdmin();
+      allow create: if true; // Anyone can create a new calculation record
+      allow list, get: if isAdmin(); // Only admins can list or get individual events
+      allow update, delete: if isAdmin(); // Only admins can modify or delete
     }
 
-    // Rules for the 'systemSettings' collection
-    // Allow anyone to read the settings
-    // Only admins can write/update the settings
-    match /systemSettings/{docId} {
-        allow get: if true;
-        allow list: if true;
-        allow create, update, delete: if isSignedIn() && isAdmin();
+    /**
+     * @description Manages system-wide settings for the calculator. Readable by all,
+     *              writable only by admins.
+     * @path /systemSettings/{settingsId}
+     */
+    match /systemSettings/{settingsId} {
+        allow get: if true; // Publicly readable for the calculator to function
+        allow create, update, delete: if isAdmin(); // Only admins can change settings
     }
 
-    // Rules for the 'roles_admin' collection
-    // Only admins can manage other admins
+
+    // --- Rules for UCS Index Tracker Project ---
+
+    /**
+     * @description Manages user profile data. Only the authenticated user can read/write their own profile.
+     * @path /users/{userId}
+     */
+    match /users/{userId} {
+      function isOwner() {
+        return request.auth.uid == userId;
+      }
+
+      allow get: if isOwner();
+      allow list: if false; // Disallow listing users for privacy
+      allow create: if isSignedIn() && isOwner() && request.resource.data.id == userId;
+      allow update: if isSignedIn() && isOwner() && resource.data.id == userId;
+      allow delete: if isSignedIn() && isOwner() && resource.data.id == userId;
+
+      /**
+       * @description Manages alert configurations for each user. Only the owning user can access their alerts.
+       * @path /users/{userId}/alerts/{alertId}
+       */
+      match /alerts/{alertId} {
+        allow get, list: if isSignedIn() && isOwner();
+        allow create: if isSignedIn() && isOwner() && request.resource.data.userId == userId;
+        allow update: if isSignedIn() && isOwner() && resource.data.userId == userId;
+        allow delete: if isSignedIn() && isOwner() && resource.data.userId == userId;
+      }
+    }
+
+    /**
+     * @description Manages admin roles. Admin status is granted by the existence of a document with the user's ID in this collection.
+     * @path /roles_admin/{userId}
+     */
     match /roles_admin/{userId} {
       allow get: if isSignedIn();
-      allow list: if isSignedIn() && isAdmin();
-      allow create, update, delete: if isSignedIn() && isAdmin();
+      allow list, create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Manages commodity definitions. Publicly readable, but only admins can modify.
+     * @path /commodities/{commodityId}
+     */
+    match /commodities/{commodityId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Manages UCS index values. Publicly readable, but only admins can modify.
+     * @path /ucs_indices/{ucsIndexId}
+     */
+    match /ucs_indices/{ucsIndexId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
     }
   }
 }
