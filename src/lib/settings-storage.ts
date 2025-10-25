@@ -2,7 +2,7 @@
 "use client";
 
 import { db } from './firebase/config';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import type { SystemSettings } from './settings';
 import { defaultSettings } from './settings';
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -10,6 +10,34 @@ import { FirestorePermissionError } from '@/firebase/errors';
 
 const SETTINGS_COLLECTION = 'impact-balance-settings';
 const SETTINGS_DOC_ID = 'default';
+const UCS_QUOTATION_COLLECTION = 'ucs_ase';
+
+
+// Function to get the latest UCS quotation from Firestore
+export const getLatestUcsQuotation = async (): Promise<number | null> => {
+    const ucsCollection = collection(db, UCS_QUOTATION_COLLECTION);
+    const q = query(ucsCollection, orderBy('documentId', 'desc'), limit(1));
+
+    try {
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const latestDoc = querySnapshot.docs[0].data();
+            return latestDoc.resultado_final_brl || null;
+        }
+        return null;
+    } catch (serverError: any) {
+        if (serverError.code === 'permission-denied') {
+            const permissionError = new FirestorePermissionError({
+                path: ucsCollection.path,
+                operation: 'list',
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        } else {
+            console.error("Error reading UCS quotation from Firestore", serverError);
+        }
+        return null;
+    }
+}
 
 // Helper to deep merge settings to ensure new properties are not missing on load
 const mergeWithDefault = (loadedSettings: Partial<SystemSettings>): SystemSettings => {
@@ -67,7 +95,17 @@ export const getSettings = async (): Promise<SystemSettings> => {
 // Function to save settings to Firestore
 export const saveSettings = (settings: SystemSettings) => {
     const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
-    setDoc(docRef, settings, { merge: true }).catch(async (serverError) => {
+    // Exclude the dynamically loaded ucsQuotationValue from being saved
+    const { calculation: { equivalences: { ucsQuotationValue, ...restEquivalences }, ...restCalculation } } = settings;
+    const settingsToSave = {
+        calculation: {
+            ...restCalculation,
+            equivalences: restEquivalences
+        }
+    };
+
+
+    setDoc(docRef, settingsToSave, { merge: true }).catch(async (serverError) => {
         if (serverError.code === 'permission-denied') {
             const permissionError = new FirestorePermissionError({
                 path: docRef.path,

@@ -198,6 +198,14 @@
       "unauthorized": {
         "title": "Unauthorized",
         "description": "You must be an administrator to perform this action."
+      },
+      "loadQuotationSuccess": {
+        "title": "UCS Quotation Loaded",
+        "description": "The current UCS quotation value (R$ {value}) has been loaded from the database."
+      },
+      "loadQuotationError": {
+        "title": "Failed to Load Quotation",
+        "description": "Could not fetch the latest UCS quotation. Using the default value."
       }
     }
   },

@@ -4,7 +4,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
-import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb } from './settings-storage';
+import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb, getLatestUcsQuotation } from './settings-storage';
 import { useAuth } from './auth';
 
 // Define the shape of your settings
@@ -135,8 +135,23 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       const loadSettings = async () => {
         setIsLoading(true);
         try {
-          const dbSettings = await getSettingsFromDb();
-          updateAndRecalculate(dbSettings); // Recalculate on initial load
+            const dbSettings = await getSettingsFromDb();
+            const latestQuotation = await getLatestUcsQuotation();
+
+            if (latestQuotation !== null) {
+                dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotation;
+                 toast({
+                    title: t('loadQuotationSuccess.title'),
+                    description: t('loadQuotationSuccess.description', { value: latestQuotation }),
+                });
+            } else {
+                 toast({
+                    variant: 'destructive',
+                    title: t('loadQuotationError.title'),
+                    description: t('loadQuotationError.description'),
+                });
+            }
+            updateAndRecalculate(dbSettings);
         } catch (error) {
           console.error("Failed to load settings from Firestore", error);
           toast({

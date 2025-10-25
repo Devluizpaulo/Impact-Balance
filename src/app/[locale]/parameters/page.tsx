@@ -24,22 +24,6 @@ function DocumentationContent() {
 
   return (
     <div className="prose dark:prose-invert max-w-none">
-        <p>
-          Footprint and biocapacity accounting helps us answer the basic research question: How much do people demand from biologically productive surfaces (Ecological Footprint) compared to how much the planet (or a region&apos;s productive surface) can regenerate on those surfaces (biocapacity)?
-        </p>
-
-        <h3>What is the Ecological Footprint?</h3>
-        <p>
-          The Ecological Footprint is a measure of the biologically productive land and water area demanded by an activity. It is commonly applied to individuals, populations, institutions, or products. In the National Footprint and Biocapacity Accounts, it refers to the biocapacity demanded by the population of a country or the World to produce and transport resources it consumes, accommodate occupied urban infrastructure, and absorb the waste it generates, using prevailing technology and resource management practices. It is measured in global hectares.
-        </p>
-
-        <h3>What is biocapacity?</h3>
-        <p>
-          Biocapacity is a property of the bioproductive surfaces on Earth. It represents the capacity of biologically productive areas to provide for human demand (people&apos;s Footprints). Like Footprint, it is measured in global hectares. It shows the capacity of the biosphere to regenerate and provide natural resources and services for life. Biocapacity is the lens of Footprint and biocapacity accounting. Such accounting enables us to add up the competing human demands on nature, which include natural resources, waste absorption, water renewal, and productive areas dedicated to urban uses. Footprint and biocapacity accounting allows us to determine how large the material metabolism of human economies is compared to what nature can renew.
-        </p>
-        
-        <Separator className="my-8" />
-
         <h3>Impact Calculation Formulas</h3>
         <p>
             The system calculates the socio-environmental impact in Sustainability Credit Units (UCS) based on the number of participants and their duration at the event. The calculation is divided into two distinct logics: one for the event staff (calculated in days) and another for visitors (calculated in hours).
@@ -346,7 +330,7 @@ export default function ParametersPage() {
                     <TableRow>
                       <TableCell>{t('equivalences.ucsQuotationValue')}</TableCell>
                       <TableCell>
-                        <ParameterInput name="calculation.equivalences.ucsQuotationValue" value={settings.calculation.equivalences.ucsQuotationValue} onChange={handleNestedChange} disabled={!isAdmin} adornment={'R$'} precision={2} />
+                        <ParameterInput name="calculation.equivalences.ucsQuotationValue" value={settings.calculation.equivalences.ucsQuotationValue} onChange={handleNestedChange} disabled={!isAdmin} readOnly={true} adornment={'R$'} precision={2} />
                       </TableCell>
                     </TableRow>
                     <TableRow>

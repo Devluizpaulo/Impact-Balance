@@ -198,6 +198,14 @@
       "unauthorized": {
         "title": "No Autorizado",
         "description": "Debe ser un administrador para realizar esta acción."
+      },
+      "loadQuotationSuccess": {
+        "title": "Cotización de UCS Cargada",
+        "description": "El valor actual de la cotización de UCS (R$ {value}) se cargó desde la base de datos."
+      },
+      "loadQuotationError": {
+        "title": "Error al Cargar la Cotización",
+        "description": "No se pudo obtener la cotización más reciente de UCS. Se utilizará el valor predeterminado."
       }
     }
   },
