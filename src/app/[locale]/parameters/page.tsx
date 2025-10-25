@@ -154,8 +154,9 @@ const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly =
         }).format(num);
     }
 
-    const rawValue = value ?? '';
-    const displayValue = typeof rawValue === 'number' && precision !== undefined ? formatNumber(rawValue, precision) : rawValue;
+    const displayValue = (typeof value === 'number' && precision !== undefined) 
+        ? formatNumber(value, precision) 
+        : (value ?? '');
 
 
     return (
