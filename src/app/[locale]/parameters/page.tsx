@@ -328,7 +328,12 @@ export default function ParametersPage() {
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
                     <TableRow>
-                      <TableCell>{t('equivalences.ucsQuotationValue')}</TableCell>
+                      <TableCell>
+                          <div>{t('equivalences.ucsQuotationValue')}</div>
+                          {settings.calculation.equivalences.ucsQuotationDate && (
+                            <div className="text-xs text-muted-foreground">{t('equivalences.quotationDate')}: {settings.calculation.equivalences.ucsQuotationDate}</div>
+                          )}
+                      </TableCell>
                       <TableCell>
                         <ParameterInput name="calculation.equivalences.ucsQuotationValue" value={settings.calculation.equivalences.ucsQuotationValue} onChange={handleNestedChange} disabled={!isAdmin} readOnly={true} adornment={'R$'} precision={2} />
                       </TableCell>

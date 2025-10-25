@@ -23,6 +23,7 @@ export interface SystemSettings {
         equivalences: {
           // Base
           ucsQuotationValue: number;
+          ucsQuotationDate: string | null;
           gdpPerCapita: number;
           // Derived
           equivalenceValuePerYear: number;
@@ -59,6 +60,7 @@ export const defaultSettings: SystemSettings = {
         },
         equivalences: {
             ucsQuotationValue: 168.85,
+            ucsQuotationDate: null,
             gdpPerCapita: 99706.20,
             equivalenceValuePerYear: 0, // Calculated
             gdpPercentage: 0, // Calculated
@@ -136,13 +138,14 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(true);
         try {
             const dbSettings = await getSettingsFromDb();
-            const latestQuotation = await getLatestUcsQuotation();
+            const latestQuotationData = await getLatestUcsQuotation();
 
-            if (latestQuotation !== null) {
-                dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotation;
+            if (latestQuotationData) {
+                dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotationData.value;
+                dbSettings.calculation.equivalences.ucsQuotationDate = latestQuotationData.date;
                  toast({
                     title: t('loadQuotationSuccess.title'),
-                    description: t('loadQuotationSuccess.description', { value: latestQuotation }),
+                    description: t('loadQuotationSuccess.description', { value: latestQuotationData.value }),
                 });
             } else {
                  toast({

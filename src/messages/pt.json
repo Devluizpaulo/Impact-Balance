@@ -172,6 +172,7 @@
     },
     "equivalences": {
       "ucsQuotationValue": "Valor de Cotação da UCS",
+      "quotationDate": "Data da Cotação",
       "gdpPerCapita": "PIB Per Capita",
       "equivalenceValuePerYear": "Valor de Equivalência por ano",
       "gdpPercentage": "% da Equivalência ao do PIB",

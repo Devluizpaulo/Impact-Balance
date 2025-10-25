@@ -172,6 +172,7 @@
     },
     "equivalences": {
       "ucsQuotationValue": "UCS Quotation Value",
+      "quotationDate": "Quotation Date",
       "gdpPerCapita": "GDP per Capita",
       "equivalenceValuePerYear": "Equivalence Value per Year",
       "gdpPercentage": "Equivalence to GDP (%)",
