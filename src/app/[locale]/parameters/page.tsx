@@ -145,7 +145,7 @@ function DocumentationContent() {
   )
 }
 
-const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly = false, precision }: { name: string, value: string | number, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean, adornment: React.ReactNode, readOnly?: boolean, precision?: number }) => {
+const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly = false, precision }: { name: string, value: string | number | null, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean, adornment: React.ReactNode, readOnly?: boolean, precision?: number }) => {
     
     const formatNumber = (num: number, fracDigits: number) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -154,7 +154,9 @@ const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly =
         }).format(num);
     }
 
-    const displayValue = typeof value === 'number' && precision !== undefined ? formatNumber(value, precision) : value;
+    const rawValue = value ?? '';
+    const displayValue = typeof rawValue === 'number' && precision !== undefined ? formatNumber(rawValue, precision) : rawValue;
+
 
     return (
         <div className="relative">
