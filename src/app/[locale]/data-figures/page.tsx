@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { worldFootprintData, type WorldFootprintDataPoint } from "@/lib/data/world-footprint-data";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { ChartTooltip, ChartTooltipContent, ChartContainer } from "@/components/ui/chart";
+import { ChartTooltipContent, ChartContainer } from "@/components/ui/chart";
 
 export default function DataFiguresPage() {
   const t = useTranslations("DataFiguresPage");

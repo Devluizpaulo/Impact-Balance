@@ -19,7 +19,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
 
 function DocumentationContent() {
-  const t = useTranslations("DocumentationPage");
+  const _t = useTranslations("DocumentationPage");
   const chartImage = PlaceHolderImages.find((img) => img.id === "hdi-footprint-chart");
 
   return (

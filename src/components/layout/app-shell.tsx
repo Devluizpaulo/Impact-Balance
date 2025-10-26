@@ -1,19 +1,12 @@
-
 "use client"
 
-import { BookText, Calculator, Map, Settings, PanelLeft, Lock, LogOut, FilePieChart, Globe2, FileText, Award } from "lucide-react";
+import { Calculator, Home, BarChart3, FileText, Award, Lock, LogOut, PanelLeft, FilePieChart, Globe2 } from "lucide-react";
 import { Link, usePathname, useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Header from "./header"
 import { cn } from "@/lib/utils";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
 import { useAuth } from "@/lib/auth";
 import Image from "next/image";
 import { useState } from "react";
@@ -70,7 +63,7 @@ const adminNavItems: NavItem[] = [
 
 function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSubItem?: boolean, isCollapsed: boolean }) {
   const { isAdmin, promptLogin } = useAuth();
-  const router = useRouter();
+  const _router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("AppShell");
   
@@ -161,7 +154,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
 }
 
 function MobileNav() {
-  const t = useTranslations("AppShell");
+  const _t = useTranslations("AppShell");
   const { isAdmin } = useAuth();
   return (
     <Sheet>

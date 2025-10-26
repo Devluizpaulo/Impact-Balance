@@ -245,7 +245,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const directData = results.breakdown.map(item => ({
                 [t('excel.category')]: participantCategories[item.category] || item.category,
                 [t('excel.quantity')]: item.quantity,
-                [t('excel.duration')]: `${item.duration} ${t_calc(`participants.${item.durationUnit}` as any)}`,
+                [t('excel.duration')]: `${item.duration} ${t_calc(`participants.${item.durationUnit}` as `participants.${string}`)}`,
                 [t('excel.ucs')]: item.ucs,
                 [t('excel.cost')]: item.cost
             }));

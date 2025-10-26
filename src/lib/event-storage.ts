@@ -2,7 +2,7 @@
 "use client";
 
 import { db } from './firebase/config';
-import { collection, addDoc, getDocs, query, orderBy, getDocsFromCache } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import type { EventRecord, NewEventRecord } from './types';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
