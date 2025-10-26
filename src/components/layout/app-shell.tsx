@@ -81,7 +81,7 @@ function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSu
     if (item.isProtected && !isAdmin) {
       promptLogin();
     } else {
-      router.push(item.href as any);
+      window.location.href = item.href;
     }
   };
 
@@ -98,7 +98,7 @@ function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSu
     >
         {item.icon}
         <span className={cn("truncate transition-opacity", isCollapsed && "sr-only")}>
-          {t(item.translationKey as any)}
+          {t(item.translationKey as string)}
         </span>
         {item.isProtected && !isAdmin && <Lock className={cn("h-4 w-4 ml-auto", isCollapsed && "hidden")} />}
     </a>
@@ -111,7 +111,7 @@ function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSu
           {linkContent}
         </TooltipTrigger>
         <TooltipContent side="right">
-          <p>{t(item.translationKey as any)}</p>
+          <p>{t(item.translationKey as string)}</p>
         </TooltipContent>
       </Tooltip>
     )

@@ -21,8 +21,9 @@ export const getEvents = async (): Promise<EventRecord[]> => {
             events.push({ id: doc.id, ...doc.data() } as EventRecord);
         });
         return events;
-    } catch (serverError: any) {
-        if (serverError.code === 'permission-denied') {
+    } catch (serverError: unknown) {
+        const err = serverError as { code?: string };
+        if (err?.code === 'permission-denied') {
             const permissionError = new FirestorePermissionError({
                 path: eventsCollection.path,
                 operation: 'list',

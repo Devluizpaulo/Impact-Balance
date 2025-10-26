@@ -18,7 +18,7 @@ import {
 import { useTranslations } from "next-intl";
 
 interface jsPDFWithAutoTable extends jsPDF {
-  autoTable: (options: any) => jsPDF;
+  autoTable: (options: Record<string, unknown>) => jsPDF;
 }
 
 interface ExportButtonsProps {
@@ -73,9 +73,9 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const seloHeight = (seloImg.height * seloWidth) / seloImg.width;
             const seloX = (pageWidth - seloWidth) / 2;
             const seloY = (pageHeight - seloHeight) / 2; // Center it
-            doc.setGState(new (doc as any).GState({ opacity: 0.04 })); // Lighter
+            (doc as unknown as { setGState: (state: unknown) => void }).setGState({ opacity: 0.04 }); // Lighter
             doc.addImage(seloImg, 'PNG', seloX, seloY, seloWidth, seloHeight);
-            doc.setGState(new (doc as any).GState({ opacity: 1 }));
+            (doc as unknown as { setGState: (state: unknown) => void }).setGState({ opacity: 1 });
 
 
             // --- PDF Header ---
@@ -117,7 +117,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const tableData = results.breakdown.map(item => [
                 participantCategories[item.category] || item.category,
                 item.quantity,
-                `${item.duration} ${t_calc(`participants.${item.durationUnit}` as any)}`,
+                `${item.duration} ${t_calc(`participants.${item.durationUnit}` as `participants.${string}`)}`,
                 Math.ceil(item.ucs).toString(),
                 formatCurrency(item.cost)
             ]);
@@ -140,7 +140,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 margin: { left: margin, right: margin }
             });
             
-            finalY = (doc as any).lastAutoTable.finalY || 100;
+            finalY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY || 100;
 
             // --- Summary section ---
             finalY += 10;
@@ -182,7 +182,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 margin: { left: margin }
             });
             
-            const lastY = (doc as any).lastAutoTable.finalY;
+            const lastY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY;
 
              doc.autoTable({
                 startY: lastY,

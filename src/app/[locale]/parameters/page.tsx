@@ -5,9 +5,9 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useSettings, type SystemSettings } from "@/lib/settings";
+import { useSettings } from "@/lib/settings";
 import { useAuth } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RefreshCcw, Save, Loader2, Hash } from "lucide-react";
@@ -38,7 +38,7 @@ function DocumentationContent() {
         <ul>
             <li><strong>Quantity:</strong> Number of people in the category.</li>
             <li><strong>Days:</strong> Number of days of participation.</li>
-            <li><strong>Daily_UCS_Consumption_Factor:</strong> A parameter derived from the per capita ecological footprint data (found in "Per Capita Calculation Basis"). It represents the fraction of UCS consumed by one person in one day.</li>
+            <li><strong>Daily_UCS_Consumption_Factor:</strong> A parameter derived from the per capita ecological footprint data (found in &quot;Per Capita Calculation Basis&quot;). It represents the fraction of UCS consumed by one person in one day.</li>
             <li><strong>Math.ceil():</strong> A function that rounds any fractional result up to the next whole number. This ensures that any impact, no matter how small, is counted as at least 1 UCS for that category.</li>
         </ul>
 
@@ -176,7 +176,6 @@ const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly =
         </div>
     );
 };
-
 
 export default function ParametersPage() {
   const t = useTranslations("ParametersPage");
@@ -401,7 +400,7 @@ export default function ParametersPage() {
                 <TableBody>
                   {Object.entries(settings.calculation.indirectCosts).map(([key, value]) => (
                     <TableRow key={key}>
-                      <TableCell>{t_calc(`indirectCosts.${key}` as any)}</TableCell>
+                      <TableCell>{t_calc(`indirectCosts.${key}` as `indirectCosts.${string}`)}</TableCell>
                       <TableCell>
                          <ParameterInput 
                           name={`calculation.indirectCosts.${key}`} 
@@ -429,7 +428,7 @@ export default function ParametersPage() {
                 <TableBody>
                   {Object.entries(settings.calculation.benefits).map(([key, value]) => (
                     <TableRow key={key}>
-                      <TableCell>{t(`benefitFactors.${key}` as any)}</TableCell>
+                      <TableCell>{t(`benefitFactors.${key}` as `benefitFactors.${string}`)}</TableCell>
                       <TableCell>
                          <ParameterInput 
                           name={`calculation.benefits.${key}`} 

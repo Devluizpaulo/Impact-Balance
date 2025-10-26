@@ -124,7 +124,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     const [isSaving, setIsSaving] = useState(false);
     const { toast } = useToast();
     const { isAdmin } = useAuth();
-    const t = useTranslations("ParametersPage.toasts" as any);
+    const t = useTranslations("ParametersPage.toasts" as "ParametersPage.toasts");
 
     // This function will receive the new base settings and will trigger a recalculation.
     const updateAndRecalculate = useCallback((newBaseSettings: SystemSettings) => {

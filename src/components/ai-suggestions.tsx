@@ -31,7 +31,7 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
               (formData.visitors?.unit === 'days' ? (formData.visitors.days || 0) : (formData.visitors?.hours || 0) / 8)
             );
 
-            const eventData = `
+            const _eventData = `
                 Event: ${formData.eventName}
                 Participants: ${JSON.stringify(formData.participants)}
                 Visitors: ${JSON.stringify(formData.visitors)}

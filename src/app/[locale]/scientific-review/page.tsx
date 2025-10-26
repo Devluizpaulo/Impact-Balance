@@ -2,7 +2,7 @@
 "use client";
 
 import AppShell from "@/components/layout/app-shell";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -57,7 +57,7 @@ export default function ScientificReviewPage() {
             <p>The elements of a standard scientific and editorial review include the following:</p>
             <ul>
               <li>Accuracy of the data and consistency with the National Footprint and Biocapacity Accounts edition from which the data is derived</li>
-              <li>Verification of compliance with the Global Footprint Network's standards</li>
+              <li>Verification of compliance with the Global Footprint Network&apos;s standards</li>
               <li>That method, method descriptions and conclusions are correct and representative of the data used</li>
             </ul>
 

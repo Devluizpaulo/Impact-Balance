@@ -40,7 +40,7 @@ const FootprintTable = ({ data, title }: { data: Record<string, number>, title: 
           <TableBody>
             {keys.map((key) => (
                <TableRow key={key}>
-                <TableCell>{t(key as any)}</TableCell>
+                <TableCell>{t(key as keyof typeof data)}</TableCell>
                 <TableCell className="text-right font-mono">{new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(data[key])}</TableCell>
               </TableRow>
             ))}
