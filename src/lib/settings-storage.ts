@@ -137,7 +137,7 @@ export const subscribeLatestUcsQuotation = (
 ) => {
   const ucsCollection = collection(db, UCS_QUOTATION_COLLECTION);
   const qLatest = query(ucsCollection, orderBy(documentId(), 'desc'), limit(1));
-  const orderedListener = (snapshot: any) => {
+  const orderedListener = (snapshot: { empty: boolean; docs: Array<{ id: string; data: () => Record<string, unknown> }> }) => {
     if (!snapshot.empty) {
       const latestDoc = snapshot.docs[0];
       const data = latestDoc.data() as Record<string, unknown>;
@@ -152,14 +152,14 @@ export const subscribeLatestUcsQuotation = (
 
   // Start with ordered subscription, but if index missing, fall back to plain collection subscription
   const unsubscribe = onSnapshot(qLatest, orderedListener, (error) => {
-    const code = (error as any)?.code as string | undefined;
+    const code = (error as { code?: string })?.code;
     if (code === 'failed-precondition') {
       // Fallback: subscribe to whole collection and compute latest client-side
       const unsubAll = onSnapshot(ucsCollection, (snapshot) => {
         if (!snapshot.empty) {
           const latestDoc = snapshot.docs.reduce((a, b) => (a.id > b.id ? a : b));
           const data = latestDoc.data() as Record<string, unknown>;
-          const raw = data.resultado_final_brl as unknown;
+          const raw = data.valor_brl as unknown;
           const parsed = typeof raw === 'number' ? raw : typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : NaN;
           const value = Number.isFinite(parsed) && parsed > 0 ? parsed : null;
           onChange(value !== null ? { value, date: latestDoc.id } : null);
@@ -243,7 +243,7 @@ export const getSettings = async (): Promise<SystemSettings> => {
 export const saveSettings = (settings: SystemSettings) => {
     const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
     // Exclude the dynamically loaded ucsQuotationValue from being saved
-    const { calculation: { equivalences: { ucsQuotationValue, ucsQuotationDate, ...restEquivalences }, ...restCalculation } } = settings;
+    const { calculation: { equivalences: { ucsQuotationValue: _ucsQuotationValue, ucsQuotationDate: _ucsQuotationDate, ...restEquivalences }, ...restCalculation } } = settings;
     const settingsToSave = {
         calculation: {
             ...restCalculation,

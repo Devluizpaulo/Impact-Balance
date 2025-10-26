@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import ImpactCalculator from "@/components/impact-calculator";
 import type { CalculationResult, FormData } from "@/lib/types";

@@ -25,7 +25,8 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
         // Set after mount to avoid hydration warnings
         const d = new Date();
         const iso = d.toISOString().slice(0, 10);
-        setReportDate(iso);
+        // Use setTimeout to avoid synchronous setState in effect
+        setTimeout(() => setReportDate(iso), 0);
     }, []);
 
     const formatCurrency = (value: number, currency = 'BRL') => {

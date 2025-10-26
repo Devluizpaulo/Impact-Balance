@@ -21,7 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/lib/settings";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { addEvent } from "@/lib/event-storage";
 import { getCurrencyRates } from "@/ai/flows/currency-converter";
