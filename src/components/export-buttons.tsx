@@ -157,7 +157,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
               [t_report('totals.costPerParticipantHour'), formatCurrency(results.costPerParticipantHour)],
             ];
 
-            let totalsItems = [
+            const totalsItems = [
                 [t_report('totals.totalToCompensate'), `${Math.ceil(results.totalUCS)} UCS`],
                 [t_report('totals.totalBudgetBRL'), formatCurrency(results.totalCost)],
             ];
@@ -182,7 +182,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
                 margin: { left: margin }
             });
             
-            let lastY = (doc as any).lastAutoTable.finalY;
+            const lastY = (doc as any).lastAutoTable.finalY;
 
              doc.autoTable({
                 startY: lastY,

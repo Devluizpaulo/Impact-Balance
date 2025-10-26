@@ -1,24 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
 
 export default function CookieConsent() {
-  const [showConsent, setShowConsent] = useState(false);
+  const [showConsent, setShowConsent] = useState<boolean>(false);
   const t = useTranslations("CookieConsent");
 
+  // Read on client after mount to avoid hydration mismatch
   useEffect(() => {
     try {
       const consent = localStorage.getItem("cookie_consent");
       if (consent !== "true") {
-        setShowConsent(true);
+        startTransition(() => setShowConsent(true));
       }
-    } catch (error) {
-      // localStorage is not available (e.g., in server-side rendering or private browsing)
-      // We can choose to show the banner or not. Let's not show it to avoid errors.
-      setShowConsent(false);
+    } catch {
+      // ignore
     }
   }, []);
 

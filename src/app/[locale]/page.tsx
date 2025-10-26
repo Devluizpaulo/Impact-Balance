@@ -1,58 +1,48 @@
-
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
-import ImpactCalculator from "@/components/impact-calculator";
-import type { CalculationResult, FormData } from "@/lib/types";
 import { useTranslations } from "next-intl";
-import ExecutiveReport from "@/components/executive-report";
 import AppShell from "@/components/layout/app-shell";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-
+import { Button } from "@/components/ui/button";
+import { Link } from "@/navigation";
 
 export default function Home() {
-  const [results, setResults] = useState<CalculationResult | null>(null);
-  const [formData, setFormData] = useState<FormData | null>(null);
-  const [isReportOpen, setIsReportOpen] = useState(false);
   const t = useTranslations("HomePage");
-  const t_report = useTranslations("ExecutiveReport");
-
-  const handleCalculation = (data: CalculationResult, formData: FormData) => {
-    setResults(data);
-    setFormData(formData);
-    setIsReportOpen(true);
-  };
-  
-  const handleReset = () => {
-    setResults(null);
-    setFormData(null);
-    setIsReportOpen(false);
-  }
 
   return (
     <AppShell>
-       <div className="space-y-4 max-w-4xl mx-auto">
-          <ImpactCalculator onCalculate={handleCalculation} onReset={handleReset} />
-      </div>
-
-       {results && formData && (
-        <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
-          <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
-            <DialogHeader>
-              <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
-            </DialogHeader>
-            <div className="flex-grow overflow-y-auto pr-6 -mt-4">
-              <ExecutiveReport results={results} formData={formData} />
+      <section className="relative overflow-hidden">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+          <div className="grid items-center gap-10 md:grid-cols-2">
+            <div className="space-y-6">
+              <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl">
+                {t("heroTitle")}
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                {t("heroSubtitle")}
+              </p>
+              <div className="flex gap-3">
+                <Button asChild>
+                  <Link href="/calculator">
+                    {/** Reuso de tradução existente para CTA */}
+                    {"Calcular Impacto"}
+                  </Link>
+                </Button>
+              </div>
             </div>
-          </DialogContent>
-        </Dialog>
-      )}
+            <div className="relative hidden md:block">
+              <Image
+                src="/hero.png"
+                alt="Impact Balance Hero"
+                width={640}
+                height={480}
+                className="rounded-lg border"
+                priority
+              />
+            </div>
+          </div>
+        </div>
+      </section>
     </AppShell>
   );
 }

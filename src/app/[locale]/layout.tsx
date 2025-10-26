@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { Toaster } from '@/components/ui/toaster';
 import '../globals.css';
 import { SettingsProvider } from '@/lib/settings';
@@ -28,11 +28,14 @@ const robotoMono = Roboto_Mono({
 
 export default async function RootLayout({
   children,
-  params: {locale}
+  params
 }: Readonly<{
   children: React.ReactNode;
-  params: {locale: string};
+  params: Promise<{locale: string}>;
 }>) {
+  const { locale } = await params;
+  // Inform next-intl of the chosen locale early to avoid sync headers usage
+  setRequestLocale(locale);
   const messages = await getMessages();
 
   return (

@@ -4,7 +4,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
-import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb, getLatestUcsQuotation } from './settings-storage';
+import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb, getLatestUcsQuotation, subscribeLatestUcsQuotation } from './settings-storage';
 import { useAuth } from './auth';
 
 // Define the shape of your settings
@@ -148,6 +148,11 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
                     description: t('loadQuotationSuccess.description', { value: latestQuotationData.value }),
                 });
             } else {
+                 // Fallback: if DB has 0 or invalid quotation value, use default value to avoid zeroing costs
+                 if (!(dbSettings.calculation.equivalences.ucsQuotationValue > 0)) {
+                   dbSettings.calculation.equivalences.ucsQuotationValue = defaultSettings.calculation.equivalences.ucsQuotationValue;
+                   dbSettings.calculation.equivalences.ucsQuotationDate = null;
+                 }
                  toast({
                     variant: 'destructive',
                     title: t('loadQuotationError.title'),
@@ -169,7 +174,28 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       };
 
       loadSettings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // Subscribe for daily quotation updates in real time
+      const unsubscribe = subscribeLatestUcsQuotation((data) => {
+        if (!data) return;
+        // Update only if changed
+        setSettings((prev) => {
+          const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
+          if (next.calculation.equivalences.ucsQuotationDate === data.date && next.calculation.equivalences.ucsQuotationValue === data.value) {
+            return prev;
+          }
+          next.calculation.equivalences.ucsQuotationValue = data.value;
+          next.calculation.equivalences.ucsQuotationDate = data.date;
+          toast({
+            title: t('loadQuotationSuccess.title'),
+            description: t('loadQuotationSuccess.description', { value: data.value }),
+          });
+          return calculateDerivedSettings(next);
+        });
+      });
+
+      return () => {
+        unsubscribe?.();
+      };
     }, [t, toast, updateAndRecalculate]);
 
 

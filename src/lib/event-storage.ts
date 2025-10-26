@@ -3,7 +3,7 @@
 
 import { db } from './firebase/config';
 import { collection, addDoc, getDocs, query, orderBy, getDocsFromCache } from 'firebase/firestore';
-import type { EventRecord } from './types';
+import type { EventRecord, NewEventRecord } from './types';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
@@ -36,15 +36,20 @@ export const getEvents = async (): Promise<EventRecord[]> => {
 };
 
 // Function to add a new event to Firestore
-export const addEvent = (newEvent: Omit<EventRecord, 'id'>) => {
+export const addEvent = (newEvent: NewEventRecord) => {
     const eventsCollection = collection(db, EVENTS_COLLECTION);
     
-    addDoc(eventsCollection, newEvent).catch(async (serverError) => {
+    const payload: Omit<EventRecord, 'id'> = {
+        timestamp: Date.now(),
+        ...newEvent,
+    };
+
+    addDoc(eventsCollection, payload).catch(async (serverError) => {
         if (serverError.code === 'permission-denied') {
             const permissionError = new FirestorePermissionError({
                 path: `${eventsCollection.path}/{newEventId}`,
                 operation: 'create',
-                requestResourceData: newEvent,
+                requestResourceData: payload,
             });
             errorEmitter.emit('permission-error', permissionError);
         } else {

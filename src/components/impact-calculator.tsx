@@ -2,7 +2,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,12 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { formSchema, type FormData, type CalculationResult, type Benefits } from "@/lib/types";
-import { Calculator, Users, Clock, UserCog, Wrench, Briefcase, Building2, Headset, User, Handshake, FileText, Award, Globe, CalendarDays } from "lucide-react";
+import { defaultSettings } from "@/lib/settings";
+import { Calculator, Users, Clock, UserCog, Wrench, Briefcase, Building2, Headset, User, Handshake, CalendarDays } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/lib/settings";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { addEvent } from "@/lib/event-storage";
 import { getCurrencyRates } from "@/ai/flows/currency-converter";
@@ -33,7 +34,7 @@ interface ImpactCalculatorProps {
 }
 
 // Moved ParticipantField outside of ImpactCalculator to prevent re-renders and focus loss
-const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string, t: (key: string) => string, form: any }) => (
+const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData['participants'], icon: React.ReactNode, label: string, t: (key: string) => string, form: UseFormReturn<FormData> }) => (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] items-center gap-2 md:gap-4 border-b border-border/50 pb-3">
       <div className="flex items-center gap-2 text-sm font-medium">
         {icon} {label}
@@ -85,23 +86,21 @@ const ParticipantField = ({ name, icon, label, t, form }: { name: keyof FormData
 
 // Helper function to recursively replace undefined with null
 // Firestore doesn't support `undefined` values.
-const cleanupUndefined = (obj: any): any => {
-  if (obj === undefined) {
-    return null;
-  }
-  if (typeof obj !== 'object' || obj === null) {
-    return obj;
-  }
-  if (Array.isArray(obj)) {
-    return obj.map(cleanupUndefined);
-  }
-  const newObj: { [key: string]: any } = {};
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      newObj[key] = cleanupUndefined(obj[key]);
+const cleanupUndefined = (obj: unknown): unknown => {
+  if (obj === undefined) return null;
+  if (obj === null) return null;
+  if (Array.isArray(obj)) return obj.map((item) => cleanupUndefined(item));
+  if (typeof obj === 'object') {
+    const source = obj as Record<string, unknown>;
+    const out: Record<string, unknown> = {};
+    for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        out[key] = cleanupUndefined(source[key]);
+      }
     }
+    return out;
   }
-  return newObj;
+  return obj;
 };
 
 
@@ -137,8 +136,11 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     const { calculation } = settings;
     const { participants, visitors } = values;
 
-    let breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
+    const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsValue = 0;
+    const quotationValue = calculation.equivalences.ucsQuotationValue > 0
+      ? calculation.equivalences.ucsQuotationValue
+      : defaultSettings.calculation.equivalences.ucsQuotationValue;
     
     // Calculate staff UCS (by days)
     Object.entries(participants).forEach(([key, p]) => {
@@ -154,7 +156,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         breakdown.push({
           category: key,
           ucs: ucs, 
-          cost: ucs * calculation.equivalences.ucsQuotationValue,
+          cost: ucs * quotationValue,
           quantity: count,
           duration: days,
           durationUnit: 'days',
@@ -190,7 +192,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
             breakdown.push({
                 category: 'visitors',
                 ucs: ucs,
-                cost: ucs * calculation.equivalences.ucsQuotationValue,
+                cost: ucs * quotationValue,
                 quantity: visitorCount,
                 duration: duration,
                 durationUnit: durationUnit,
@@ -253,7 +255,7 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     );
     const totalEventHours = maxDays > 0 ? maxDays * 24 : 0;
     
-    let results: CalculationResult = {
+    const results: CalculationResult = {
       totalParticipants: totalParticipantsValue,
       totalUCS,
       totalCost,
@@ -291,10 +293,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
         });
     }
 
-    const cleanedValues = cleanupUndefined(values);
+    const cleanedValues = cleanupUndefined(values) as FormData;
 
     await addEvent({
-      timestamp: Date.now(),
       formData: cleanedValues,
       results
     });

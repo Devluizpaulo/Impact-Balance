@@ -96,3 +96,5 @@ export interface EventRecord {
   formData: FormData;
   results: CalculationResult;
 }
+
+export type NewEventRecord = Omit<EventRecord, 'id' | 'timestamp'>;

@@ -338,7 +338,22 @@ export default function ParametersPage() {
                           )}
                       </TableCell>
                       <TableCell>
-                        <ParameterInput name="calculation.equivalences.ucsQuotationValue" value={settings.calculation.equivalences.ucsQuotationValue} onChange={handleNestedChange} disabled={!isAdmin} readOnly={true} adornment={'R$'} precision={2} />
+                        <div className="flex items-center justify-end gap-2">
+                          <ParameterInput 
+                            name="calculation.equivalences.ucsQuotationValue" 
+                            value={settings.calculation.equivalences.ucsQuotationValue} 
+                            onChange={handleNestedChange} 
+                            disabled={!isAdmin} 
+                            readOnly={true} 
+                            adornment={'R$'} 
+                            precision={2} 
+                          />
+                          {settings.calculation.equivalences.ucsQuotationDate && (
+                            <span className="inline-flex items-center rounded border px-2 py-0.5 text-xs text-muted-foreground">
+                              {t('equivalences.quotationDate')}: {settings.calculation.equivalences.ucsQuotationDate}
+                            </span>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                     <TableRow>

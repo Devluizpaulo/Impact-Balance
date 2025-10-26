@@ -28,7 +28,7 @@ type NavItem = {
 
 const publicNavItems: NavItem[] = [
   { 
-    href: "/", 
+    href: "/calculator", 
     icon: <Calculator className="h-5 w-5" />, 
     translationKey: 'calculator' 
   },

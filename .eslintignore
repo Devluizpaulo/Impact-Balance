@@ -1,0 +1,7 @@
+.next
+node_modules
+coverage
+.next-turbo
+out
+build
+dist

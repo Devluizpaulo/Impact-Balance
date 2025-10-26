@@ -7,6 +7,7 @@ import {locales} from './config';
 
 export const pathnames = {
   '/': '/',
+  '/calculator': '/calculator',
   '/parameters': '/parameters',
   '/data-figures': '/data-figures',
   '/country-results': '/country-results',

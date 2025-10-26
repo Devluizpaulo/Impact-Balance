@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { CalculationResult, FormData } from "@/lib/types";
@@ -8,6 +7,8 @@ import { useTranslations } from "next-intl";
 import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow, TableFooter } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useSettings } from "@/lib/settings";
 
 interface ExecutiveReportProps {
     results: CalculationResult;
@@ -17,6 +18,15 @@ interface ExecutiveReportProps {
 export default function ExecutiveReport({ results, formData }: ExecutiveReportProps) {
     const t_calc = useTranslations("ImpactCalculator");
     const t_report = useTranslations("ExecutiveReport");
+    const { settings } = useSettings();
+
+    const [reportDate, setReportDate] = useState<string | null>(null);
+    useEffect(() => {
+        // Set after mount to avoid hydration warnings
+        const d = new Date();
+        const iso = d.toISOString().slice(0, 10);
+        setReportDate(iso);
+    }, []);
 
     const formatCurrency = (value: number, currency = 'BRL') => {
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(value);
@@ -66,6 +76,18 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                 <div>
                   <h3 className="text-2xl font-bold font-headline text-gray-900">{t_report('title')}</h3>
                   <p className="text-gray-600">{t_report('forEvent')} <span className="font-semibold text-primary">{formData.eventName}</span></p>
+                  <div className="text-xs text-gray-500 mt-1 space-x-2">
+                    {reportDate && (
+                      <span>
+                        {"Relatório em: "}{reportDate}
+                      </span>
+                    )}
+                    {settings.calculation.equivalences.ucsQuotationDate && (
+                      <span>
+                        {"Cotação UCS em: "}{settings.calculation.equivalences.ucsQuotationDate}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <ExportButtons results={results} formData={formData} />
             </div>
