@@ -32,7 +32,7 @@ export default function Home() {
             </div>
             <div className="relative hidden md:block">
               <Image
-                src="/hero.png"
+                src="/hero_calculadora.png"
                 alt="Impact Balance Hero"
                 width={640}
                 height={480}
