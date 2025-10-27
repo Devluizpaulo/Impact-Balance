@@ -12,7 +12,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 
 
 export const metadata: Metadata = {
-  title: 'Balanço de Impacto',
+  title: 'Calculadora de Eventos',
   description: 'Calcule e equilibre o impacto ambiental de seus eventos.',
 };
 
