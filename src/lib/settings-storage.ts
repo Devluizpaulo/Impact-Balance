@@ -65,59 +65,58 @@ export const clearQuotationCache = (): void => {
   }
 };
 
+const parseQuotationDoc = (doc: { id: string, data: () => Record<string, unknown> }): { value: number, date: string } | null => {
+    const data = doc.data();
+    // The user specified the field is 'resultado_final_brl'
+    const rawValue = data.resultado_final_brl as unknown;
+
+    if (rawValue === undefined || rawValue === null) {
+      return null;
+    }
+
+    const parsedValue = typeof rawValue === 'number' 
+        ? rawValue 
+        : typeof rawValue === 'string' 
+        ? parseFloat(rawValue.replace(',', '.')) 
+        : NaN;
+
+    if (Number.isFinite(parsedValue) && parsedValue > 0) {
+        return {
+            value: parsedValue,
+            date: doc.id,
+        };
+    }
+    return null;
+};
+
 
 // Function to get the latest UCS quotation from Firestore
 export const getLatestUcsQuotation = async (): Promise<{value: number, date: string} | null> => {
-    // Check cache first
     const cached = getCachedQuotation();
     if (cached) {
         return cached;
     }
 
     const ucsCollection = collection(db, UCS_QUOTATION_COLLECTION);
-    // Order by document ID (date string) descending to get the latest
-    const q = query(ucsCollection, orderBy(documentId(), 'desc'), limit(1));
-
+    
     try {
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-            const latestDoc = querySnapshot.docs[0];
-            const data = latestDoc.data() as Record<string, unknown>;
-            const raw = data.valor_brl as unknown;
-            const parsed = typeof raw === 'number' ? raw : typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : NaN;
-            if (Number.isFinite(parsed) && parsed > 0) {
-              const result = {
-                  value: parsed,
-                  date: latestDoc.id // The document ID is the date string e.g., "2025-10-24"
-              };
-              // Cache the result
-              setCachedQuotation(result);
-              return result;
-            }
+        const querySnapshot = await getDocs(ucsCollection);
+        if (querySnapshot.empty) {
+            return null;
         }
-        return null;
+
+        const latestDoc = querySnapshot.docs.reduce((latest, current) => {
+            return current.id > latest.id ? current : latest;
+        });
+        
+        const result = parseQuotationDoc(latestDoc);
+        if (result) {
+            setCachedQuotation(result);
+        }
+        return result;
+
     } catch (serverError: unknown) {
         const err = serverError as { code?: string };
-        // If index is missing for orderBy(__name__), fall back to client-side max by ID
-        if (err?.code === 'failed-precondition') {
-            try {
-                const all = await getDocs(ucsCollection);
-                if (!all.empty) {
-                    // Pick the doc with max lexicographic ID (YYYY-MM-DD)
-                    const latestDoc = all.docs.reduce((a, b) => (a.id > b.id ? a : b));
-                    const data = latestDoc.data() as Record<string, unknown>;
-                    const raw = data.valor_brl as unknown;
-                    const parsed = typeof raw === 'number' ? raw : typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : NaN;
-                    if (Number.isFinite(parsed) && parsed > 0) {
-                        const result = { value: parsed, date: latestDoc.id };
-                        setCachedQuotation(result);
-                        return result;
-                    }
-                }
-            } catch (fallbackErr) {
-                console.error('Fallback read of UCS quotation failed', fallbackErr);
-            }
-        }
         if (err?.code === 'permission-denied') {
             const permissionError = new FirestorePermissionError({
                 path: ucsCollection.path,
@@ -134,55 +133,42 @@ export const getLatestUcsQuotation = async (): Promise<{value: number, date: str
 // Realtime subscription to the latest UCS quotation. Returns an unsubscribe function.
 export const subscribeLatestUcsQuotation = (
   onChange: (data: { value: number; date: string } | null) => void
-) => {
+): (() => void) | undefined => {
   const ucsCollection = collection(db, UCS_QUOTATION_COLLECTION);
-  const qLatest = query(ucsCollection, orderBy(documentId(), 'desc'), limit(1));
-  const orderedListener = (snapshot: { empty: boolean; docs: Array<{ id: string; data: () => Record<string, unknown> }> }) => {
-    if (!snapshot.empty) {
-      const latestDoc = snapshot.docs[0];
-      const data = latestDoc.data() as Record<string, unknown>;
-      const raw = data.valor_brl as unknown;
-      const parsed = typeof raw === 'number' ? raw : typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : NaN;
-      const value = Number.isFinite(parsed) && parsed > 0 ? parsed : null;
-      onChange(value !== null ? { value, date: latestDoc.id } : null);
-    } else {
-      onChange(null);
-    }
-  };
+  
+  try {
+    const unsubscribe = onSnapshot(ucsCollection, (snapshot) => {
+      if (snapshot.empty) {
+        onChange(null);
+        return;
+      }
+      
+      const latestDoc = snapshot.docs.reduce((latest, current) => {
+        return current.id > latest.id ? current : latest;
+      });
+      
+      const result = parseQuotationDoc(latestDoc);
+      onChange(result);
 
-  // Start with ordered subscription, but if index missing, fall back to plain collection subscription
-  const unsubscribe = onSnapshot(qLatest, orderedListener, (error) => {
-    const code = (error as { code?: string })?.code;
-    if (code === 'failed-precondition') {
-      // Fallback: subscribe to whole collection and compute latest client-side
-      const unsubAll = onSnapshot(ucsCollection, (snapshot) => {
-        if (!snapshot.empty) {
-          const latestDoc = snapshot.docs.reduce((a, b) => (a.id > b.id ? a : b));
-          const data = latestDoc.data() as Record<string, unknown>;
-          const raw = data.valor_brl as unknown;
-          const parsed = typeof raw === 'number' ? raw : typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : NaN;
-          const value = Number.isFinite(parsed) && parsed > 0 ? parsed : null;
-          onChange(value !== null ? { value, date: latestDoc.id } : null);
-        } else {
-          onChange(null);
-        }
-      }, (e) => {
-        console.error('Error subscribing to UCS quotation (fallback)', e);
-      });
-      // Return fallback unsubscribe instead
-      return unsubAll;
-    }
-    if (code === 'permission-denied') {
-      const permissionError = new FirestorePermissionError({
-        path: ucsCollection.path,
-        operation: 'list',
-      });
-      errorEmitter.emit('permission-error', permissionError);
-    } else {
-      console.error('Error subscribing to UCS quotation', error);
-    }
-  });
-  return unsubscribe;
+    }, (error) => {
+      const err = error as { code?: string };
+      if (err?.code === 'permission-denied') {
+        const permissionError = new FirestorePermissionError({
+          path: ucsCollection.path,
+          operation: 'list',
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      } else {
+        console.error('Error subscribing to UCS quotation', error);
+      }
+      onChange(null); // Notify of error state
+    });
+
+    return unsubscribe;
+  } catch (error) {
+    console.error('Failed to initiate subscription:', error);
+    return undefined;
+  }
 };
 
 // Helper to deep merge settings to ensure new properties are not missing on load
