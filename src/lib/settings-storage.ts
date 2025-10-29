@@ -148,6 +148,9 @@ export const subscribeLatestUcsQuotation = (
       });
       
       const result = parseQuotationDoc(latestDoc);
+      if (result) {
+        setCachedQuotation(result);
+      }
       onChange(result);
 
     }, (error) => {
