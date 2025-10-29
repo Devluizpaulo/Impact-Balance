@@ -67,24 +67,57 @@ export const clearQuotationCache = (): void => {
 
 const parseQuotationDoc = (doc: { id: string, data: () => Record<string, unknown> }): { value: number, date: string } | null => {
     const data = doc.data();
-    // The user specified the field is 'resultado_final_brl'
-    const rawValue = data.resultado_final_brl as unknown;
+    const candidates = [
+      'resultado_final_brl',
+      'resultado_final_BRL',
+      'resultadoFinalBrl',
+      'resultadoFinalBRL',
+      'valor_brl',
+      'valorBRL',
+      'valor',
+      'value',
+      'price',
+      'cotacao',
+      'cotação'
+    ];
+
+    let rawValue: unknown = (data as Record<string, unknown>)['resultado_final_brl'];
+    if (rawValue === undefined || rawValue === null) {
+      for (const key of candidates) {
+        if (key in data) {
+          rawValue = (data as Record<string, unknown>)[key];
+          break;
+        }
+      }
+    }
 
     if (rawValue === undefined || rawValue === null) {
       return null;
     }
 
-    const parsedValue = typeof rawValue === 'number' 
-        ? rawValue 
-        : typeof rawValue === 'string' 
-        ? parseFloat(rawValue.replace(',', '.')) 
-        : NaN;
+    const parsedValue = typeof rawValue === 'number'
+      ? rawValue
+      : typeof rawValue === 'string'
+      ? parseFloat(rawValue.replace(',', '.'))
+      : NaN;
 
     if (Number.isFinite(parsedValue) && parsedValue > 0) {
-        return {
-            value: parsedValue,
-            date: doc.id,
-        };
+      // Try to derive date from Firestore timestamp field first, then 'data' string, then doc.id
+      let dateStr: string | null = null;
+      const ts = (data as any).timestamp;
+      if (ts && typeof ts === 'object' && typeof ts.toDate === 'function') {
+        dateStr = ts.toDate().toISOString().slice(0, 10);
+      } else if (typeof (data as any).data === 'string') {
+        // keep original if already in dd/mm/yyyy
+        dateStr = (data as any).data;
+      } else {
+        dateStr = doc.id;
+      }
+
+      return {
+        value: parsedValue,
+        date: dateStr || doc.id,
+      };
     }
     return null;
 };
@@ -100,14 +133,18 @@ export const getLatestUcsQuotation = async (): Promise<{value: number, date: str
     const ucsCollection = collection(db, UCS_QUOTATION_COLLECTION);
     
     try {
-        const querySnapshot = await getDocs(ucsCollection);
+        // Prefer ordering by Firestore timestamp field when available
+        let latestQuery = query(ucsCollection, orderBy('timestamp', 'desc'), limit(1));
+        let querySnapshot = await getDocs(latestQuery);
+        // Fallback to documentId ordering if timestamp order fails to return
+        if (querySnapshot.empty) {
+          latestQuery = query(ucsCollection, orderBy(documentId(), 'desc'), limit(1));
+          querySnapshot = await getDocs(latestQuery);
+        }
         if (querySnapshot.empty) {
             return null;
         }
-
-        const latestDoc = querySnapshot.docs.reduce((latest, current) => {
-            return current.id > latest.id ? current : latest;
-        });
+        const latestDoc = querySnapshot.docs[0];
         
         const result = parseQuotationDoc(latestDoc);
         if (result) {
@@ -137,16 +174,15 @@ export const subscribeLatestUcsQuotation = (
   const ucsCollection = collection(db, UCS_QUOTATION_COLLECTION);
   
   try {
-    const unsubscribe = onSnapshot(ucsCollection, (snapshot) => {
+    // Prefer ordering by Firestore timestamp field when available
+    const latestByTs = query(ucsCollection, orderBy('timestamp', 'desc'), limit(1));
+    const unsubscribe = onSnapshot(latestByTs, (snapshot) => {
       if (snapshot.empty) {
         onChange(null);
         return;
       }
-      
-      const latestDoc = snapshot.docs.reduce((latest, current) => {
-        return current.id > latest.id ? current : latest;
-      });
-      
+
+      const latestDoc = snapshot.docs[0];
       const result = parseQuotationDoc(latestDoc);
       if (result) {
         setCachedQuotation(result);

@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef, startTransition } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
 import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb, getLatestUcsQuotation, subscribeLatestUcsQuotation } from './settings-storage';
@@ -125,6 +125,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     const { toast } = useToast();
     const { isAdmin } = useAuth();
     const t = useTranslations("ParametersPage.toasts" as const);
+    const isMountedRef = useRef(false);
 
     // This function will receive the new base settings and will trigger a recalculation.
     const updateAndRecalculate = useCallback((newBaseSettings: SystemSettings) => {
@@ -134,6 +135,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
 
     useEffect(() => {
+      isMountedRef.current = true;
+      
       const loadSettings = async () => {
         setIsLoading(true);
         try {
@@ -143,7 +146,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             if (latestQuotationData) {
                 dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotationData.value;
                 dbSettings.calculation.equivalences.ucsQuotationDate = latestQuotationData.date;
-                 toast({
+                 if (isMountedRef.current) toast({
                     title: t('loadQuotationSuccess.title'),
                     description: t('loadQuotationSuccess.description', { value: latestQuotationData.value }),
                 });
@@ -153,7 +156,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
                    dbSettings.calculation.equivalences.ucsQuotationValue = defaultSettings.calculation.equivalences.ucsQuotationValue;
                    dbSettings.calculation.equivalences.ucsQuotationDate = null;
                  }
-                 toast({
+                 if (isMountedRef.current) toast({
                     variant: 'destructive',
                     title: t('loadQuotationError.title'),
                     description: t('loadQuotationError.description'),
@@ -162,7 +165,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             updateAndRecalculate(dbSettings);
         } catch (error) {
           console.error("Failed to load settings from Firestore", error);
-          toast({
+          if (isMountedRef.current) toast({
               variant: 'destructive',
               title: t('loadError.title'),
               description: t('loadError.description'),
@@ -178,23 +181,29 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       const unsubscribe = subscribeLatestUcsQuotation((data) => {
         if (!data) return;
         // Update only if changed
-        setSettings((prev) => {
-          const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
-          if (next.calculation.equivalences.ucsQuotationDate === data.date && next.calculation.equivalences.ucsQuotationValue === data.value) {
-            return prev;
-          }
-          next.calculation.equivalences.ucsQuotationValue = data.value;
-          next.calculation.equivalences.ucsQuotationDate = data.date;
-          toast({
-            title: t('loadQuotationSuccess.title'),
-            description: t('loadQuotationSuccess.description', { value: data.value }),
+        if (!isMountedRef.current) return;
+        startTransition(() => {
+          setSettings((prev) => {
+            const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
+            if (next.calculation.equivalences.ucsQuotationDate === data.date && next.calculation.equivalences.ucsQuotationValue === data.value) {
+              return prev;
+            }
+            next.calculation.equivalences.ucsQuotationValue = data.value;
+            next.calculation.equivalences.ucsQuotationDate = data.date;
+            if (isMountedRef.current) {
+              toast({
+                title: t('loadQuotationSuccess.title'),
+                description: t('loadQuotationSuccess.description', { value: data.value }),
+              });
+            }
+            return calculateDerivedSettings(next);
           });
-          return calculateDerivedSettings(next);
         });
       });
 
       return () => {
         unsubscribe?.();
+        isMountedRef.current = false;
       };
     }, [t, toast, updateAndRecalculate]);
 
