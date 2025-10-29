@@ -2,7 +2,7 @@
 "use client";
 
 import { db } from './firebase/config';
-import { doc, getDoc, setDoc, collection, query, orderBy, limit, getDocs, onSnapshot, documentId } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, orderBy, limit, getDocs, onSnapshot, documentId, Timestamp } from 'firebase/firestore';
 import type { SystemSettings } from './settings';
 import { defaultSettings } from './settings';
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -104,14 +104,17 @@ const parseQuotationDoc = (doc: { id: string, data: () => Record<string, unknown
     if (Number.isFinite(parsedValue) && parsedValue > 0) {
       // Try to derive date from Firestore timestamp field first, then 'data' string, then doc.id
       let dateStr: string | null = null;
-      const ts = (data as any).timestamp;
-      if (ts && typeof ts === 'object' && typeof ts.toDate === 'function') {
+      const ts = (data as { timestamp?: Timestamp }).timestamp;
+      if (ts instanceof Timestamp) {
         dateStr = ts.toDate().toISOString().slice(0, 10);
-      } else if (typeof (data as any).data === 'string') {
-        // keep original if already in dd/mm/yyyy
-        dateStr = (data as any).data;
       } else {
-        dateStr = doc.id;
+        const dataStr = (data as { data?: string }).data;
+        if (typeof dataStr === 'string') {
+          // keep original if already in dd/mm/yyyy
+          dateStr = dataStr;
+        } else {
+          dateStr = doc.id;
+        }
       }
 
       return {
