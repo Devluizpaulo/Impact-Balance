@@ -146,42 +146,49 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             if (latestQuotationData) {
                 dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotationData.value;
                 dbSettings.calculation.equivalences.ucsQuotationDate = latestQuotationData.date;
-                 if (isMountedRef.current) toast({
-                    title: t('loadQuotationSuccess.title'),
-                    description: t('loadQuotationSuccess.description', { value: latestQuotationData.value }),
-                });
+                 if (isMountedRef.current) {
+                    toast({
+                        title: t('loadQuotationSuccess.title'),
+                        description: t('loadQuotationSuccess.description', { value: latestQuotationData.value }),
+                    });
+                }
             } else {
                  // Fallback: if DB has 0 or invalid quotation value, use default value to avoid zeroing costs
                  if (!(dbSettings.calculation.equivalences.ucsQuotationValue > 0)) {
                    dbSettings.calculation.equivalences.ucsQuotationValue = defaultSettings.calculation.equivalences.ucsQuotationValue;
                    dbSettings.calculation.equivalences.ucsQuotationDate = null;
                  }
-                 if (isMountedRef.current) toast({
-                    variant: 'destructive',
-                    title: t('loadQuotationError.title'),
-                    description: t('loadQuotationError.description'),
-                });
+                 if (isMountedRef.current) {
+                    toast({
+                        variant: 'destructive',
+                        title: t('loadQuotationError.title'),
+                        description: t('loadQuotationError.description'),
+                    });
+                }
             }
             updateAndRecalculate(dbSettings);
         } catch (error) {
           console.error("Failed to load settings from Firestore", error);
-          if (isMountedRef.current) toast({
-              variant: 'destructive',
-              title: t('loadError.title'),
-              description: t('loadError.description'),
-          });
+          if (isMountedRef.current) {
+            toast({
+                variant: 'destructive',
+                title: t('loadError.title'),
+                description: t('loadError.description'),
+            });
+          }
           updateAndRecalculate(defaultSettings);
         } finally {
-          setIsLoading(false);
+          if (isMountedRef.current) {
+            setIsLoading(false);
+          }
         }
       };
 
       loadSettings();
       // Subscribe for daily quotation updates in real time
       const unsubscribe = subscribeLatestUcsQuotation((data) => {
-        if (!data) return;
-        // Update only if changed
-        if (!isMountedRef.current) return;
+        if (!data || !isMountedRef.current) return;
+        
         startTransition(() => {
           setSettings((prev) => {
             const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
@@ -190,19 +197,21 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             }
             next.calculation.equivalences.ucsQuotationValue = data.value;
             next.calculation.equivalences.ucsQuotationDate = data.date;
-            if (isMountedRef.current) {
-              toast({
-                title: t('loadQuotationSuccess.title'),
-                description: t('loadQuotationSuccess.description', { value: data.value }),
-              });
-            }
+            
+            toast({
+              title: t('loadQuotationSuccess.title'),
+              description: t('loadQuotationSuccess.description', { value: data.value }),
+            });
+            
             return calculateDerivedSettings(next);
           });
         });
       });
 
       return () => {
-        unsubscribe?.();
+        if (unsubscribe) {
+            unsubscribe();
+        }
         isMountedRef.current = false;
       };
     }, [t, toast, updateAndRecalculate]);
