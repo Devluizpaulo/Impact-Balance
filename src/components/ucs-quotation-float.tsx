@@ -1,14 +1,15 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, X, RefreshCw } from "lucide-react";
-import { getLatestUcsQuotation, subscribeLatestUcsQuotation, clearQuotationCache } from "@/lib/settings-storage";
+import { getLatestUcsQuotation, subscribeLatestUcsQuotation, clearQuotationCache, type UcsQuotation } from "@/lib/settings-storage";
 import { cn } from "@/lib/utils";
 
 export default function UcsQuotationFloat() {
-  const [quotation, setQuotation] = useState<{ value: number; date: string } | null>(null);
+  const [quotation, setQuotation] = useState<UcsQuotation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -95,7 +96,7 @@ export default function UcsQuotationFloat() {
                 <RefreshCw className="h-3 w-3 animate-spin" />
               ) : quotation ? (
                 <span className="text-xs font-mono">
-                  {formatCurrency(quotation.value)}
+                  {formatCurrency(quotation.brl)}
                 </span>
               ) : (
                 <span className="text-xs text-red-500">Erro</span>
@@ -141,7 +142,7 @@ export default function UcsQuotationFloat() {
               ) : quotation ? (
                 <div className="space-y-2">
                   <div className="text-lg font-bold text-primary">
-                    {formatCurrency(quotation.value)}
+                    {formatCurrency(quotation.brl)}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Atualizada em: {formatDate(quotation.date)}
