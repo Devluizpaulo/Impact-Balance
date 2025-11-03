@@ -16,13 +16,21 @@ const UCS_QUOTATION_COLLECTION = 'ucs_ase';
 const CACHE_KEY = 'ucs_quotation_cache';
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
 
+export interface UcsQuotation {
+  brl: number;
+  usd: number;
+  eur: number;
+  date: string;
+}
+
 interface CachedQuotation {
-  data: { value: number; date: string };
+  data: UcsQuotation;
   timestamp: number;
 }
 
+
 // Cache utilities
-const getCachedQuotation = (): { value: number; date: string } | null => {
+const getCachedQuotation = (): UcsQuotation | null => {
   try {
     const cached = localStorage.getItem(CACHE_KEY);
     if (!cached) return null;
@@ -45,7 +53,7 @@ const getCachedQuotation = (): { value: number; date: string } | null => {
   }
 };
 
-const setCachedQuotation = (data: { value: number; date: string }): void => {
+const setCachedQuotation = (data: UcsQuotation): void => {
   try {
     const cacheData: CachedQuotation = {
       data,
@@ -65,69 +73,59 @@ export const clearQuotationCache = (): void => {
   }
 };
 
-const parseQuotationDoc = (doc: { id: string, data: () => Record<string, unknown> }): { value: number, date: string } | null => {
+const parseQuotationDoc = (doc: { id: string, data: () => Record<string, unknown> }): UcsQuotation | null => {
     const data = doc.data();
-    const candidates = [
-      'resultado_final_brl',
-      'resultado_final_BRL',
-      'resultadoFinalBrl',
-      'resultadoFinalBRL',
-      'valor_brl',
-      'valorBRL',
-      'valor',
-      'value',
-      'price',
-      'cotacao',
-      'cotação'
-    ];
-
-    let rawValue: unknown = (data as Record<string, unknown>)['resultado_final_brl'];
-    if (rawValue === undefined || rawValue === null) {
-      for (const key of candidates) {
-        if (key in data) {
-          rawValue = (data as Record<string, unknown>)[key];
-          break;
+    
+    const getNumericValue = (keys: string[]): number | null => {
+        for (const key of keys) {
+            if (key in data) {
+                const rawValue = data[key];
+                 const parsedValue = typeof rawValue === 'number'
+                    ? rawValue
+                    : typeof rawValue === 'string'
+                    ? parseFloat(rawValue.replace(',', '.'))
+                    : NaN;
+                if (Number.isFinite(parsedValue)) {
+                    return parsedValue;
+                }
+            }
         }
-      }
+        return null;
     }
 
-    if (rawValue === undefined || rawValue === null) {
+    const brl = getNumericValue(['resultado_final_brl', 'valor_brl', 'valor']);
+    const usd = getNumericValue(['resultado_final_usd']);
+    const eur = getNumericValue(['resultado_final_eur']);
+
+    if (brl === null || usd === null || eur === null) {
       return null;
     }
 
-    const parsedValue = typeof rawValue === 'number'
-      ? rawValue
-      : typeof rawValue === 'string'
-      ? parseFloat(rawValue.replace(',', '.'))
-      : NaN;
-
-    if (Number.isFinite(parsedValue) && parsedValue > 0) {
-      // Try to derive date from Firestore timestamp field first, then 'data' string, then doc.id
-      let dateStr: string | null = null;
-      const ts = (data as { timestamp?: Timestamp }).timestamp;
-      if (ts instanceof Timestamp) {
-        dateStr = ts.toDate().toISOString().slice(0, 10);
+    // Try to derive date from Firestore timestamp field first, then 'data' string, then doc.id
+    let dateStr: string | null = null;
+    const ts = (data as { timestamp?: Timestamp }).timestamp;
+    if (ts instanceof Timestamp) {
+      dateStr = ts.toDate().toISOString().slice(0, 10);
+    } else {
+      const dataStr = (data as { data?: string }).data;
+      if (typeof dataStr === 'string') {
+        dateStr = dataStr;
       } else {
-        const dataStr = (data as { data?: string }).data;
-        if (typeof dataStr === 'string') {
-          // keep original if already in dd/mm/yyyy
-          dateStr = dataStr;
-        } else {
-          dateStr = doc.id;
-        }
+        dateStr = doc.id;
       }
-
-      return {
-        value: parsedValue,
-        date: dateStr || doc.id,
-      };
     }
-    return null;
+
+    return {
+      brl,
+      usd,
+      eur,
+      date: dateStr || doc.id,
+    };
 };
 
 
 // Function to get the latest UCS quotation from Firestore
-export const getLatestUcsQuotation = async (): Promise<{value: number, date: string} | null> => {
+export const getLatestUcsQuotation = async (): Promise<UcsQuotation | null> => {
     const cached = getCachedQuotation();
     if (cached) {
         return cached;
@@ -172,7 +170,7 @@ export const getLatestUcsQuotation = async (): Promise<{value: number, date: str
 
 // Realtime subscription to the latest UCS quotation. Returns an unsubscribe function.
 export const subscribeLatestUcsQuotation = (
-  onChange: (data: { value: number; date: string } | null) => void
+  onChange: (data: UcsQuotation | null) => void
 ): (() => void) | undefined => {
   const ucsCollection = collection(db, UCS_QUOTATION_COLLECTION);
   
@@ -270,8 +268,20 @@ export const getSettings = async (): Promise<SystemSettings> => {
 // Function to save settings to Firestore
 export const saveSettings = (settings: SystemSettings) => {
     const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
-    // Exclude the dynamically loaded ucsQuotationValue from being saved
-    const { calculation: { equivalences: { ucsQuotationValue: _ucsQuotationValue, ucsQuotationDate: _ucsQuotationDate, ...restEquivalences }, ...restCalculation } } = settings;
+    // Exclude the dynamically loaded quotation values from being saved
+    const { 
+        calculation: { 
+            equivalences: { 
+                ucsQuotationValue: _brl, 
+                ucsQuotationValueUSD: _usd,
+                ucsQuotationValueEUR: _eur,
+                ucsQuotationDate: _date, 
+                ...restEquivalences 
+            }, 
+            ...restCalculation 
+        } 
+    } = settings;
+    
     const settingsToSave = {
         calculation: {
             ...restCalculation,
@@ -295,3 +305,5 @@ export const saveSettings = (settings: SystemSettings) => {
         throw serverError;
     });
 };
+
+  

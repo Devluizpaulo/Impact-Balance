@@ -60,8 +60,8 @@ export type CalculationResult = {
   totalParticipants: number;
   totalUCS: number;
   totalCost: number;
-  totalCostUSD?: number;
-  totalCostEUR?: number;
+  totalCostUSD: number;
+  totalCostEUR: number;
   directUcs: number;
   directCost: number;
   indirectCost: number; // Indirect costs are purely monetary
@@ -98,3 +98,5 @@ export interface EventRecord {
 }
 
 export type NewEventRecord = Omit<EventRecord, 'id' | 'timestamp'>;
+
+  

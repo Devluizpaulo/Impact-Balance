@@ -24,7 +24,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { addEvent } from "@/lib/event-storage";
-import { getCurrencyRates } from "@/ai/flows/currency-converter";
 import { useToast } from "@/hooks/use-toast";
 
 
@@ -259,6 +258,8 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       totalParticipants: totalParticipantsValue,
       totalUCS,
       totalCost,
+      totalCostUSD: totalUCS * (settings.calculation.equivalences.ucsQuotationValueUSD || 0),
+      totalCostEUR: totalUCS * (settings.calculation.equivalences.ucsQuotationValueEUR || 0),
       directUcs,
       directCost,
       indirectCost,
@@ -275,23 +276,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
       },
       benefits,
     };
-    
-    try {
-        const currencyData = await getCurrencyRates();
-        if (currencyData.rates.USD) {
-            results.totalCostUSD = totalCost * currencyData.rates.USD;
-        }
-        if (currencyData.rates.EUR) {
-            results.totalCostEUR = totalCost * currencyData.rates.EUR;
-        }
-    } catch (error) {
-        console.error("Could not fetch currency rates", error);
-        toast({
-            variant: "destructive",
-            title: "Erro de Câmbio",
-            description: "Não foi possível obter as taxas de câmbio. Os valores em outras moedas não estarão disponíveis.",
-        });
-    }
 
     const cleanedValues = cleanupUndefined(values) as FormData;
 
@@ -433,3 +417,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
+
+  

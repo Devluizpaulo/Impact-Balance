@@ -4,7 +4,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef, startTransition } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
-import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb, getLatestUcsQuotation, subscribeLatestUcsQuotation } from './settings-storage';
+import { getSettings as getSettingsFromDb, saveSettings as saveSettingsToDb, getLatestUcsQuotation, subscribeLatestUcsQuotation, type UcsQuotation } from './settings-storage';
 import { useAuth } from './auth';
 
 // Define the shape of your settings
@@ -22,7 +22,9 @@ export interface SystemSettings {
         };
         equivalences: {
           // Base
-          ucsQuotationValue: number;
+          ucsQuotationValue: number; // BRL
+          ucsQuotationValueUSD: number;
+          ucsQuotationValueEUR: number;
           ucsQuotationDate: string | null;
           gdpPerCapita: number;
           // Derived
@@ -60,6 +62,8 @@ export const defaultSettings: SystemSettings = {
         },
         equivalences: {
             ucsQuotationValue: 168.85,
+            ucsQuotationValueUSD: 33.01,
+            ucsQuotationValueEUR: 28.43,
             ucsQuotationDate: null,
             gdpPerCapita: 99706.20,
             equivalenceValuePerYear: 0, // Calculated
@@ -144,12 +148,14 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             const latestQuotationData = await getLatestUcsQuotation();
 
             if (latestQuotationData) {
-                dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotationData.value;
+                dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotationData.brl;
+                dbSettings.calculation.equivalences.ucsQuotationValueUSD = latestQuotationData.usd;
+                dbSettings.calculation.equivalences.ucsQuotationValueEUR = latestQuotationData.eur;
                 dbSettings.calculation.equivalences.ucsQuotationDate = latestQuotationData.date;
                  if (isMountedRef.current) {
                     toast({
                         title: t('loadQuotationSuccess.title'),
-                        description: t('loadQuotationSuccess.description', { value: latestQuotationData.value }),
+                        description: t('loadQuotationSuccess.description', { value: latestQuotationData.brl }),
                     });
                 }
             } else {
@@ -185,8 +191,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       };
 
       loadSettings();
-      // Subscribe for daily quotation updates in real time
-      const unsubscribe = subscribeLatestUcsQuotation((data) => {
+      
+      const handleQuotationChange = (data: UcsQuotation | null) => {
         if (!data || !isMountedRef.current) return;
         
         let shouldToast = false;
@@ -194,10 +200,12 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         startTransition(() => {
           setSettings((prev) => {
             const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
-            if (next.calculation.equivalences.ucsQuotationDate === data.date && next.calculation.equivalences.ucsQuotationValue === data.value) {
+            if (next.calculation.equivalences.ucsQuotationDate === data.date && next.calculation.equivalences.ucsQuotationValue === data.brl) {
               return prev; // No change
             }
-            next.calculation.equivalences.ucsQuotationValue = data.value;
+            next.calculation.equivalences.ucsQuotationValue = data.brl;
+            next.calculation.equivalences.ucsQuotationValueUSD = data.usd;
+            next.calculation.equivalences.ucsQuotationValueEUR = data.eur;
             next.calculation.equivalences.ucsQuotationDate = data.date;
             
             shouldToast = true;
@@ -208,10 +216,12 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         if (shouldToast) {
             toast({
               title: t('loadQuotationSuccess.title'),
-              description: t('loadQuotationSuccess.description', { value: data.value }),
+              description: t('loadQuotationSuccess.description', { value: data.brl }),
             });
         }
-      });
+      };
+      
+      const unsubscribe = subscribeLatestUcsQuotation(handleQuotationChange);
 
       return () => {
         if (unsubscribe) {
@@ -279,3 +289,5 @@ export const useSettings = () => {
     }
     return context;
 };
+
+  
