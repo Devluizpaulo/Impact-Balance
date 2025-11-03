@@ -94,8 +94,8 @@ const parseQuotationDoc = (doc: { id: string, data: () => Record<string, unknown
     }
 
     const brl = getNumericValue(['resultado_final_brl', 'valor_brl', 'valor']);
-    const usd = getNumericValue(['resultado_final_usd']);
-    const eur = getNumericValue(['resultado_final_eur']);
+    const usd = getNumericValue(['resultado_final_usd', 'valor_usd']);
+    const eur = getNumericValue(['resultado_final_eur', 'valor_eur']);
 
     if (brl === null || usd === null || eur === null) {
       return null;
