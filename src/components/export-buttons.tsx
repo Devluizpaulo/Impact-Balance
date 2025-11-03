@@ -73,9 +73,8 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             const seloHeight = (seloImg.height * seloWidth) / seloImg.width;
             const seloX = (pageWidth - seloWidth) / 2;
             const seloY = (pageHeight - seloHeight) / 2; // Center it
-            (doc as unknown as { setGState: (state: unknown) => void }).setGState({ opacity: 0.04 }); // Lighter
-            doc.addImage(seloImg, 'PNG', seloX, seloY, seloWidth, seloHeight);
-            (doc as unknown as { setGState: (state: unknown) => void }).setGState({ opacity: 1 });
+            
+            doc.addImage(seloImg, 'PNG', seloX, seloY, seloWidth, seloHeight, undefined, 'FAST', 0.04);
 
 
             // --- PDF Header ---
@@ -307,5 +306,3 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
         </div>
     );
 }
-
-    
