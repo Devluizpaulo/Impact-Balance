@@ -189,23 +189,28 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       const unsubscribe = subscribeLatestUcsQuotation((data) => {
         if (!data || !isMountedRef.current) return;
         
+        let shouldToast = false;
+        
         startTransition(() => {
           setSettings((prev) => {
             const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
             if (next.calculation.equivalences.ucsQuotationDate === data.date && next.calculation.equivalences.ucsQuotationValue === data.value) {
-              return prev;
+              return prev; // No change
             }
             next.calculation.equivalences.ucsQuotationValue = data.value;
             next.calculation.equivalences.ucsQuotationDate = data.date;
             
+            shouldToast = true;
+            return calculateDerivedSettings(next);
+          });
+        });
+
+        if (shouldToast) {
             toast({
               title: t('loadQuotationSuccess.title'),
               description: t('loadQuotationSuccess.description', { value: data.value }),
             });
-            
-            return calculateDerivedSettings(next);
-          });
-        });
+        }
       });
 
       return () => {
