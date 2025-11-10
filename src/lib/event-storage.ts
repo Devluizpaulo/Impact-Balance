@@ -12,7 +12,8 @@ const EVENTS_COLLECTION = 'impact-balance-events';
 // Function to get all stored events from Firestore
 export const getEvents = async (): Promise<EventRecord[]> => {
     const eventsCollection = collection(db, EVENTS_COLLECTION);
-    const q = query(eventsCollection, where('archived', '!=', true), orderBy('archived'), orderBy('timestamp', 'desc'));
+    // Use '==' for equality filter, which is more efficient and doesn't require a composite index for this query.
+    const q = query(eventsCollection, where('archived', '==', false), orderBy('timestamp', 'desc'));
     
     try {
         const querySnapshot = await getDocs(q);
