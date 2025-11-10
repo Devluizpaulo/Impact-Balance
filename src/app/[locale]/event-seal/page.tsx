@@ -43,6 +43,7 @@ export default function EventSealPage() {
     const fetchEvents = async () => {
         setLoading(true);
         const storedEvents = await getEvents();
+        // Filter on the client-side to include older records without the 'archived' field
         setEvents(storedEvents.filter(e => !e.archived));
         setLoading(false);
     };
