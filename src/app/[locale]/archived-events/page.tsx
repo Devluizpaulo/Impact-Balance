@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import { getEvents, deleteEvent, unarchiveEvent } from "@/lib/event-storage";
 import type { EventRecord } from "@/lib/types";
 import AppShell from "@/components/layout/app-shell";
@@ -49,7 +49,9 @@ export default function ArchivedEventsPage() {
     };
 
     useEffect(() => {
-        fetchEvents();
+        startTransition(() => {
+            fetchEvents();
+        });
     }, []);
 
     const handleViewReport = (event: EventRecord) => {

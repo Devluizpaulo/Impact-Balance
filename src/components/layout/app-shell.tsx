@@ -162,7 +162,6 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
 
 function MobileNav() {
   const _t = useTranslations("AppShell");
-  const { isAdmin } = useAuth();
   return (
     <Sheet>
       <SheetTrigger asChild>

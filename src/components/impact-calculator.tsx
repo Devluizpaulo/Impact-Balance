@@ -24,7 +24,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { addEvent } from "@/lib/event-storage";
-import { useToast } from "@/hooks/use-toast";
 
 
 interface ImpactCalculatorProps {
@@ -107,7 +106,6 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
   const t = useTranslations('ImpactCalculator');
   const { settings } = useSettings();
   const [visitorUnit, setVisitorUnit] = useState<'hours' | 'days'>('hours');
-  const { toast } = useToast();
   
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema(t)),
