@@ -219,6 +219,11 @@
       "report": "Informe Ejecutivo",
       "certificate": "Certificado"
     },
+    "tooltips": {
+      "view": "Ver Informe",
+      "archive": "Archivar Evento",
+      "delete": "Eliminar Evento"
+    },
     "table": {
       "title": "Eventos Guardados",
       "description": "Lista de todos los eventos calculados y guardados en el sistema.",
@@ -253,6 +258,11 @@
     "tabs": {
       "report": "Informe Ejecutivo",
       "certificate": "Certificado"
+    },
+    "tooltips": {
+      "view": "Ver Informe",
+      "unarchive": "Desarchivar Evento",
+      "delete": "Eliminar Evento"
     },
     "table": {
       "title": "Eventos Archivados",

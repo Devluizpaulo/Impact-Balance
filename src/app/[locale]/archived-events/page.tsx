@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye, Loader2, Award, ArchiveRestore, Trash2 } from "lucide-react";
+import { FileSearch, Loader2, Award, ArchiveRestore, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import EventCertificate from "@/components/event-certificate";
 import CertificateActions from "@/components/certificate-actions";
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function ArchivedEventsPage() {
     const t = useTranslations("ArchivedEventsPage");
@@ -138,17 +139,38 @@ export default function ArchivedEventsPage() {
                                             <TableCell className="text-right font-mono">{formatCurrency(event.results.totalCost)}</TableCell>
                                             <TableCell>
                                                 <div className="flex items-center justify-center gap-1">
-                                                  <Button variant="ghost" size="icon" onClick={() => handleViewReport(event)}>
-                                                      <Eye className="h-4 w-4" />
-                                                  </Button>
+                                                  <Tooltip>
+                                                      <TooltipTrigger asChild>
+                                                        <Button variant="ghost" size="icon" onClick={() => handleViewReport(event)}>
+                                                            <FileSearch className="h-4 w-4" />
+                                                        </Button>
+                                                      </TooltipTrigger>
+                                                      <TooltipContent>
+                                                        <p>{t('tooltips.view')}</p>
+                                                      </TooltipContent>
+                                                  </Tooltip>
                                                   {isAdmin && (
                                                     <>
-                                                      <Button variant="ghost" size="icon" onClick={() => handleUnarchive(event.id)}>
-                                                          <ArchiveRestore className="h-4 w-4" />
-                                                      </Button>
-                                                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => openDeleteDialog(event)}>
-                                                          <Trash2 className="h-4 w-4" />
-                                                      </Button>
+                                                      <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                          <Button variant="ghost" size="icon" onClick={() => handleUnarchive(event.id)}>
+                                                              <ArchiveRestore className="h-4 w-4" />
+                                                          </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                          <p>{t('tooltips.unarchive')}</p>
+                                                        </TooltipContent>
+                                                      </Tooltip>
+                                                      <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => openDeleteDialog(event)}>
+                                                              <Trash2 className="h-4 w-4" />
+                                                          </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                          <p>{t('tooltips.delete')}</p>
+                                                        </TooltipContent>
+                                                      </Tooltip>
                                                     </>
                                                   )}
                                                 </div>
@@ -205,4 +227,3 @@ export default function ArchivedEventsPage() {
         </AppShell>
     );
 }
-

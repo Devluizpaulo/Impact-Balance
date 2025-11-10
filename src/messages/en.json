@@ -219,6 +219,11 @@
       "report": "Executive Report",
       "certificate": "Certificate"
     },
+    "tooltips": {
+      "view": "View Report",
+      "archive": "Archive Event",
+      "delete": "Delete Event"
+    },
     "table": {
       "title": "Saved Events",
       "description": "List of all events calculated and saved in the system.",
@@ -253,6 +258,11 @@
     "tabs": {
       "report": "Executive Report",
       "certificate": "Certificate"
+    },
+    "tooltips": {
+      "view": "View Report",
+      "unarchive": "Unarchive Event",
+      "delete": "Delete Event"
     },
     "table": {
       "title": "Archived Events",

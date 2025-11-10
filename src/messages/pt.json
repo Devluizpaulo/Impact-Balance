@@ -219,6 +219,11 @@
       "report": "Relatório Executivo",
       "certificate": "Certificado"
     },
+    "tooltips": {
+      "view": "Ver Relatório",
+      "archive": "Arquivar Evento",
+      "delete": "Excluir Evento"
+    },
     "table": {
       "title": "Eventos Salvos",
       "description": "Lista de todos os eventos calculados e guardados no sistema.",
@@ -253,6 +258,11 @@
     "tabs": {
       "report": "Relatório Executivo",
       "certificate": "Certificado"
+    },
+    "tooltips": {
+      "view": "Ver Relatório",
+      "unarchive": "Desarquivar Evento",
+      "delete": "Excluir Evento"
     },
     "table": {
       "title": "Eventos Arquivados",
