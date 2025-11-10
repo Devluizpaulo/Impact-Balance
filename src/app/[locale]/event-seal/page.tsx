@@ -118,7 +118,7 @@ export default function EventSealPage() {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>{t('table.eventName')}</TableHead>
+                                        <TableHead className="w-[40%]">{t('table.eventName')}</TableHead>
                                         <TableHead>{t('table.date')}</TableHead>
                                         <TableHead className="text-right">{t('table.totalUCS')}</TableHead>
                                         <TableHead className="text-right">{t('table.totalCost')}</TableHead>
@@ -128,27 +128,31 @@ export default function EventSealPage() {
                                 <TableBody>
                                     {events.map((event) => (
                                         <TableRow key={event.id}>
-                                            <TableCell className="font-medium flex items-center">
-                                                <Award className="h-4 w-4 mr-2 text-primary/70" />
-                                                {event.formData.eventName}
+                                            <TableCell className="font-medium">
+                                                <div className="flex items-center">
+                                                  <Award className="h-4 w-4 mr-2 text-primary/70" />
+                                                  <span>{event.formData.eventName}</span>
+                                                </div>
                                             </TableCell>
                                             <TableCell>{new Date(event.timestamp).toLocaleDateString()}</TableCell>
                                             <TableCell className="text-right font-mono">{event.results.totalUCS}</TableCell>
                                             <TableCell className="text-right font-mono">{formatCurrency(event.results.totalCost)}</TableCell>
-                                            <TableCell className="text-center">
-                                                <Button variant="ghost" size="icon" onClick={() => handleViewReport(event)}>
-                                                    <Eye className="h-4 w-4" />
-                                                </Button>
-                                                {isAdmin && (
-                                                  <>
-                                                    <Button variant="ghost" size="icon" onClick={() => handleArchive(event.id)}>
-                                                        <Archive className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => openDeleteDialog(event)}>
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                  </>
-                                                )}
+                                            <TableCell>
+                                                <div className="flex items-center justify-center gap-1">
+                                                  <Button variant="ghost" size="icon" onClick={() => handleViewReport(event)}>
+                                                      <Eye className="h-4 w-4" />
+                                                  </Button>
+                                                  {isAdmin && (
+                                                    <>
+                                                      <Button variant="ghost" size="icon" onClick={() => handleArchive(event.id)}>
+                                                          <Archive className="h-4 w-4" />
+                                                      </Button>
+                                                      <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => openDeleteDialog(event)}>
+                                                          <Trash2 className="h-4 w-4" />
+                                                      </Button>
+                                                    </>
+                                                  )}
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     ))}
