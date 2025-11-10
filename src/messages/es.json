@@ -18,7 +18,7 @@
     "countryResults": "Resultados por País",
     "documentation": "Documentación",
     "scientificReview": "Revisión Científica",
-    "eventSeal": "Sello de Eventos",
+    "eventSeal": "Certificados",
     "logout": "Cerrar Sesión"
   },
   "HomePage": {
@@ -211,9 +211,13 @@
     }
   },
     "EventSealPage": {
-    "title": "Sello de Eventos",
-    "description": "Administre y vea los sellos de los eventos calculados.",
+    "title": "Certificados de Eventos",
+    "description": "Administre y vea los certificados de los eventos calculados.",
     "noEvents": "Aún no se han calculado eventos.",
+    "tabs": {
+      "report": "Informe Ejecutivo",
+      "certificate": "Certificado"
+    },
     "table": {
       "title": "Eventos Guardados",
       "description": "Lista de todos los eventos calculados y guardados en el sistema.",

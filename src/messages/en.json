@@ -18,7 +18,7 @@
     "countryResults": "Country Results",
     "documentation": "Documentation",
     "scientificReview": "Scientific Review",
-    "eventSeal": "Event Seal",
+    "eventSeal": "Certificates",
     "logout": "Logout"
   },
   "HomePage": {
@@ -211,9 +211,13 @@
     }
   },
   "EventSealPage": {
-    "title": "Event Seal",
-    "description": "Manage and view seals for calculated events.",
+    "title": "Event Certificates",
+    "description": "Manage and view certificates for calculated events.",
     "noEvents": "No events have been calculated yet.",
+     "tabs": {
+      "report": "Executive Report",
+      "certificate": "Certificate"
+    },
     "table": {
       "title": "Saved Events",
       "description": "List of all events calculated and saved in the system.",
