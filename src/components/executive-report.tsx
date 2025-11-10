@@ -29,12 +29,12 @@ const QuotationDetails = ({ equivalences }: { equivalences: SystemSettings['calc
     }
 
     return (
-        <div className="text-xs text-gray-500 mt-2 border border-dashed border-gray-300 rounded-md p-2">
+        <div className="text-xs text-gray-500 mt-4 border border-dashed border-gray-300 rounded-md p-2 col-span-1 md:col-span-2">
             <h5 className="font-semibold text-gray-600 mb-1">{t('title')} {equivalences.ucsQuotationDate}</h5>
             <div className="flex flex-wrap gap-x-4 gap-y-1">
-                <span>{t('brl')}: <span className="font-mono">{formatCurrency(equivalences.ucsQuotationValue)}</span></span>
-                <span>{t('usd')}: <span className="font-mono">{formatCurrencyUSD(equivalences.ucsQuotationValueUSD)}</span></span>
-                <span>{t('eur')}: <span className="font-mono">{formatCurrencyEUR(equivalences.ucsQuotationValueEUR)}</span></span>
+                <span>1 UCS = <span className="font-mono font-semibold text-gray-700">{formatCurrency(equivalences.ucsQuotationValue)}</span></span>
+                <span>1 UCS = <span className="font-mono font-semibold text-gray-700">{formatCurrencyUSD(equivalences.ucsQuotationValueUSD)}</span></span>
+                <span>1 UCS = <span className="font-mono font-semibold text-gray-700">{formatCurrencyEUR(equivalences.ucsQuotationValueEUR)}</span></span>
             </div>
         </div>
     )
@@ -102,7 +102,6 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                         <span>{t_report('reportDate')}: {reportDate}</span>
                     </div>
                   )}
-                  <QuotationDetails equivalences={settings.calculation.equivalences} />
                 </div>
                 <ExportButtons results={results} formData={formData} />
             </div>
@@ -205,6 +204,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                             </div>
                         )}
                     </div>
+                    <QuotationDetails equivalences={settings.calculation.equivalences} />
                 </div>
             </div>
             
@@ -215,3 +215,5 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
       </div>
     );
 }
+
+    
