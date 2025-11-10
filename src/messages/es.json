@@ -232,11 +232,18 @@
       "download": "Descargar PDF",
       "email": "Compartir por Email",
       "whatsapp": "Compartir en WhatsApp",
-      "generating": "Generando...",
-      "emailSubject": "Certificado de Sostenibilidad para {eventName}",
-      "emailBody": "¡Mira el certificado de sostenibilidad para el evento '{eventName}'!",
-      "whatsappMessage": "¡Mira el certificado de sostenibilidad para el evento '{eventName}'! Generado por la plataforma Balance de Impacto."
-    }
+      "generating": "Generando..."
+    },
+    "deleteDialog": {
+      "title": "¿Estás seguro?",
+      "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente el evento \"{eventName}\".",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
+    "archiveSuccess": "Evento archivado con éxito.",
+    "archiveError": "Error al archivar el evento.",
+    "deleteSuccess": "Evento eliminado con éxito.",
+    "deleteError": "Error al eliminar el evento."
   },
   "EventCertificate": {
     "title": "Certificado de Sostenibilidad",

@@ -220,7 +220,7 @@
     },
     "table": {
       "title": "Eventos Salvos",
-      "description": "Lista de todos os eventos calculados e salvos no sistema.",
+      "description": "Lista de todos os eventos calculados e guardados no sistema.",
       "eventName": "Nome do Evento",
       "date": "Data",
       "totalUCS": "Total UCS",
@@ -232,11 +232,18 @@
       "download": "Baixar PDF",
       "email": "Compartilhar por Email",
       "whatsapp": "Compartilhar no WhatsApp",
-      "generating": "Gerando...",
-      "emailSubject": "Certificado de Sustentabilidade para {eventName}",
-      "emailBody": "Confira o certificado de sustentabilidade para o evento '{eventName}'!",
-      "whatsappMessage": "Confira o certificado de sustentabilidade para o evento '{eventName}'! Gerado pela plataforma Balanço de Impacto."
-    }
+      "generating": "Gerando..."
+    },
+    "deleteDialog": {
+      "title": "Tem certeza?",
+      "description": "Esta ação não pode ser desfeita. Isto irá apagar permanentemente o evento \"{eventName}\".",
+      "cancel": "Cancelar",
+      "confirm": "Excluir"
+    },
+    "archiveSuccess": "Evento arquivado com sucesso.",
+    "archiveError": "Falha ao arquivar o evento.",
+    "deleteSuccess": "Evento excluído com sucesso.",
+    "deleteError": "Falha ao excluir o evento."
   },
   "EventCertificate": {
     "title": "Certificado de Sustentabilidade",

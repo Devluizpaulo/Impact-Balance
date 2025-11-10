@@ -2,36 +2,52 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getEvents } from "@/lib/event-storage";
+import { getEvents, deleteEvent, archiveEvent } from "@/lib/event-storage";
 import type { EventRecord } from "@/lib/types";
 import AppShell from "@/components/layout/app-shell";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye, Loader2, Award } from "lucide-react";
+import { Eye, Loader2, Award, Archive, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import EventCertificate from "@/components/event-certificate";
 import CertificateActions from "@/components/certificate-actions";
 import ExecutiveReport from "@/components/executive-report";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth";
 
 export default function EventSealPage() {
     const t = useTranslations("EventSealPage");
     const t_report = useTranslations("ExecutiveReport");
+    const { isAdmin } = useAuth();
     const [events, setEvents] = useState<EventRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedEvent, setSelectedEvent] = useState<EventRecord | null>(null);
     const [isReportOpen, setIsReportOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [eventToDelete, setEventToDelete] = useState<EventRecord | null>(null);
+    const { toast } = useToast();
+
+    const fetchEvents = async () => {
+        setLoading(true);
+        const storedEvents = await getEvents();
+        setEvents(storedEvents.filter(e => !e.archived));
+        setLoading(false);
+    };
 
     useEffect(() => {
-        const fetchEvents = async () => {
-            setLoading(true);
-            const storedEvents = await getEvents();
-            setEvents(storedEvents);
-            setLoading(false);
-        };
         fetchEvents();
     }, []);
 
@@ -40,6 +56,37 @@ export default function EventSealPage() {
         setIsReportOpen(true);
     }
     
+    const handleArchive = async (eventId: string) => {
+      try {
+        await archiveEvent(eventId);
+        toast({ title: t('archiveSuccess') });
+        fetchEvents(); // Refresh list
+      } catch (error) {
+        toast({ variant: 'destructive', title: t('archiveError') });
+        console.error("Failed to archive event:", error);
+      }
+    };
+    
+    const openDeleteDialog = (event: EventRecord) => {
+        setEventToDelete(event);
+        setIsDeleteDialogOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!eventToDelete) return;
+        try {
+            await deleteEvent(eventToDelete.id);
+            toast({ title: t('deleteSuccess') });
+            fetchEvents(); // Refresh list
+            setIsDeleteDialogOpen(false);
+            setEventToDelete(null);
+        } catch (error) {
+            toast({ variant: 'destructive', title: t('deleteError') });
+            console.error("Failed to delete event:", error);
+        }
+    };
+
+
     const formatCurrency = (value: number) => {
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
     }
@@ -91,6 +138,16 @@ export default function EventSealPage() {
                                                 <Button variant="ghost" size="icon" onClick={() => handleViewReport(event)}>
                                                     <Eye className="h-4 w-4" />
                                                 </Button>
+                                                {isAdmin && (
+                                                  <>
+                                                    <Button variant="ghost" size="icon" onClick={() => handleArchive(event.id)}>
+                                                        <Archive className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => openDeleteDialog(event)}>
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                  </>
+                                                )}
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -125,6 +182,22 @@ export default function EventSealPage() {
                     </DialogContent>
                 </Dialog>
             )}
+             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>{t('deleteDialog.title')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        {t('deleteDialog.description', { eventName: eventToDelete?.formData.eventName })}
+                    </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>{t('deleteDialog.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                        {t('deleteDialog.confirm')}
+                    </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </AppShell>
     );
 }

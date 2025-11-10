@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview Firestore Security Rules for both UCS Index Tracker and Impact Balance applications.
  *
@@ -27,7 +28,8 @@ service cloud.firestore {
      */
     match /impact-balance-events/{eventId} {
       allow create: if true; // Anyone can create an event calculation
-      allow read, list, update, delete: if isAdmin(); // Only admins can manage the data
+      allow list, get: if true; // Publicly readable
+      allow update, delete: if isAdmin(); // Only admins can modify
     }
 
     /**
@@ -101,7 +103,7 @@ service cloud.firestore {
       allow get, list: if isSignedIn() && isOwner();
       allow create: if isSignedIn() && isOwner() && request.resource.data.userId == userId;
       allow update: if isSignedIn() && isOwner() && resource.data.userId == userId;
-      allow delete: if isSignedIn() && isOwner() && resource.data.userId == userId;
+      allow delete: if isSignedIn() && isOwner() && resource.data.id == userId;
     }
   }
 }

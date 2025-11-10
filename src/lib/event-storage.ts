@@ -2,7 +2,7 @@
 "use client";
 
 import { db } from './firebase/config';
-import { collection, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, orderBy, where, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import type { EventRecord, NewEventRecord } from './types';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -12,7 +12,7 @@ const EVENTS_COLLECTION = 'impact-balance-events';
 // Function to get all stored events from Firestore
 export const getEvents = async (): Promise<EventRecord[]> => {
     const eventsCollection = collection(db, EVENTS_COLLECTION);
-    const q = query(eventsCollection, orderBy('timestamp', 'desc'));
+    const q = query(eventsCollection, where('archived', '!=', true), orderBy('archived'), orderBy('timestamp', 'desc'));
     
     try {
         const querySnapshot = await getDocs(q);
@@ -42,6 +42,7 @@ export const addEvent = (newEvent: NewEventRecord) => {
     
     const payload: Omit<EventRecord, 'id'> = {
         timestamp: Date.now(),
+        archived: false,
         ...newEvent,
     };
 
@@ -57,4 +58,16 @@ export const addEvent = (newEvent: NewEventRecord) => {
              console.error("Error saving event to Firestore", serverError);
         }
     });
+};
+
+// Function to archive an event
+export const archiveEvent = (eventId: string): Promise<void> => {
+    const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
+    return updateDoc(eventDoc, { archived: true });
+};
+
+// Function to delete an event
+export const deleteEvent = (eventId: string): Promise<void> => {
+    const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
+    return deleteDoc(eventDoc);
 };
