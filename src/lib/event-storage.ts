@@ -66,8 +66,16 @@ export const archiveEvent = (eventId: string): Promise<void> => {
     return updateDoc(eventDoc, { archived: true });
 };
 
+// Function to unarchive an event
+export const unarchiveEvent = (eventId: string): Promise<void> => {
+    const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
+    return updateDoc(eventDoc, { archived: false });
+};
+
+
 // Function to delete an event
 export const deleteEvent = (eventId: string): Promise<void> => {
     const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
     return deleteDoc(eventDoc);
 };
+

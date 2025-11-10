@@ -1,6 +1,7 @@
+
 "use client"
 
-import { Calculator, Award, Lock, LogOut, PanelLeft, FilePieChart, Globe2, FileText, Settings } from "lucide-react";
+import { Calculator, Award, Lock, LogOut, PanelLeft, FilePieChart, Globe2, FileText, Settings, Archive } from "lucide-react";
 import { Link, usePathname, useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -30,6 +31,12 @@ const mainNavItems: NavItem[] = [
     href: "/event-seal", 
     icon: <Award className="h-5 w-5" />, 
     translationKey: 'eventSeal',
+  },
+  { 
+    href: "/archived-events", 
+    icon: <Archive className="h-5 w-5" />, 
+    translationKey: 'archivedEvents',
+    isProtected: true,
   },
   { 
     href: "/parameters", 

@@ -19,6 +19,7 @@
     "documentation": "Documentación",
     "scientificReview": "Revisión Científica",
     "eventSeal": "Certificados",
+    "archivedEvents": "Archivados",
     "logout": "Cerrar Sesión"
   },
   "HomePage": {
@@ -242,6 +243,34 @@
     },
     "archiveSuccess": "Evento archivado con éxito.",
     "archiveError": "Error al archivar el evento.",
+    "deleteSuccess": "Evento eliminado con éxito.",
+    "deleteError": "Error al eliminar el evento."
+  },
+  "ArchivedEventsPage": {
+    "title": "Eventos Archivados",
+    "description": "Administre y vea los certificados de los eventos archivados.",
+    "noEvents": "Aún no se han archivado eventos.",
+    "tabs": {
+      "report": "Informe Ejecutivo",
+      "certificate": "Certificado"
+    },
+    "table": {
+      "title": "Eventos Archivados",
+      "description": "Lista de todos los eventos archivados en el sistema.",
+      "eventName": "Nombre del Evento",
+      "date": "Fecha",
+      "totalUCS": "Total UCS",
+      "totalCost": "Costo Total (BRL)",
+      "actions": "Acciones"
+    },
+    "deleteDialog": {
+      "title": "¿Estás seguro?",
+      "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente el evento \"{eventName}\".",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
+    "unarchiveSuccess": "Evento desarchivado con éxito.",
+    "unarchiveError": "Error al desarchivar el evento.",
     "deleteSuccess": "Evento eliminado con éxito.",
     "deleteError": "Error al eliminar el evento."
   },

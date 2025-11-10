@@ -13,6 +13,7 @@ export const pathnames = {
   '/country-results': '/country-results',
   '/scientific-review': '/scientific-review',
   '/event-seal': '/event-seal',
+  '/archived-events': '/archived-events',
 } satisfies Pathnames<typeof locales>;
 
 export const {Link, redirect, usePathname, useRouter} =

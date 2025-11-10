@@ -19,6 +19,7 @@
     "documentation": "Documentation",
     "scientificReview": "Scientific Review",
     "eventSeal": "Certificates",
+    "archivedEvents": "Archived",
     "logout": "Logout"
   },
   "HomePage": {
@@ -242,6 +243,34 @@
     },
     "archiveSuccess": "Event archived successfully.",
     "archiveError": "Failed to archive event.",
+    "deleteSuccess": "Event deleted successfully.",
+    "deleteError": "Failed to delete event."
+  },
+  "ArchivedEventsPage": {
+    "title": "Archived Events",
+    "description": "Manage and view certificates for archived events.",
+    "noEvents": "No events have been archived yet.",
+    "tabs": {
+      "report": "Executive Report",
+      "certificate": "Certificate"
+    },
+    "table": {
+      "title": "Archived Events",
+      "description": "List of all events archived in the system.",
+      "eventName": "Event Name",
+      "date": "Date",
+      "totalUCS": "Total UCS",
+      "totalCost": "Total Cost (BRL)",
+      "actions": "Actions"
+    },
+    "deleteDialog": {
+      "title": "Are you sure?",
+      "description": "This action cannot be undone. This will permanently delete the event \"{eventName}\".",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "unarchiveSuccess": "Event unarchived successfully.",
+    "unarchiveError": "Failed to unarchive event.",
     "deleteSuccess": "Event deleted successfully.",
     "deleteError": "Failed to delete event."
   },
