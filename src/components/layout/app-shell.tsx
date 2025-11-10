@@ -1,6 +1,6 @@
 "use client"
 
-import { Calculator, Home, BarChart3, FileText, Award, Lock, LogOut, PanelLeft, FilePieChart, Globe2 } from "lucide-react";
+import { Calculator, Award, Lock, LogOut, PanelLeft, FilePieChart, Globe2, FileText, Settings } from "lucide-react";
 import { Link, usePathname, useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/auth";
 import Image from "next/image";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Separator } from "../ui/separator";
 
 type NavItem = {
   href: string;
@@ -19,44 +20,40 @@ type NavItem = {
   isProtected?: boolean;
 }
 
-const publicNavItems: NavItem[] = [
+const mainNavItems: NavItem[] = [
   { 
     href: "/calculator", 
     icon: <Calculator className="h-5 w-5" />, 
     translationKey: 'calculator' 
   },
-   { 
+  { 
+    href: "/event-seal", 
+    icon: <Award className="h-5 w-5" />, 
+    translationKey: 'eventSeal',
+  },
+  { 
     href: "/parameters", 
-    icon: <Lock className="h-5 w-5" />, 
+    icon: <Settings className="h-5 w-5" />, 
     translationKey: 'configurations',
     isProtected: true,
   },
 ];
 
-const adminNavItems: NavItem[] = [
-  {
-    href: "/scientific-review",
-    icon: <FileText className="h-5 w-5" />,
-    translationKey: 'scientificReview',
-    isProtected: true,
-  },
+const dataAndDocsNavItems: NavItem[] = [
   {
     href: "/data-figures", 
     icon: <FilePieChart className="h-5 w-5" />, 
     translationKey: 'dataFigures',
-    isProtected: true,
   },
   { 
     href: "/country-results", 
     icon: <Globe2 className="h-5 w-5" />, 
     translationKey: 'countryResults',
-    isProtected: true,
   },
-    { 
-    href: "/event-seal", 
-    icon: <Award className="h-5 w-5" />, 
-    translationKey: 'eventSeal',
-    isProtected: true,
+  {
+    href: "/scientific-review",
+    icon: <FileText className="h-5 w-5" />,
+    translationKey: 'scientificReview',
   },
 ];
 
@@ -121,10 +118,13 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
   return (
     <nav className="flex flex-col h-full">
       <div className="flex-1 px-2 space-y-1">
-        {publicNavItems.map((item) => (
+        {mainNavItems.map((item) => (
           <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
-         {isAdmin && adminNavItems.map((item) => (
+         
+        <Separator className={cn("my-4", isCollapsed && "mx-auto w-1/2")} />
+
+        {dataAndDocsNavItems.map((item) => (
           <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
       </div>
@@ -173,10 +173,13 @@ function MobileNav() {
         <div className="flex-1 overflow-y-auto py-2">
            <nav className="flex flex-col h-full">
               <div className="flex-1 px-2 space-y-1">
-                {publicNavItems.map((item) => (
+                {mainNavItems.map((item) => (
                   <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
-                {isAdmin && adminNavItems.map((item) => (
+                
+                <Separator className="my-4" />
+
+                {dataAndDocsNavItems.map((item) => (
                   <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
               </div>
