@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { CalculationResult, FormData } from "@/lib/types";
@@ -8,7 +9,36 @@ import { Table, TableBody, TableCell, TableHeader, TableHead, TableRow, TableFoo
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useSettings } from "@/lib/settings";
+import { useSettings, type SystemSettings } from "@/lib/settings";
+
+const formatCurrency = (value: number, currency = 'BRL') => {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(value);
+}
+const formatCurrencyUSD = (value: number) => {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+}
+const formatCurrencyEUR = (value: number) => {
+    return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
+}
+
+const QuotationDetails = ({ equivalences }: { equivalences: SystemSettings['calculation']['equivalences'] }) => {
+    const t = useTranslations("ExecutiveReport.quotationDetails");
+    
+    if (!equivalences.ucsQuotationDate) {
+        return null;
+    }
+
+    return (
+        <div className="text-xs text-gray-500 mt-2 border border-dashed border-gray-300 rounded-md p-2">
+            <h5 className="font-semibold text-gray-600 mb-1">{t('title')} {equivalences.ucsQuotationDate}</h5>
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+                <span>{t('brl')}: <span className="font-mono">{formatCurrency(equivalences.ucsQuotationValue)}</span></span>
+                <span>{t('usd')}: <span className="font-mono">{formatCurrencyUSD(equivalences.ucsQuotationValueUSD)}</span></span>
+                <span>{t('eur')}: <span className="font-mono">{formatCurrencyEUR(equivalences.ucsQuotationValueEUR)}</span></span>
+            </div>
+        </div>
+    )
+}
 
 interface ExecutiveReportProps {
     results: CalculationResult;
@@ -28,16 +58,6 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
         // Use setTimeout to avoid synchronous setState in effect
         setTimeout(() => setReportDate(iso), 0);
     }, []);
-
-    const formatCurrency = (value: number, currency = 'BRL') => {
-        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency }).format(value);
-    }
-    const formatCurrencyUSD = (value: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-    }
-    const formatCurrencyEUR = (value: number) => {
-        return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
-    }
     
     const formatUcs = (value: number) => {
         return value.toLocaleString('pt-BR');
@@ -77,18 +97,12 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
                 <div>
                   <h3 className="text-2xl font-bold font-headline text-gray-900">{t_report('title')}</h3>
                   <p className="text-gray-600">{t_report('forEvent')} <span className="font-semibold text-primary">{formData.eventName}</span></p>
-                  <div className="text-xs text-gray-500 mt-1 space-x-2">
-                    {reportDate && (
-                      <span>
-                        {"Relatório em: "}{reportDate}
-                      </span>
-                    )}
-                    {settings.calculation.equivalences.ucsQuotationDate && (
-                      <span>
-                        {"Cotação UCS em: "}{settings.calculation.equivalences.ucsQuotationDate}
-                      </span>
-                    )}
-                  </div>
+                   {reportDate && (
+                    <div className="text-xs text-gray-500 mt-1">
+                        <span>{t_report('reportDate')}: {reportDate}</span>
+                    </div>
+                  )}
+                  <QuotationDetails equivalences={settings.calculation.equivalences} />
                 </div>
                 <ExportButtons results={results} formData={formData} />
             </div>
@@ -201,5 +215,3 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
       </div>
     );
 }
-
-    

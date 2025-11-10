@@ -33,6 +33,7 @@
   "ExecutiveReport": {
     "title": "Relatório de Impacto Socioambiental",
     "forEvent": "para o evento",
+    "reportDate": "Data do Relatório",
     "introduction": "Este relatório detalha a pegada de Unidades de Crédito de Sustentabilidade (UCS) e o orçamento de compensação associado para o evento especificado. A análise abrange o impacto direto gerado pelos participantes e os custos indiretos relacionados.",
     "breakdownTitle": "Detalhamento do Impacto",
     "summaryTitle": "Resumo",
@@ -53,6 +54,12 @@
       "costPerParticipantDay": "Compensação por Participante-Dia",
       "costPerParticipantHour": "Compensação por Participante-Hora",
       "totalParticipants": "Total de Participantes"
+    },
+    "quotationDetails": {
+      "title": "Detalhes da Cotação para",
+      "brl": "BRL",
+      "usd": "USD",
+      "eur": "EUR"
     }
   },
   "ImpactCalculator": {
