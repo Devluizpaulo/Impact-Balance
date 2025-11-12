@@ -243,11 +243,8 @@
     "viewReport": "View Report",
     "actions": {
       "download": "Download PDF",
-      "email": "Share via Email",
       "whatsapp": "Share on WhatsApp",
       "generating": "Generating...",
-      "emailSubject": "Sustainability Certificate for {eventName}",
-      "emailBody": "Check out the sustainability certificate for the event {eventName}!",
       "whatsappMessage": "Check out the sustainability certificate for the event {eventName}!"
     },
     "deleteDialog": {
@@ -422,5 +419,3 @@
     }
   }
 }
-
-    

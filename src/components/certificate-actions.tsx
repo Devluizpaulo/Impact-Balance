@@ -6,7 +6,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Mail, Share2, Loader2 } from 'lucide-react';
+import { Download, Share2, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { EventRecord } from '@/lib/types';
 
@@ -81,12 +81,6 @@ export default function CertificateActions({ event }: CertificateActionsProps) {
     }
   };
 
-  const handleEmail = () => {
-    const subject = encodeURIComponent(t('emailSubject', { eventName: formData.eventName }));
-    const body = encodeURIComponent(t('emailBody', { eventName: formData.eventName }));
-    window.open(`mailto:?subject=${subject}&body=${body}`);
-  };
-
   const handleWhatsApp = () => {
     const text = encodeURIComponent(t('whatsappMessage', { eventName: formData.eventName }));
     window.open(`https://wa.me/?text=${text}`, '_blank');
@@ -97,9 +91,6 @@ export default function CertificateActions({ event }: CertificateActionsProps) {
       <Button onClick={handleDownload} disabled={isGenerating}>
         {isGenerating ? <Loader2 className="animate-spin" /> : <Download />}
         {isGenerating ? t('generating') : t('download')}
-      </Button>
-      <Button variant="outline" onClick={handleEmail}>
-        <Mail /> {t('email')}
       </Button>
       <Button variant="outline" onClick={handleWhatsApp}>
         <Share2 /> {t('whatsapp')}
