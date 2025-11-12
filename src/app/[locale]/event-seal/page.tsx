@@ -193,7 +193,7 @@ export default function EventSealPage() {
                             <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
                         </DialogHeader>
 
-                        <Tabs defaultValue="report" className="flex-grow flex flex-col">
+                        <Tabs defaultValue="report" className="flex-grow flex flex-col overflow-hidden">
                             <TabsList className="grid w-full grid-cols-2">
                                 <TabsTrigger value="report">{t('tabs.report')}</TabsTrigger>
                                 <TabsTrigger value="certificate">{t('tabs.certificate')}</TabsTrigger>

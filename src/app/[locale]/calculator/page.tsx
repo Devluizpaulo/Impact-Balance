@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -42,7 +43,7 @@ export default function CalculatorPage() {
 
       {results && formData && (
         <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
-          <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
+          <DialogContent className="max-w-4xl w-full h-[95vh] p-4 sm:p-6 flex flex-col">
             <DialogHeader>
               <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
             </DialogHeader>
