@@ -13,7 +13,7 @@ interface EventCertificateProps {
 }
 
 const BenefitItem = ({ label, value, unit, imageUrl }: { label: string, value: string | number, unit: string, imageUrl: string }) => (
-    <div className="bg-gray-100 rounded-lg p-2 flex items-center gap-2 text-xs">
+    <div className="bg-gray-100/80 rounded-lg p-2 flex items-center gap-2 text-xs">
         <Image src={imageUrl} alt={label} width={32} height={32} className="rounded-md object-cover w-8 h-8" />
         <div className="flex-1">
             <p className="font-bold text-gray-800">{label}</p>
@@ -79,55 +79,58 @@ export default function EventCertificate({ event }: EventCertificateProps) {
 
 
     return (
-        <div id="event-certificate" className="bg-white text-gray-800 aspect-[1/1.414] w-full max-w-full mx-auto shadow-2xl flex flex-col font-sans relative">
+        <div id="event-certificate" className="bg-white text-gray-800 aspect-[1/1.414] w-full max-w-full mx-auto shadow-2xl flex flex-col font-sans relative p-4 sm:p-6">
             
             <div
-                className="absolute inset-0 bg-contain bg-center bg-no-repeat"
+                className="absolute inset-0 bg-contain bg-center bg-no-repeat opacity-10"
                 style={{ backgroundImage: "url('/certificate-bg.png')" }}
             ></div>
 
-            <div className="absolute inset-0 flex flex-col">
+            <div className="relative z-10 flex flex-col h-full">
                 {/* Header */}
-                <header className="relative z-10 flex justify-between items-center px-8 py-4 border-b border-gray-200">
+                <header className="flex justify-between items-center pb-2 border-b border-gray-200">
                     <Image src="/logo-bmv.png" alt="BMV Logo" width={100} height={34} />
-                    <h1 className="font-bold text-lg">REPORT BMV PERFORMANCE</h1>
+                    <h1 className="font-bold text-base sm:text-lg text-center">REPORT BMV PERFORMANCE</h1>
                     <div className="flex items-center gap-2">
                         <Image src="/logo-sgs.png" alt="SGS Logo" width={40} height={40} />
-                        <span className="font-semibold text-sm">Nov 2026</span>
+                        <span className="font-semibold text-xs sm:text-sm">Nov 2026</span>
                     </div>
                 </header>
 
-                <main className="relative z-10 flex-grow p-4 md:p-6 grid grid-cols-12 gap-4">
+                <main className="flex-grow grid grid-cols-12 gap-4 pt-4">
                     {/* Left Column */}
-                    <div className="col-span-5 space-y-4">
-                        <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="col-span-5 space-y-4 flex flex-col">
+                        <div className="bg-gray-50/80 p-3 rounded-lg">
                             <p className="text-xs">CPF/CNPJ: <span className="font-bold">N/A</span></p>
                             <p className="text-xs">Data: <span className="font-bold">{formatDate(timestamp)}</span></p>
                             <p className="text-sm font-bold mt-1">ICRS*: <span className="text-primary">{results.totalUCS} UCS</span></p>
                         </div>
-                        <div className="relative">
-                            <Image src="/mapa-brasil-folha.png" alt="Mapa do Brasil" width={400} height={400} className="w-full h-auto" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
-                            {nucleos.map(name => <NucleoItem key={name} name={name} />)}
+                        <div className="flex-grow flex flex-col justify-between">
+                            <div className="relative">
+                                <Image src="/mapa-brasil-folha.png" alt="Mapa do Brasil" width={400} height={400} className="w-full h-auto" />
+                            </div>
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
+                                {nucleos.map(name => <NucleoItem key={name} name={name} />)}
+                            </div>
                         </div>
                     </div>
 
                     {/* Right Column */}
                     <div className="col-span-7 space-y-4">
-                        <div className="p-3 bg-gray-50 rounded-lg text-xs h-32 overflow-y-auto">
+                         <div className="p-3 bg-gray-50/80 rounded-lg text-xs h-24 sm:h-32 overflow-y-auto">
                             {/* Placeholder list */}
-                            {Array.from({ length: 12 }).map((_, i) => <p key={i} className="text-gray-500">Benefício adicional {i+1}</p>)}
+                            <p className="font-bold text-gray-700 mb-1">Benefícios Adicionais</p>
+                            {Array.from({ length: 12 }).map((_, i) => <p key={i} className="text-gray-500 text-[10px]">Benefício adicional {i+1}</p>)}
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                             {benefitItems.map(item => <BenefitItem key={item.label} {...item} />)}
                         </div>
                         <Separator />
-                        <div className="grid grid-cols-12 gap-4">
-                            <div className="col-span-1 flex items-center justify-center -rotate-90">
-                            <p className="font-bold text-lg text-gray-500 tracking-widest">ODS</p>
+                        <div className="grid grid-cols-12 gap-2 sm:gap-4 items-center">
+                             <div className="col-span-1 flex items-center justify-center -rotate-90">
+                                <p className="font-bold text-lg text-gray-400 tracking-widest whitespace-nowrap">ODS</p>
                             </div>
-                            <div className="col-span-5 space-y-2">
+                            <div className="col-span-6 space-y-2">
                                 <div className="flex flex-wrap gap-1">
                                     {odsIconsGroup1.map(icon => <OdsIcon key={icon.src} {...icon} />)}
                                 </div>
@@ -138,7 +141,7 @@ export default function EventCertificate({ event }: EventCertificateProps) {
                                     {odsIconsGroup3.map(icon => <OdsIcon key={icon.src} {...icon} />)}
                                 </div>
                             </div>
-                            <div className="col-span-6 flex items-center justify-around gap-2">
+                            <div className="col-span-5 flex items-center justify-around gap-2">
                                 <DonutChart value={75} label="2030" />
                                 <DonutChart value={30} label="30%" />
                             </div>
@@ -150,10 +153,11 @@ export default function EventCertificate({ event }: EventCertificateProps) {
                 </main>
 
                 {/* Footer */}
-                <footer className="relative z-10 px-8 py-2 border-t border-gray-200 mt-auto">
+                <footer className="relative z-10 pt-2 border-t border-gray-200 mt-auto">
                     <div className="flex justify-between items-center text-xs text-gray-500">
-                        <p>{id}</p>
-                        <p>{formData.eventName}</p>
+                        <p className="truncate w-1/3">{id}</p>
+                        <p className="truncate w-1/3 text-center">{formData.eventName}</p>
+                        <div className="w-1/3" />
                     </div>
                 </footer>
             </div>
