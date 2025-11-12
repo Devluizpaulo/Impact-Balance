@@ -245,7 +245,10 @@
       "download": "Baixar PDF",
       "email": "Compartilhar por Email",
       "whatsapp": "Compartilhar no WhatsApp",
-      "generating": "Gerando..."
+      "generating": "Gerando...",
+      "emailSubject": "Certificado de Sustentabilidade para {eventName}",
+      "emailBody": "Confira o certificado de sustentabilidade para o evento {eventName}!",
+      "whatsappMessage": "Confira o certificado de sustentabilidade para o evento {eventName}!"
     },
     "deleteDialog": {
       "title": "Tem certeza?",
