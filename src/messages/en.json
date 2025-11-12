@@ -293,39 +293,15 @@
   },
   "EventCertificate": {
     "title": "Certificate of Sustainability",
-    "watermarkAlt": "Certification Seal",
-    "holder": "Holder",
-    "operationDate": "Operation Date",
-    "product": "Product",
-    "productName": "Green Treasury Sustainability Seal",
-    "productDescription": "This seal certifies the event's commitment to sustainability through the acquisition of Sustainability Credit Units (SCU) to offset its socio-environmental impact.",
-    "acquiredQuantity": "Acquired Quantity",
-    "ucsUnit": "SCU (Sustainability Credit Units)",
-    "certificationStatement": "We certify that the event",
     "benefitsGrid": {
-        "forest": "Forest",
-        "carbon": "Carbon",
-        "fauna": "Fauna",
-        "flora": "Flora",
-        "wood": "Wood",
-        "supportedProduction": "Supported Production",
-        "hydrological": "Hydrological",
-        "areaRecovery": "Area Recovery"
-    },
-    "benefits": {
-      "title": "Environmental Benefits Generated",
-      "intro": "The investment in Sustainability Credit Units generated the following positive impacts:",
-      "preservedNativeForestArea": "Preserved Native Forest Area",
-      "carbonEmissionAvoided": "Carbon Emission Avoided (Stored Carbon)",
-      "storedWood": "Stored Wood",
-      "faunaSpeciesPreservation": "Preservation of Fauna Species",
-      "floraSpeciesPreservation": "Preservation of Flora Species",
-      "hydrologicalFlowPreservation": "Preservation of Hydrological Flow",
-      "speciesUnit": "spp/ha"
-    },
-    "verification": {
-      "title": "Registration Number for Verification",
-      "registrationNumber": "Registration Number"
+      "forest": "Forest",
+      "carbon": "Carbon",
+      "fauna": "Fauna",
+      "flora": "Flora",
+      "wood": "Wood",
+      "supportedProduction": "Supported Production",
+      "hydrological": "Hydrological",
+      "areaRecovery": "Area Recovery"
     }
   },
   "DocumentationPage": {

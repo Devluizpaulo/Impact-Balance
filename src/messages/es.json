@@ -293,39 +293,15 @@
   },
   "EventCertificate": {
     "title": "Certificado de Sostenibilidad",
-    "watermarkAlt": "Sello de Certificación",
-    "holder": "Titular",
-    "operationDate": "Fecha de Operación",
-    "product": "Producto",
-    "productName": "Sello de Sostenibilidad Tesoro Verde",
-    "productDescription": "Este sello certifica el compromiso del evento con la sostenibilidad, mediante la adquisición de Unidades de Crédito de Sostenibilidad (UCS) para compensar su impacto socioambiental.",
-    "acquiredQuantity": "Cantidad Adquirida",
-    "ucsUnit": "UCS (Unidades de Crédito de Sostenibilidad)",
-    "certificationStatement": "Certificamos que el evento",
     "benefitsGrid": {
-        "forest": "Bosque",
-        "carbon": "Carbono",
-        "fauna": "Fauna",
-        "flora": "Flora",
-        "wood": "Madera",
-        "supportedProduction": "Producción Apoyada",
-        "hydrological": "Hidrológico",
-        "areaRecovery": "Recuperación de Área"
-    },
-    "benefits": {
-      "title": "Beneficios Ambientales Generados",
-      "intro": "La inversión en las Unidades de Crédito de Sostenibilidad generó los siguientes impactos positivos:",
-      "preservedNativeForestArea": "Área de Bosque Nativo Preservado",
-      "carbonEmissionAvoided": "Emisión de Carbono Evitada (Carbono Almacenado)",
-      "storedWood": "Madera Almacenada",
-      "faunaSpeciesPreservation": "Preservación de Especies de Fauna",
-      "floraSpeciesPreservation": "Preservación de Especies de Flora",
-      "hydrologicalFlowPreservation": "Preservación del Flujo Hidrológico",
-      "speciesUnit": "especies/ha"
-    },
-    "verification": {
-      "title": "Número de Registro para Verificación",
-      "registrationNumber": "Número de Registro"
+      "forest": "Bosque",
+      "carbon": "Carbono",
+      "fauna": "Fauna",
+      "flora": "Flora",
+      "wood": "Madera",
+      "supportedProduction": "Producción Apoyada",
+      "hydrological": "Hidrológico",
+      "areaRecovery": "Recuperación de Área"
     }
   },
   "DocumentationPage": {
