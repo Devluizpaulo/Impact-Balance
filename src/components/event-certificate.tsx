@@ -80,76 +80,84 @@ export default function EventCertificate({ event }: EventCertificateProps) {
 
     return (
         <div id="event-certificate" className="bg-white text-gray-800 aspect-[1/1.414] w-full max-w-full mx-auto shadow-2xl flex flex-col font-sans relative">
+            
+            <div
+                className="absolute inset-0 bg-contain bg-center bg-no-repeat"
+                style={{ backgroundImage: "url('/certificate-bg.png')" }}
+            ></div>
 
-            {/* Header */}
-            <header className="relative z-10 flex justify-between items-center px-8 py-4 border-b border-gray-200">
-                <Image src="/logo-bmv.png" alt="BMV Logo" width={100} height={34} />
-                <h1 className="font-bold text-lg">REPORT BMV PERFORMANCE</h1>
-                <div className="flex items-center gap-2">
-                    <Image src="/logo-sgs.png" alt="SGS Logo" width={40} height={40} />
-                    <span className="font-semibold text-sm">Nov 2026</span>
-                </div>
-            </header>
+            <div className="absolute inset-0 flex flex-col">
+                {/* Header */}
+                <header className="relative z-10 flex justify-between items-center px-8 py-4 border-b border-gray-200">
+                    <Image src="/logo-bmv.png" alt="BMV Logo" width={100} height={34} />
+                    <h1 className="font-bold text-lg">REPORT BMV PERFORMANCE</h1>
+                    <div className="flex items-center gap-2">
+                        <Image src="/logo-sgs.png" alt="SGS Logo" width={40} height={40} />
+                        <span className="font-semibold text-sm">Nov 2026</span>
+                    </div>
+                </header>
 
-            <main className="relative z-10 flex-grow p-4 md:p-6 grid grid-cols-12 gap-4">
-                {/* Left Column */}
-                <div className="col-span-5 space-y-4">
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                        <p className="text-xs">CPF/CNPJ: <span className="font-bold">N/A</span></p>
-                        <p className="text-xs">Data: <span className="font-bold">{formatDate(timestamp)}</span></p>
-                        <p className="text-sm font-bold mt-1">ICRS*: <span className="text-primary">{results.totalUCS} UCS</span></p>
-                    </div>
-                    <div className="relative">
-                        <Image src="/mapa-brasil-folha.png" alt="Mapa do Brasil" width={400} height={400} className="w-full h-auto" />
-                    </div>
-                     <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
-                        {nucleos.map(name => <NucleoItem key={name} name={name} />)}
-                    </div>
-                </div>
-
-                {/* Right Column */}
-                <div className="col-span-7 space-y-4">
-                    <div className="p-3 bg-gray-50 rounded-lg text-xs h-32 overflow-y-auto">
-                        {/* Placeholder list */}
-                        {Array.from({ length: 12 }).map((_, i) => <p key={i} className="text-gray-500">Benefício adicional {i+1}</p>)}
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                        {benefitItems.map(item => <BenefitItem key={item.label} {...item} />)}
-                    </div>
-                     <Separator />
-                     <div className="grid grid-cols-12 gap-4">
-                        <div className="col-span-1 flex items-center justify-center -rotate-90">
-                           <p className="font-bold text-lg text-gray-500 tracking-widest">ODS</p>
+                <main className="relative z-10 flex-grow p-4 md:p-6 grid grid-cols-12 gap-4">
+                    {/* Left Column */}
+                    <div className="col-span-5 space-y-4">
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                            <p className="text-xs">CPF/CNPJ: <span className="font-bold">N/A</span></p>
+                            <p className="text-xs">Data: <span className="font-bold">{formatDate(timestamp)}</span></p>
+                            <p className="text-sm font-bold mt-1">ICRS*: <span className="text-primary">{results.totalUCS} UCS</span></p>
                         </div>
-                        <div className="col-span-5 space-y-2">
-                            <div className="flex flex-wrap gap-1">
-                                {odsIconsGroup1.map(icon => <OdsIcon key={icon.src} {...icon} />)}
+                        <div className="relative">
+                            <Image src="/mapa-brasil-folha.png" alt="Mapa do Brasil" width={400} height={400} className="w-full h-auto" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
+                            {nucleos.map(name => <NucleoItem key={name} name={name} />)}
+                        </div>
+                    </div>
+
+                    {/* Right Column */}
+                    <div className="col-span-7 space-y-4">
+                        <div className="p-3 bg-gray-50 rounded-lg text-xs h-32 overflow-y-auto">
+                            {/* Placeholder list */}
+                            {Array.from({ length: 12 }).map((_, i) => <p key={i} className="text-gray-500">Benefício adicional {i+1}</p>)}
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            {benefitItems.map(item => <BenefitItem key={item.label} {...item} />)}
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-12 gap-4">
+                            <div className="col-span-1 flex items-center justify-center -rotate-90">
+                            <p className="font-bold text-lg text-gray-500 tracking-widest">ODS</p>
                             </div>
-                            <div className="flex flex-wrap gap-1">
-                                {odsIconsGroup2.map(icon => <OdsIcon key={icon.src} {...icon} />)}
+                            <div className="col-span-5 space-y-2">
+                                <div className="flex flex-wrap gap-1">
+                                    {odsIconsGroup1.map(icon => <OdsIcon key={icon.src} {...icon} />)}
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                    {odsIconsGroup2.map(icon => <OdsIcon key={icon.src} {...icon} />)}
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                    {odsIconsGroup3.map(icon => <OdsIcon key={icon.src} {...icon} />)}
+                                </div>
                             </div>
-                            <div className="flex flex-wrap gap-1">
-                                {odsIconsGroup3.map(icon => <OdsIcon key={icon.src} {...icon} />)}
+                            <div className="col-span-6 flex items-center justify-around gap-2">
+                                <DonutChart value={75} label="2030" />
+                                <DonutChart value={30} label="30%" />
                             </div>
                         </div>
-                         <div className="col-span-6 flex items-center justify-around gap-2">
-                            <DonutChart value={75} label="2030" />
-                            <DonutChart value={30} label="30%" />
-                         </div>
-                     </div>
-                      <p className="text-[8px] text-gray-400 text-center">
-                        Fonte: https://www.cbd.int/article/cop15-cbd-press-release-final-19dec2022
-                      </p>
-                </div>
-            </main>
+                        <p className="text-[8px] text-gray-400 text-center">
+                            Fonte: https://www.cbd.int/article/cop15-cbd-press-release-final-19dec2022
+                        </p>
+                    </div>
+                </main>
 
-            {/* Footer */}
-            <footer className="relative z-10 px-8 py-2 border-t border-gray-200">
-                <div className="flex justify-between items-center text-xs text-gray-500">
-                    <p>{id}</p>
-                    <p>{formData.eventName}</p>
-                </div>
-            </footer>
+                {/* Footer */}
+                <footer className="relative z-10 px-8 py-2 border-t border-gray-200 mt-auto">
+                    <div className="flex justify-between items-center text-xs text-gray-500">
+                        <p>{id}</p>
+                        <p>{formData.eventName}</p>
+                    </div>
+                </footer>
+            </div>
         </div>
     );
 }
+
