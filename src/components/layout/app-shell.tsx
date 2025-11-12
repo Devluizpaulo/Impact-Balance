@@ -126,7 +126,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
     <nav className="flex flex-col h-full">
       <div className="flex-1 px-2 space-y-1">
         {mainNavItems.map((item) => (
-          <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
+          (item.isProtected && !isAdmin) ? null : <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
          
         <Separator className={cn("my-4", isCollapsed && "mx-auto w-1/2")} />
@@ -161,7 +161,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
 }
 
 function MobileNav() {
-  const _t = useTranslations("AppShell");
+  const { isAdmin } = useAuth();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -180,7 +180,7 @@ function MobileNav() {
            <nav className="flex flex-col h-full">
               <div className="flex-1 px-2 space-y-1">
                 {mainNavItems.map((item) => (
-                  <NavLink key={item.href} item={item} isCollapsed={false} />
+                  (item.isProtected && !isAdmin) ? null : <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
                 
                 <Separator className="my-4" />
