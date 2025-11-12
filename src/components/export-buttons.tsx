@@ -65,7 +65,7 @@ export default function ExportButtons({ results, formData }: ExportButtonsProps)
             await new Promise(resolve => { logoImg.onload = resolve; });
             
             const seloImg = new Image();
-            seloImg.src = '/selo.png';
+            seloImg.src = '/modelo_selo.png';
             await new Promise(resolve => { seloImg.onload = resolve; });
 
              // --- Add Seal Watermark ---

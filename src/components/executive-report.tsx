@@ -84,7 +84,7 @@ export default function ExecutiveReport({ results, formData }: ExecutiveReportPr
       <div id="executive-report" className="bg-white text-gray-800 p-6 sm:p-8 rounded-lg h-full relative flex flex-col shadow-lg">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-4 sm:p-8">
               <Image 
-                  src="/selo.png" 
+                  src="/modelo_selo.png" 
                   alt="Selo de Certificação"
                   layout="fill"
                   objectFit="contain"
