@@ -80,8 +80,6 @@ export default function EventCertificate({ event }: EventCertificateProps) {
 
     return (
         <div id="event-certificate" className="bg-white text-gray-800 aspect-[1/1.414] w-full max-w-full mx-auto shadow-2xl flex flex-col font-sans relative">
-             {/* Background Pattern */}
-            <div className="absolute inset-0 z-0 opacity-40" style={{backgroundImage: "url('/bg-pattern.png')", backgroundSize: 'cover'}}></div>
 
             {/* Header */}
             <header className="relative z-10 flex justify-between items-center px-8 py-4 border-b border-gray-200">
@@ -155,5 +153,3 @@ export default function EventCertificate({ event }: EventCertificateProps) {
         </div>
     );
 }
-
-    
