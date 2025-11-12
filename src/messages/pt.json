@@ -148,7 +148,7 @@
       "title": "Falha ao Exportar Excel",
       "description": "Ocorreu um erro inesperado ao gerar o arquivo Excel."
     }
-},
+  },
   "ParametersPage": {
     "title": "Parâmetros do Sistema",
     "description": "Os valores utilizados para o cálculo de impacto. As alterações são salvas no banco de dados central.",
@@ -200,7 +200,7 @@
         "title": "Configurações Redefinidas",
         "description": "Os parâmetros foram redefinidos para os valores padrão no banco de dados."
       },
-       "loadError": {
+      "loadError": {
         "title": "Falha ao Carregar",
         "description": "Não foi possível carregar as configurações do banco de dados. Usando padrões locais."
       },
@@ -218,7 +218,7 @@
       }
     }
   },
-    "EventSealPage": {
+  "EventSealPage": {
     "title": "Certificados de Eventos",
     "description": "Gerencie e visualize os certificados para os eventos calculados.",
     "noEvents": "Nenhum evento foi calculado ainda.",
@@ -258,7 +258,7 @@
     "deleteSuccess": "Evento excluído com sucesso.",
     "deleteError": "Falha ao excluir o evento."
   },
-   "ArchivedEventsPage": {
+  "ArchivedEventsPage": {
     "title": "Eventos Arquivados",
     "description": "Gerencie e visualize os certificados para os eventos arquivados.",
     "noEvents": "Nenhum evento foi arquivado ainda.",
@@ -302,6 +302,16 @@
     "acquiredQuantity": "Quantidade Adquirida",
     "ucsUnit": "UCS (Unidades de Crédito de Sustentabilidade)",
     "certificationStatement": "Certificamos que o evento",
+    "benefitsGrid": {
+        "forest": "Floresta",
+        "carbon": "Carbono",
+        "fauna": "Fauna",
+        "flora": "Flora",
+        "wood": "Madeira",
+        "supportedProduction": "Produção Apoiada",
+        "hydrological": "Hidrológico",
+        "areaRecovery": "Recuperação de Área"
+    },
     "benefits": {
       "title": "Benefícios Ambientais Gerados",
       "intro": "O investimento nas Unidades de Crédito de Sustentabilidade gerou os seguintes impactos positivos:",
@@ -419,3 +429,5 @@
     }
   }
 }
+
+    

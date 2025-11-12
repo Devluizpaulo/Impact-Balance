@@ -85,7 +85,7 @@
       "hours": "Hours",
       "durationUnit": "Duration Unit"
     },
-     "indirectCosts": {
+    "indirectCosts": {
       "title": "Indirect Costs",
       "ownershipRegistration": "Ownership Registration (%)",
       "certificateIssuance": "Certificate Issuance",
@@ -200,7 +200,7 @@
         "title": "Settings Reset",
         "description": "Parameters have been reset to their default values in the database."
       },
-       "loadError": {
+      "loadError": {
         "title": "Load Failed",
         "description": "Could not load settings from the database. Using local defaults."
       },
@@ -222,7 +222,7 @@
     "title": "Event Certificates",
     "description": "Manage and view certificates for calculated events.",
     "noEvents": "No events have been calculated yet.",
-     "tabs": {
+    "tabs": {
       "report": "Executive Report",
       "certificate": "Certificate"
     },
@@ -291,7 +291,7 @@
     "deleteSuccess": "Event deleted successfully.",
     "deleteError": "Failed to delete event."
   },
-   "EventCertificate": {
+  "EventCertificate": {
     "title": "Certificate of Sustainability",
     "watermarkAlt": "Certification Seal",
     "holder": "Holder",
@@ -302,6 +302,16 @@
     "acquiredQuantity": "Acquired Quantity",
     "ucsUnit": "SCU (Sustainability Credit Units)",
     "certificationStatement": "We certify that the event",
+    "benefitsGrid": {
+        "forest": "Forest",
+        "carbon": "Carbon",
+        "fauna": "Fauna",
+        "flora": "Flora",
+        "wood": "Wood",
+        "supportedProduction": "Supported Production",
+        "hydrological": "Hydrological",
+        "areaRecovery": "Area Recovery"
+    },
     "benefits": {
       "title": "Environmental Benefits Generated",
       "intro": "The investment in Sustainability Credit Units generated the following positive impacts:",
@@ -419,3 +429,5 @@
     }
   }
 }
+
+    

@@ -30,7 +30,7 @@
       "description": "Complete el formulario para calcular el impacto de su evento."
     }
   },
-    "ExecutiveReport": {
+  "ExecutiveReport": {
     "title": "Informe de Impacto Socioambiental",
     "forEvent": "para el evento",
     "reportDate": "Fecha del Informe",
@@ -218,7 +218,7 @@
       }
     }
   },
-    "EventSealPage": {
+  "EventSealPage": {
     "title": "Certificados de Eventos",
     "description": "Administre y vea los certificados de los eventos calculados.",
     "noEvents": "Aún no se han calculado eventos.",
@@ -302,6 +302,16 @@
     "acquiredQuantity": "Cantidad Adquirida",
     "ucsUnit": "UCS (Unidades de Crédito de Sostenibilidad)",
     "certificationStatement": "Certificamos que el evento",
+    "benefitsGrid": {
+        "forest": "Bosque",
+        "carbon": "Carbono",
+        "fauna": "Fauna",
+        "flora": "Flora",
+        "wood": "Madera",
+        "supportedProduction": "Producción Apoyada",
+        "hydrological": "Hidrológico",
+        "areaRecovery": "Recuperación de Área"
+    },
     "benefits": {
       "title": "Beneficios Ambientales Generados",
       "intro": "La inversión en las Unidades de Crédito de Sostenibilidad generó los siguientes impactos positivos:",
@@ -419,3 +429,5 @@
     }
   }
 }
+
+    
