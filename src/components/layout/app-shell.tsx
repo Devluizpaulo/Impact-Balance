@@ -26,21 +26,6 @@ const mainNavItems: NavItem[] = [
     icon: <Calculator className="h-5 w-5" />, 
     translationKey: 'calculator' 
   },
-  {
-    href: "/data-figures", 
-    icon: <FilePieChart className="h-5 w-5" />, 
-    translationKey: 'dataFigures',
-  },
-  { 
-    href: "/country-results", 
-    icon: <Globe2 className="h-5 w-5" />, 
-    translationKey: 'countryResults',
-  },
-  {
-    href: "/scientific-review",
-    icon: <FileText className="h-5 w-5" />,
-    translationKey: 'scientificReview',
-  },
 ];
 
 

@@ -4,7 +4,7 @@
 import { useAuth } from "@/lib/auth";
 import { useRouter } from "@/navigation";
 import { useEffect } from "react";
-import { Award, Archive, Settings, LogOut } from "lucide-react";
+import { Award, Archive, Settings, LogOut, FilePieChart, Globe2, FileText } from "lucide-react";
 import AppShell from "@/components/layout/app-shell";
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
@@ -34,6 +34,18 @@ const AdminDashboard = () => {
                         <Link href="/parameters" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
                             <Settings className="h-5 w-5" />
                             {t('configurations')}
+                        </Link>
+                        <Link href="/data-figures" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                            <FilePieChart className="h-5 w-5" />
+                            {t('dataFigures')}
+                        </Link>
+                        <Link href="/country-results" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                            <Globe2 className="h-5 w-5" />
+                            {t('countryResults')}
+                        </Link>
+                        <Link href="/scientific-review" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
+                            <FileText className="h-5 w-5" />
+                            {t('scientificReview')}
                         </Link>
                          <Button variant="ghost" className="w-full justify-start text-muted-foreground mt-4" onClick={logout}>
                             <LogOut className="h-5 w-5 mr-3" />
@@ -75,4 +87,3 @@ export default function DashboardPage() {
         </AppShell>
     );
 }
-
