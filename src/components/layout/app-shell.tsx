@@ -1,15 +1,14 @@
 
 "use client"
 
-import { Calculator, LayoutDashboard, LogOut, PanelLeft } from "lucide-react";
-import { Link, usePathname, useRouter } from "@/navigation";
+import { Calculator, LayoutDashboard, LogOut, PanelLeft, Award, Archive, Settings, FilePieChart, Globe2, FileText } from "lucide-react";
+import { Link, usePathname } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Header from "./header"
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
-import Image from "next/image";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
@@ -26,6 +25,15 @@ const mainNavItems: NavItem[] = [
     icon: <Calculator className="h-5 w-5" />, 
     translationKey: 'calculator' 
   },
+];
+
+const adminNavItems: NavItem[] = [
+  { href: "/event-seal", icon: <Award className="h-5 w-5" />, translationKey: 'eventSeal' },
+  { href: "/archived-events", icon: <Archive className="h-5 w-5" />, translationKey: 'archivedEvents' },
+  { href: "/parameters", icon: <Settings className="h-5 w-5" />, translationKey: 'configurations' },
+  { href: "/data-figures", icon: <FilePieChart className="h-5 w-5" />, translationKey: 'dataFigures' },
+  { href: "/country-results", icon: <Globe2 className="h-5 w-5" />, translationKey: 'countryResults' },
+  { href: "/scientific-review", icon: <FileText className="h-5 w-5" />, translationKey: 'scientificReview' },
 ];
 
 
@@ -82,6 +90,9 @@ function NavLink({ item, isCollapsed }: { item: NavItem, isCollapsed: boolean })
 function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
   const t = useTranslations("AppShell");
   const { isAdmin, logout } = useAuth();
+  const pathname = usePathname();
+
+  const isDashboard = pathname.startsWith('/dashboard');
 
   const dashboardItem: NavItem = { 
     href: "/dashboard", 
@@ -97,6 +108,13 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
           <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
          {isAdmin && <NavLink item={dashboardItem} isCollapsed={isCollapsed} />}
+         {isAdmin && isDashboard && (
+            <div className="mt-4 pt-4 border-t">
+              {adminNavItems.map((item) => (
+                <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
+              ))}
+            </div>
+         )}
       </div>
       {isAdmin && (
         <div className={cn("mt-auto", isCollapsed ? 'px-2' : 'p-4')}>
@@ -141,18 +159,20 @@ function MobileNav() {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="flex flex-col p-0 max-w-xs">
-         <div className="flex h-16 items-center border-b px-4">
-          <Link href="/" className="flex items-center gap-2 font-bold">
-             <Image src="/logo.png" alt="BMV Logo" width={120} height={41} priority />
-          </Link>
-        </div>
-        <div className="flex-1 overflow-y-auto py-2">
+         <div className="flex-1 overflow-y-auto py-2">
            <nav className="flex flex-col h-full">
               <div className="flex-1 px-2 space-y-1">
                 {mainNavItems.map((item) => (
                   <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
                  {isAdmin && <NavLink item={dashboardItem} isCollapsed={false} />}
+                  {isAdmin && (
+                    <div className="mt-4 pt-4 border-t">
+                      {adminNavItems.map((item) => (
+                        <NavLink key={item.href} item={item} isCollapsed={false} />
+                      ))}
+                    </div>
+                  )}
               </div>
           </nav>
         </div>
