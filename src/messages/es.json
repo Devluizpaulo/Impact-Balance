@@ -13,7 +13,7 @@
   },
   "AppShell": {
     "calculator": "Calculadora",
-    "configurations": "Configuraciones",
+    "parameters": "Parámetros",
     "dataFigures": "Datos Mundiales",
     "countryResults": "Resultados por País",
     "documentation": "Documentación",
