@@ -22,7 +22,8 @@
     "archivedEvents": "Archived",
     "dashboard": "Dashboard",
     "logout": "Logout",
-    "adminOnly": "Admin only"
+    "adminOnly": "Admin only",
+    "adminLogin": "Admin Login"
   },
   "HomePage": {
     "heroTitle": "Impact Balance",

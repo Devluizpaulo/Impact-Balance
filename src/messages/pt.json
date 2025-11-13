@@ -22,7 +22,8 @@
     "archivedEvents": "Arquivados",
     "dashboard": "Dashboard",
     "logout": "Sair",
-    "adminOnly": "Apenas administrador"
+    "adminOnly": "Apenas administrador",
+    "adminLogin": "Login de Administrador"
   },
   "HomePage": {
     "heroTitle": "Balanço de Impacto",

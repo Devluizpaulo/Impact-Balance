@@ -4,11 +4,13 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth';
 import { Button } from '../ui/button';
-import { LogOut } from 'lucide-react';
+import { LogOut, Lock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
 
 export default function Header({ mobileNav }: { mobileNav: React.ReactNode }) {
-  const { isAdmin, logout } = useAuth();
+  const { isAdmin, logout, promptLogin } = useAuth();
   const t = useTranslations("AppShell");
 
   return (
@@ -26,7 +28,20 @@ export default function Header({ mobileNav }: { mobileNav: React.ReactNode }) {
       {mobileNav}
       <div className="w-full flex-1" />
       <LanguageSwitcher />
-       {isAdmin && (
+
+      {!isAdmin ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={promptLogin}>
+                  <Lock className="h-5 w-5" />
+                  <span className="sr-only">{t('adminLogin')}</span>
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{t('adminLogin')}</p>
+            </TooltipContent>
+          </Tooltip>
+      ) : (
         <Button variant="ghost" size="sm" onClick={logout} className="hidden md:flex">
           <LogOut className="mr-2 h-4 w-4" />
           {t('logout')}
