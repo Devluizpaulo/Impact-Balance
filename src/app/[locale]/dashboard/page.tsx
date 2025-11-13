@@ -7,26 +7,23 @@ import { useEffect, useState, startTransition } from "react";
 import AppShell from "@/components/layout/app-shell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { getEvents } from "@/lib/event-storage";
 import type { EventRecord } from "@/lib/types";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Loader2, Calendar, Hash, DollarSign, LineChart } from "lucide-react";
+import { Loader2, Calendar, Hash, DollarSign, ArrowRight, LineChart, FileSearch } from "lucide-react";
 import { useTranslations } from "next-intl";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Link } from "@/navigation";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ExecutiveReport from "@/components/executive-report";
 import CertificateActions from "@/components/certificate-actions";
 import EventCertificate from "@/components/event-certificate";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 
 const AdminDashboardContent = () => {
     const t = useTranslations("Dashboard");
-    const t_report = useTranslations("ExecutiveReport");
-    const t_seal_page = useTranslations("EventSealPage");
+    const t_report_tabs = useTranslations("EventSealPage.tabs");
     const [events, setEvents] = useState<EventRecord[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedEvent, setSelectedEvent] = useState<EventRecord | null>(null);
@@ -37,14 +34,15 @@ const AdminDashboardContent = () => {
         const fetchEvents = async () => {
             setLoading(true);
             const storedEvents = await getEvents();
-            setEvents(storedEvents);
+            // Filter to show only non-archived events on the dashboard
+            setEvents(storedEvents.filter(e => e.archived !== true));
             setLoading(false);
         };
         startTransition(() => {
             fetchEvents();
         });
     }, []);
-    
+
     const handleViewReport = (event: EventRecord) => {
         setSelectedEvent(event);
         setIsReportOpen(true);
@@ -127,8 +125,15 @@ const AdminDashboardContent = () => {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="lg:col-span-4">
                     <CardHeader>
-                        <CardTitle>{t('recentEvents.title')}</CardTitle>
-                         <CardDescription>{t('recentEvents.description')}</CardDescription>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <CardTitle>{t('recentEvents.title')}</CardTitle>
+                                <CardDescription>{t('recentEvents.description')}</CardDescription>
+                            </div>
+                             <Button variant="outline" size="sm" asChild>
+                                <Link href="/event-seal">{t('recentEvents.seeAll')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </div>
                     </CardHeader>
                     <CardContent>
                         {recentEvents.length > 0 ? (
@@ -153,7 +158,10 @@ const AdminDashboardContent = () => {
                             </TableBody>
                         </Table>
                         ) : (
-                             <p className="text-sm text-muted-foreground">{t('recentEvents.noEvents')}</p>
+                             <div className="text-center py-16 text-muted-foreground flex flex-col items-center gap-4">
+                                <FileSearch className="w-12 h-12 text-muted-foreground/30" />
+                                <p className="text-sm">{t('recentEvents.noEvents')}</p>
+                            </div>
                         )}
                     </CardContent>
                 </Card>
@@ -181,31 +189,32 @@ const AdminDashboardContent = () => {
                     </CardContent>
                 </Card>
             </div>
-             {selectedEvent && (
-                <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
-                    <DialogContent className="max-w-5xl w-full h-[95vh] p-4 sm:p-6 flex flex-col">
-                        <DialogHeader>
-                            <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
-                        </DialogHeader>
 
-                        <Tabs defaultValue="report" className="flex-grow flex flex-col overflow-hidden">
-                            <TabsList className="grid w-full grid-cols-2">
-                                <TabsTrigger value="report">{t_seal_page('tabs.report')}</TabsTrigger>
-                                <TabsTrigger value="certificate">{t_seal_page('tabs.certificate')}</TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="report" className="flex-grow overflow-y-auto mt-4 pr-2">
-                                <ExecutiveReport results={selectedEvent.results} formData={selectedEvent.formData} />
-                            </TabsContent>
-                            <TabsContent value="certificate" className="flex-grow overflow-y-auto mt-4">
-                                <div className="flex flex-col gap-4 max-w-4xl mx-auto">
-                                    <CertificateActions event={selectedEvent} />
-                                    <EventCertificate event={selectedEvent} />
-                                </div>
-                            </TabsContent>
-                        </Tabs>
-                    </DialogContent>
-                </Dialog>
-            )}
+            {selectedEvent && (
+            <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
+                <DialogContent className="max-w-5xl w-full h-[95vh] p-4 sm:p-6 flex flex-col">
+                    <DialogHeader>
+                        <DialogTitle className="sr-only">{t_report_tabs('report')}</DialogTitle>
+                    </DialogHeader>
+
+                    <Tabs defaultValue="report" className="flex-grow flex flex-col overflow-hidden">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="report">{t_report_tabs('report')}</TabsTrigger>
+                            <TabsTrigger value="certificate">{t_report_tabs('certificate')}</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="report" className="flex-grow overflow-y-auto mt-4 pr-2">
+                            <ExecutiveReport results={selectedEvent.results} formData={selectedEvent.formData} />
+                        </TabsContent>
+                        <TabsContent value="certificate" className="flex-grow overflow-y-auto mt-4">
+                            <div className="flex flex-col gap-4 max-w-4xl mx-auto">
+                                <CertificateActions event={selectedEvent} />
+                                <EventCertificate event={selectedEvent} />
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                </DialogContent>
+            </Dialog>
+        )}
         </div>
     )
 }

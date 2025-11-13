@@ -39,7 +39,8 @@
       "eventName": "Event Name",
       "ucs": "UCS",
       "date": "Date",
-      "noEvents": "No events calculated yet."
+      "noEvents": "No events calculated yet.",
+      "seeAll": "See All"
     },
     "monthlyChart": {
       "title": "UCS per Month",
@@ -429,3 +430,5 @@
     }
   }
 }
+
+    
