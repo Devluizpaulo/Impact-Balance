@@ -114,16 +114,14 @@ export default function CountryResultsPage() {
 
     return (
         <AppShell>
-            <div className="container mx-auto px-4 py-8 md:py-12">
-                <div className="space-y-2 mb-8">
-                    <h1 className="text-3xl font-bold font-headline">{t('title')}</h1>
-                    <p className="text-muted-foreground">{t('description')}</p>
-                </div>
-                <div className="space-y-8">
-                    {countryFootprintData.map((country) => (
-                        <CountryCard key={country.country} countryData={country} />
-                    ))}
-                </div>
+            <div className="space-y-2 mb-8">
+                <h1 className="text-3xl font-bold font-headline">{t('title')}</h1>
+                <p className="text-muted-foreground">{t('description')}</p>
+            </div>
+            <div className="space-y-8">
+                {countryFootprintData.map((country) => (
+                    <CountryCard key={country.country} countryData={country} />
+                ))}
             </div>
         </AppShell>
     );

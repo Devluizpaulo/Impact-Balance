@@ -229,9 +229,9 @@ export default function ParametersPage() {
   if (isLoading) {
     return (
       <AppShell>
-        <div className="container mx-auto px-4 py-8 md:py-12">
-          <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
-            <div className="space-y-2">
+        <div className="flex-1 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
               <Skeleton className="h-8 w-64" />
               <Skeleton className="h-5 w-96" />
             </div>
@@ -253,8 +253,7 @@ export default function ParametersPage() {
   
   return (
     <AppShell>
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
+        <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold font-headline">{t('title')}</h1>
               <p className="text-muted-foreground">{t('description')}</p>
@@ -458,8 +457,6 @@ export default function ParametersPage() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
-      </div>
     </AppShell>
   );
 }
