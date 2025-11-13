@@ -113,7 +113,8 @@ export default function EventSealPage() {
                             <Loader2 className="w-8 h-8 animate-spin text-primary" />
                         </div>
                     ) : events.length === 0 ? (
-                        <div className="text-center py-16 text-muted-foreground">
+                        <div className="text-center py-16 text-muted-foreground flex flex-col items-center gap-4">
+                            <FileSearch className="w-16 h-16 text-muted-foreground/30" />
                             <p>{t('noEvents')}</p>
                         </div>
                     ) : (
