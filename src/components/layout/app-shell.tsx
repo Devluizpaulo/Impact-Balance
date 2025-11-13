@@ -11,10 +11,13 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
+type AppShellTranslationKeys = keyof ReturnType<typeof useTranslations<"AppShell">>;
+type Pathname = keyof typeof pathnames;
+
 type NavItem = {
-  href: keyof typeof pathnames;
+  href: Pathname;
   icon: React.ReactNode;
-  translationKey: string;
+  translationKey: AppShellTranslationKeys;
   isProtected?: boolean;
 }
 
@@ -66,12 +69,12 @@ function NavLink({ item }: { item: NavItem }) {
             >
                 {item.icon}
                 <span className="truncate">
-                    {t(item.translationKey as any)}
+                    {t(item.translationKey)}
                 </span>
             </Link>
         </TooltipTrigger>
         <TooltipContent side="right">
-            <p>{t(item.translationKey as any)}</p>
+            <p>{t(item.translationKey)}</p>
         </TooltipContent>
     </Tooltip>
   );
@@ -160,7 +163,7 @@ const AdminDashboardLayout = ({ children }: { children: React.ReactNode }) => {
                                     )}
                                 >
                                     {item.icon}
-                                    {t(item.translationKey as any)}
+                                    {t(item.translationKey)}
                                 </Link>
                             ))}
                             
@@ -175,7 +178,7 @@ const AdminDashboardLayout = ({ children }: { children: React.ReactNode }) => {
                                     )}
                                 >
                                     {item.icon}
-                                    {t(item.translationKey as any)}
+                                    {t(item.translationKey)}
                                 </Link>
                             ))}
                         </nav>
