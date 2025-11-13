@@ -164,4 +164,3 @@ export default function EventCertificate({ event }: EventCertificateProps) {
         </div>
     );
 }
-
