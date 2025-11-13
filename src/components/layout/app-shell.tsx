@@ -12,7 +12,6 @@ import { useAuth } from "@/lib/auth";
 import Image from "next/image";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { Separator } from "../ui/separator";
 
 type NavItem = {
   href: string;
@@ -125,7 +124,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
         ))}
       </div>
       {isAdmin && (
-        <div className={cn("mt-auto p-2", isCollapsed ? 'px-2' : 'p-4')}>
+        <div className={cn("mt-auto", isCollapsed ? 'px-2' : 'p-4')}>
           {isCollapsed ? (
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
@@ -196,6 +195,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           onMouseLeave={() => setIsCollapsed(true)}
         >
           <div className="flex h-full max-h-screen flex-col gap-2">
+            <div className="flex h-16 items-center justify-center border-b px-4">
+              <Link href="/" className="flex items-center gap-2 font-bold">
+                 <Image src="/logo.png" alt="BMV Logo" width={120} height={41} priority className={cn(isCollapsed && 'hidden')} />
+                 <Image src="/logo-icon.png" alt="BMV Icon" width={32} height={32} priority className={cn(!isCollapsed && 'hidden')} />
+              </Link>
+            </div>
             <div className="flex-1 py-4 overflow-y-auto">
               <SidebarNav isCollapsed={isCollapsed} />
             </div>
