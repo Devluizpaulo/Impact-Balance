@@ -2,7 +2,7 @@
 "use client"
 
 import { Calculator, LayoutDashboard, LogOut, Award, Archive, Settings, FilePieChart, Globe2, FileText, PanelLeft } from "lucide-react";
-import { Link, usePathname } from "@/navigation";
+import { Link, usePathname, pathnames } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import { useAuth } from "@/lib/auth";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type NavItem = {
-  href: string;
+  href: keyof typeof pathnames;
   icon: React.ReactNode;
   translationKey: string;
   isProtected?: boolean;
