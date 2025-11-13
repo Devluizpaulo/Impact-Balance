@@ -20,7 +20,8 @@
     "scientificReview": "Revisión Científica",
     "eventSeal": "Certificados",
     "archivedEvents": "Archivados",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "adminOnly": "Solo para administradores"
   },
   "HomePage": {
     "heroTitle": "Balance de Impacto",
@@ -405,5 +406,3 @@
     }
   }
 }
-
-    

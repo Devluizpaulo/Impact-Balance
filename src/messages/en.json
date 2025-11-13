@@ -20,7 +20,8 @@
     "scientificReview": "Scientific Review",
     "eventSeal": "Certificates",
     "archivedEvents": "Archived",
-    "logout": "Logout"
+    "logout": "Logout",
+    "adminOnly": "Admin only"
   },
   "HomePage": {
     "heroTitle": "Impact Balance",
@@ -405,5 +406,3 @@
     }
   }
 }
-
-    

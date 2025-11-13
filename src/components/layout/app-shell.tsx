@@ -32,7 +32,7 @@ const mainNavItems: NavItem[] = [
     icon: <Award className="h-5 w-5" />, 
     translationKey: 'eventSeal',
   },
-  { 
+    { 
     href: "/archived-events", 
     icon: <Archive className="h-5 w-5" />, 
     translationKey: 'archivedEvents',
@@ -44,9 +44,6 @@ const mainNavItems: NavItem[] = [
     translationKey: 'configurations',
     isProtected: true,
   },
-];
-
-const dataAndDocsNavItems: NavItem[] = [
   {
     href: "/data-figures", 
     icon: <FilePieChart className="h-5 w-5" />, 
@@ -65,31 +62,27 @@ const dataAndDocsNavItems: NavItem[] = [
 ];
 
 
-function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSubItem?: boolean, isCollapsed: boolean }) {
+function NavLink({ item, isCollapsed }: { item: NavItem, isCollapsed: boolean }) {
   const { isAdmin, promptLogin } = useAuth();
-  const _router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("AppShell");
   
   const isActive = pathname === item.href;
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (item.isProtected && !isAdmin) {
+      e.preventDefault();
       promptLogin();
-    } else {
-      window.location.href = item.href;
     }
   };
-
+  
   const linkContent = (
-    <a
+    <Link
       href={item.href}
       onClick={handleClick}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
         isActive && "bg-muted text-primary font-medium",
-        isSubItem ? "font-normal" : "font-medium",
         isCollapsed && "justify-center"
       )}
     >
@@ -98,8 +91,9 @@ function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSu
           {t(item.translationKey as string)}
         </span>
         {item.isProtected && !isAdmin && <Lock className={cn("h-4 w-4 ml-auto", isCollapsed && "hidden")} />}
-    </a>
+    </Link>
   );
+
   
   if (isCollapsed) {
     return (
@@ -109,6 +103,7 @@ function NavLink({ item, isSubItem = false, isCollapsed }: { item: NavItem, isSu
         </TooltipTrigger>
         <TooltipContent side="right">
           <p>{t(item.translationKey as string)}</p>
+           {item.isProtected && !isAdmin && <p className="text-xs text-muted-foreground">{t('adminOnly')}</p>}
         </TooltipContent>
       </Tooltip>
     )
@@ -126,13 +121,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
     <nav className="flex flex-col h-full">
       <div className="flex-1 px-2 space-y-1">
         {mainNavItems.map((item) => (
-          (item.isProtected && !isAdmin) ? null : <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
-        ))}
-         
-        <Separator className={cn("my-4", isCollapsed && "mx-auto w-1/2")} />
-
-        {dataAndDocsNavItems.map((item) => (
-          <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
+          ((item.isProtected && !isAdmin) ? null : <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />)
         ))}
       </div>
       {isAdmin && (
@@ -181,12 +170,6 @@ function MobileNav() {
               <div className="flex-1 px-2 space-y-1">
                 {mainNavItems.map((item) => (
                   (item.isProtected && !isAdmin) ? null : <NavLink key={item.href} item={item} isCollapsed={false} />
-                ))}
-                
-                <Separator className="my-4" />
-
-                {dataAndDocsNavItems.map((item) => (
-                  <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
               </div>
           </nav>
