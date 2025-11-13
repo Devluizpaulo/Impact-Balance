@@ -25,6 +25,27 @@
     "adminOnly": "Admin only",
     "adminLogin": "Admin Login"
   },
+  "Dashboard": {
+    "title": "Dashboard",
+    "kpi": {
+      "totalEvents": "Total Events",
+      "totalUcs": "Total UCS",
+      "totalCost": "Total Cost (BRL)",
+      "avgUcs": "Avg. UCS / Event"
+    },
+    "recentEvents": {
+      "title": "Recent Events",
+      "description": "The last 5 calculated events.",
+      "eventName": "Event Name",
+      "ucs": "UCS",
+      "date": "Date",
+      "noEvents": "No events calculated yet."
+    },
+    "monthlyChart": {
+      "title": "UCS per Month",
+      "description": "Monthly summary of generated Sustainability Credit Units."
+    }
+  },
   "HomePage": {
     "heroTitle": "Impact Balance",
     "heroSubtitle": "Understand, quantify, and mitigate the socio-environmental footprint of your events.",

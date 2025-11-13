@@ -25,6 +25,27 @@
     "adminOnly": "Solo para administradores",
     "adminLogin": "Acceso de Administrador"
   },
+  "Dashboard": {
+    "title": "Dashboard",
+    "kpi": {
+      "totalEvents": "Total de Eventos",
+      "totalUcs": "Total de UCS",
+      "totalCost": "Costo Total (BRL)",
+      "avgUcs": "Promedio UCS / Evento"
+    },
+    "recentEvents": {
+      "title": "Eventos Recientes",
+      "description": "Los últimos 5 eventos calculados.",
+      "eventName": "Nombre del Evento",
+      "ucs": "UCS",
+      "date": "Fecha",
+      "noEvents": "Aún no se han calculado eventos."
+    },
+    "monthlyChart": {
+      "title": "UCS por Mes",
+      "description": "Resumen mensual de las Unidades de Crédito de Sostenibilidad generadas."
+    }
+  },
   "HomePage": {
     "heroTitle": "Balance de Impacto",
     "heroSubtitle": "Comprenda, cuantifique y mitigue la huella socioambiental de sus eventos.",
