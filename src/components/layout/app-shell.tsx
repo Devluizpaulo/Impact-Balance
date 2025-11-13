@@ -27,16 +27,6 @@ const mainNavItems: NavItem[] = [
   },
 ];
 
-const adminNavItems: NavItem[] = [
-  { href: "/event-seal", icon: <Award className="h-5 w-5" />, translationKey: 'eventSeal' },
-  { href: "/archived-events", icon: <Archive className="h-5 w-5" />, translationKey: 'archivedEvents' },
-  { href: "/parameters", icon: <Settings className="h-5 w-5" />, translationKey: 'configurations' },
-  { href: "/data-figures", icon: <FilePieChart className="h-5 w-5" />, translationKey: 'dataFigures' },
-  { href: "/country-results", icon: <Globe2 className="h-5 w-5" />, translationKey: 'countryResults' },
-  { href: "/scientific-review", icon: <FileText className="h-5 w-5" />, translationKey: 'scientificReview' },
-];
-
-
 function NavLink({ item, isCollapsed }: { item: NavItem, isCollapsed: boolean }) {
   const { isAdmin, promptLogin } = useAuth();
   const pathname = usePathname();
@@ -90,9 +80,6 @@ function NavLink({ item, isCollapsed }: { item: NavItem, isCollapsed: boolean })
 function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
   const t = useTranslations("AppShell");
   const { isAdmin, logout } = useAuth();
-  const pathname = usePathname();
-
-  const isDashboard = pathname.startsWith('/dashboard');
 
   const dashboardItem: NavItem = { 
     href: "/dashboard", 
@@ -108,13 +95,6 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
           <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
          {isAdmin && <NavLink item={dashboardItem} isCollapsed={isCollapsed} />}
-         {isAdmin && isDashboard && (
-            <div className="mt-4 pt-4 border-t">
-              {adminNavItems.map((item) => (
-                <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
-              ))}
-            </div>
-         )}
       </div>
       {isAdmin && (
         <div className={cn("mt-auto", isCollapsed ? 'px-2' : 'p-4')}>
@@ -166,13 +146,6 @@ function MobileNav() {
                   <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
                  {isAdmin && <NavLink item={dashboardItem} isCollapsed={false} />}
-                  {isAdmin && (
-                    <div className="mt-4 pt-4 border-t">
-                      {adminNavItems.map((item) => (
-                        <NavLink key={item.href} item={item} isCollapsed={false} />
-                      ))}
-                    </div>
-                  )}
               </div>
           </nav>
         </div>
@@ -184,6 +157,20 @@ function MobileNav() {
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const pathname = usePathname();
+  const isDashboardPage = pathname.startsWith('/dashboard');
+
+  // Do not use the main AppShell sidebar on dashboard pages
+  if (isDashboardPage) {
+    return (
+       <div className="flex flex-col min-h-screen w-full bg-background">
+          <Header mobileNav={<MobileNav />} />
+          <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+            {children}
+          </main>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-background">
