@@ -26,14 +26,18 @@ const mainNavItems: NavItem[] = [
   },
 ];
 
-const adminNavItems: NavItem[] = [
+const eventManagementNavItems: NavItem[] = [
     { href: "/event-seal", icon: <Award className="h-5 w-5" />, translationKey: 'eventSeal' },
     { href: "/archived-events", icon: <Archive className="h-5 w-5" />, translationKey: 'archivedEvents' },
+];
+
+const dataAnalysisNavItems: NavItem[] = [
     { href: "/parameters", icon: <Settings className="h-5 w-5" />, translationKey: 'parameters' },
     { href: "/data-figures", icon: <FilePieChart className="h-5 w-5" />, translationKey: 'dataFigures' },
     { href: "/country-results", icon: <Globe2 className="h-5 w-5" />, translationKey: 'countryResults' },
     { href: "/scientific-review", icon: <FileText className="h-5 w-5" />, translationKey: 'scientificReview' },
-];
+]
+
 
 function NavLink({ item }: { item: NavItem }) {
   const { isAdmin, promptLogin } = useAuth();
@@ -83,6 +87,11 @@ function MobileNav() {
     isProtected: true,
   };
 
+  const allAdminItems = [
+    ...eventManagementNavItems,
+    ...dataAnalysisNavItems
+  ];
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -99,16 +108,18 @@ function MobileNav() {
                   <NavLink key={item.href} item={item} />
                 ))}
                 {isAdmin && <NavLink item={dashboardItem} />}
-                <div className="px-3 py-2">
-                  <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-                    {t('dashboard')}
-                  </h2>
-                  <div className="space-y-1">
-                    {adminNavItems.map((item) => (
-                       <NavLink key={item.href} item={item} />
-                    ))}
+                {isAdmin && (
+                  <div className="px-3 py-2">
+                    <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+                      {t('dashboard')}
+                    </h2>
+                    <div className="space-y-1">
+                      {allAdminItems.map((item) => (
+                        <NavLink key={item.href} item={item} />
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               {isAdmin && (
                 <div className="mt-auto p-4">
@@ -137,7 +148,24 @@ const AdminDashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     <div className="flex-1">
                         <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
                             <Link href="/dashboard" className="px-2 py-3 text-lg font-bold font-headline">{t('dashboard')}</Link>
-                            {adminNavItems.map(item => (
+                            
+                            <h3 className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('manage')}</h3>
+                            {eventManagementNavItems.map(item => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={cn(
+                                        "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                                        pathname === item.href && "text-primary bg-muted"
+                                    )}
+                                >
+                                    {item.icon}
+                                    {t(item.translationKey as any)}
+                                </Link>
+                            ))}
+                            
+                             <h3 className="px-3 mt-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('dataAnalysis')}</h3>
+                            {dataAnalysisNavItems.map(item => (
                                 <Link
                                     key={item.href}
                                     href={item.href}

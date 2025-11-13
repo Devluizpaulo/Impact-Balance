@@ -23,7 +23,9 @@
     "dashboard": "Dashboard",
     "logout": "Cerrar Sesión",
     "adminOnly": "Solo para administradores",
-    "adminLogin": "Acceso de Administrador"
+    "adminLogin": "Acceso de Administrador",
+    "manage": "Gestionar",
+    "dataAnalysis": "Datos y Análisis"
   },
   "Dashboard": {
     "title": "Dashboard",
@@ -430,5 +432,3 @@
     }
   }
 }
-
-    
