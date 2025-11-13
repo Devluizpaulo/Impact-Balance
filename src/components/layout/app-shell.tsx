@@ -11,13 +11,12 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-type AppShellTranslationKeys = keyof ReturnType<typeof useTranslations<"AppShell">>;
 type Pathname = keyof typeof pathnames;
 
 type NavItem = {
   href: Pathname;
   icon: React.ReactNode;
-  translationKey: AppShellTranslationKeys;
+  translationKey: 'calculator' | 'eventSeal' | 'archivedEvents' | 'parameters' | 'dataFigures' | 'countryResults' | 'scientificReview' | 'dashboard' | 'logout' | 'adminOnly' | 'adminLogin' | 'manage' | 'dataAnalysis';
   isProtected?: boolean;
 }
 
