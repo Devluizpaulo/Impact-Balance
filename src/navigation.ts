@@ -14,6 +14,7 @@ export const pathnames = {
   '/scientific-review': '/scientific-review',
   '/event-seal': '/event-seal',
   '/archived-events': '/archived-events',
+  '/dashboard': '/dashboard',
 } satisfies Pathnames<typeof locales>;
 
 export const {Link, redirect, usePathname, useRouter} =

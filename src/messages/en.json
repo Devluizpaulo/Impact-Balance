@@ -20,6 +20,7 @@
     "scientificReview": "Scientific Review",
     "eventSeal": "Certificates",
     "archivedEvents": "Archived",
+    "dashboard": "Dashboard",
     "logout": "Logout",
     "adminOnly": "Admin only"
   },

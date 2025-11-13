@@ -1,7 +1,7 @@
 
 "use client"
 
-import { Calculator, Award, Lock, LogOut, PanelLeft, FilePieChart, Globe2, FileText, Settings, Archive } from "lucide-react";
+import { Calculator, Award, Lock, LogOut, PanelLeft, FilePieChart, Globe2, FileText, Settings, Archive, LayoutDashboard } from "lucide-react";
 import { Link, usePathname, useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -25,23 +25,6 @@ const mainNavItems: NavItem[] = [
     href: "/calculator", 
     icon: <Calculator className="h-5 w-5" />, 
     translationKey: 'calculator' 
-  },
-  { 
-    href: "/event-seal", 
-    icon: <Award className="h-5 w-5" />, 
-    translationKey: 'eventSeal',
-  },
-    { 
-    href: "/archived-events", 
-    icon: <Archive className="h-5 w-5" />, 
-    translationKey: 'archivedEvents',
-    isProtected: true,
-  },
-  { 
-    href: "/parameters", 
-    icon: <Settings className="h-5 w-5" />, 
-    translationKey: 'configurations',
-    isProtected: true,
   },
   {
     href: "/data-figures", 
@@ -116,12 +99,20 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
   const t = useTranslations("AppShell");
   const { isAdmin, logout } = useAuth();
 
+  const dashboardItem: NavItem = { 
+    href: "/dashboard", 
+    icon: <LayoutDashboard className="h-5 w-5" />, 
+    translationKey: 'dashboard',
+    isProtected: true,
+  };
+
   return (
     <nav className="flex flex-col h-full">
       <div className="flex-1 px-2 space-y-1">
         {mainNavItems.map((item) => (
-          ((item.isProtected && !isAdmin) ? null : <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />)
+          <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
+         {isAdmin && <NavLink item={dashboardItem} isCollapsed={isCollapsed} />}
       </div>
       {isAdmin && (
         <div className={cn("mt-auto", isCollapsed ? 'px-2' : 'p-4')}>
@@ -150,6 +141,13 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
 
 function MobileNav() {
   const { isAdmin } = useAuth();
+  const dashboardItem: NavItem = { 
+    href: "/dashboard", 
+    icon: <LayoutDashboard className="h-5 w-5" />, 
+    translationKey: 'dashboard',
+    isProtected: true,
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -168,8 +166,9 @@ function MobileNav() {
            <nav className="flex flex-col h-full">
               <div className="flex-1 px-2 space-y-1">
                 {mainNavItems.map((item) => (
-                  (item.isProtected && !isAdmin) ? null : <NavLink key={item.href} item={item} isCollapsed={false} />
+                  <NavLink key={item.href} item={item} isCollapsed={false} />
                 ))}
+                 {isAdmin && <NavLink item={dashboardItem} isCollapsed={false} />}
               </div>
           </nav>
         </div>

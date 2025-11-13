@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setEmail('');
       setPassword('');
       toast({ title: t('loginSuccess.title'), description: t('loginSuccess.description') });
-      router.push('/parameters');
+      router.push('/dashboard');
       return true;
     } catch (error) {
       console.error("Firebase Auth Error:", error);
