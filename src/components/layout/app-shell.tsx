@@ -1,7 +1,7 @@
 
 "use client"
 
-import { Calculator, Award, Lock, LogOut, PanelLeft, FilePieChart, Globe2, FileText, Settings, Archive, LayoutDashboard } from "lucide-react";
+import { Calculator, LayoutDashboard, LogOut, PanelLeft } from "lucide-react";
 import { Link, usePathname, useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -57,7 +57,6 @@ function NavLink({ item, isCollapsed }: { item: NavItem, isCollapsed: boolean })
         <span className={cn("truncate transition-opacity", isCollapsed && "sr-only")}>
           {t(item.translationKey as string)}
         </span>
-        {item.isProtected && !isAdmin && <Lock className={cn("h-4 w-4 ml-auto", isCollapsed && "hidden")} />}
     </Link>
   );
 
@@ -93,7 +92,7 @@ function SidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
 
   return (
     <nav className="flex flex-col h-full">
-      <div className="flex-1 px-2 space-y-1">
+      <div className="flex-1 px-2 space-y-1 py-4">
         {mainNavItems.map((item) => (
           <NavLink key={item.href} item={item} isCollapsed={isCollapsed} />
         ))}
@@ -170,7 +169,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     <div className="flex flex-col min-h-screen w-full bg-background">
       <Header mobileNav={<MobileNav />} />
       <div className="flex flex-1">
-        <div
+        <aside
           className={cn(
             "hidden border-r bg-muted/40 md:block transition-all duration-300",
             isCollapsed ? "w-20" : "w-64"
@@ -178,18 +177,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           onMouseEnter={() => setIsCollapsed(false)}
           onMouseLeave={() => setIsCollapsed(true)}
         >
-          <div className="flex h-full max-h-screen flex-col gap-2">
-            <div className="flex h-16 items-center justify-center border-b px-4">
-              <Link href="/" className="flex items-center gap-2 font-bold">
-                 <Image src="/logo.png" alt="BMV Logo" width={120} height={41} priority className={cn(isCollapsed && 'hidden')} />
-                 <Image src="/logo-icon.png" alt="BMV Icon" width={32} height={32} priority className={cn(!isCollapsed && 'hidden')} />
-              </Link>
-            </div>
-            <div className="flex-1 py-4 overflow-y-auto">
-              <SidebarNav isCollapsed={isCollapsed} />
-            </div>
+          <div className="flex h-full max-h-screen flex-col">
+            <SidebarNav isCollapsed={isCollapsed} />
           </div>
-        </div>
+        </aside>
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
           {children}
         </main>
