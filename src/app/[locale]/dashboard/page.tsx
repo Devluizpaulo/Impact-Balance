@@ -7,19 +7,31 @@ import { useEffect, useState, startTransition } from "react";
 import AppShell from "@/components/layout/app-shell";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { getEvents } from "@/lib/event-storage";
 import type { EventRecord } from "@/lib/types";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Loader2, Calendar, Hash, DollarSign, ArrowRight, LineChart } from "lucide-react";
+import { Loader2, Calendar, Hash, DollarSign, LineChart } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/navigation";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ExecutiveReport from "@/components/executive-report";
+import CertificateActions from "@/components/certificate-actions";
+import EventCertificate from "@/components/event-certificate";
 
 const AdminDashboardContent = () => {
     const t = useTranslations("Dashboard");
+    const t_report = useTranslations("ExecutiveReport");
+    const t_seal_page = useTranslations("EventSealPage");
     const [events, setEvents] = useState<EventRecord[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedEvent, setSelectedEvent] = useState<EventRecord | null>(null);
+    const [isReportOpen, setIsReportOpen] = useState(false);
+
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -32,6 +44,11 @@ const AdminDashboardContent = () => {
             fetchEvents();
         });
     }, []);
+    
+    const handleViewReport = (event: EventRecord) => {
+        setSelectedEvent(event);
+        setIsReportOpen(true);
+    }
 
     const totalEvents = events.length;
     const totalUcs = events.reduce((sum, event) => sum + event.results.totalUCS, 0);
@@ -125,7 +142,7 @@ const AdminDashboardContent = () => {
                             </TableHeader>
                             <TableBody>
                                 {recentEvents.map(event => (
-                                    <TableRow key={event.id}>
+                                    <TableRow key={event.id} onClick={() => handleViewReport(event)} className="cursor-pointer">
                                         <TableCell>
                                             <div className="font-medium">{event.formData.eventName}</div>
                                         </TableCell>
@@ -164,6 +181,31 @@ const AdminDashboardContent = () => {
                     </CardContent>
                 </Card>
             </div>
+             {selectedEvent && (
+                <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
+                    <DialogContent className="max-w-5xl w-full h-[95vh] p-4 sm:p-6 flex flex-col">
+                        <DialogHeader>
+                            <DialogTitle className="sr-only">{t_report('title')}</DialogTitle>
+                        </DialogHeader>
+
+                        <Tabs defaultValue="report" className="flex-grow flex flex-col overflow-hidden">
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="report">{t_seal_page('tabs.report')}</TabsTrigger>
+                                <TabsTrigger value="certificate">{t_seal_page('tabs.certificate')}</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="report" className="flex-grow overflow-y-auto mt-4 pr-2">
+                                <ExecutiveReport results={selectedEvent.results} formData={selectedEvent.formData} />
+                            </TabsContent>
+                            <TabsContent value="certificate" className="flex-grow overflow-y-auto mt-4">
+                                <div className="flex flex-col gap-4 max-w-4xl mx-auto">
+                                    <CertificateActions event={selectedEvent} />
+                                    <EventCertificate event={selectedEvent} />
+                                </div>
+                            </TabsContent>
+                        </Tabs>
+                    </DialogContent>
+                </Dialog>
+            )}
         </div>
     )
 }
@@ -189,3 +231,5 @@ export default function DashboardPage() {
         </AppShell>
     );
 }
+
+    
