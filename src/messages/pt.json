@@ -1,4 +1,3 @@
-
 {
   "Header": {
     "title": "Balanço de Impacto",
@@ -212,7 +211,8 @@
       "equivalenceValuePerYear": "Valor de Equivalência por ano",
       "gdpPercentage": "% da Equivalência ao do PIB",
       "equivalenceValuePerDay": "Valor de Equivalência por dia",
-      "equivalenceValuePerHour": "Valor de Equivalência por hora"
+      "equivalenceValuePerHour": "Valor de Equivalência por hora",
+      "useManualQuotation": "Usar Cotação Manual"
     },
     "toasts": {
       "saveSuccess": {
@@ -242,6 +242,10 @@
       "loadQuotationError": {
         "title": "Falha ao Carregar Cotação",
         "description": "Não foi possível obter a cotação mais recente do UCS. Usando o valor padrão."
+      },
+      "manualQuotationActive": {
+        "title": "Cotação Manual Ativa",
+        "description": "O valor da cotação da UCS está sendo definido manualmente."
       }
     }
   },

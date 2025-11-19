@@ -17,6 +17,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 function DocumentationContent() {
   const _t = useTranslations("DocumentationPage");
@@ -183,49 +185,43 @@ export default function ParametersPage() {
   const t_docs = useTranslations("DocumentationPage");
   const { settings, setSettings, saveSettings, resetSettings, isLoading, isSaving } = useSettings();
   const { isAdmin } = useAuth();
+  const { equivalences } = settings.calculation;
 
   const handleNestedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value: rawValue } = e.target;
     const keys = name.split('.');
     
-    // Allow direct string update for non-calculation fields
+    const newSettings = JSON.parse(JSON.stringify(settings));
+    let current = newSettings;
+    for (let i = 0; i < keys.length - 1; i++) {
+        current = current[keys[i]];
+    }
+
     if (keys[0] !== 'calculation') {
-        const newSettings = JSON.parse(JSON.stringify(settings));
-        let current = newSettings;
-        for (let i = 0; i < keys.length - 1; i++) {
-            current = current[keys[i]];
-        }
         current[keys[keys.length - 1]] = rawValue;
         setSettings(newSettings);
         return;
     }
 
-
-    // Clean the value for parsing: remove thousand separators, replace comma with dot
     const cleanedValue = rawValue.replace(/\./g, '').replace(',', '.');
     const parsedValue = parseFloat(cleanedValue);
 
-    // If parsing fails, don't update state to avoid NaN
     if (isNaN(parsedValue) && cleanedValue.trim() !== '') {
         return;
     }
     
     const finalValue = isNaN(parsedValue) ? 0 : parsedValue;
-
-    // Create a deep copy to avoid direct state mutation
-    const newSettings = JSON.parse(JSON.stringify(settings));
-
-    let current = newSettings;
-    for (let i = 0; i < keys.length - 1; i++) {
-        current = current[keys[i]];
-    }
     
     current[keys[keys.length - 1]] = finalValue;
-
-    // Use the callback from useSettings to trigger recalculation
     setSettings(newSettings);
   };
   
+  const handleSwitchChange = (checked: boolean) => {
+    const newSettings = JSON.parse(JSON.stringify(settings));
+    newSettings.calculation.equivalences.useManualQuotation = checked;
+    setSettings(newSettings);
+  };
+
   if (isLoading) {
     return (
       <AppShell>
@@ -325,23 +321,32 @@ export default function ParametersPage() {
               <CardTitle>{t('equivalencesAndCosts')}</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="flex items-center space-x-2 mb-4 p-2 rounded-md bg-muted/50">
+                  <Switch
+                    id="manual-quotation-switch"
+                    checked={equivalences.useManualQuotation}
+                    onCheckedChange={handleSwitchChange}
+                    disabled={!isAdmin}
+                  />
+                  <Label htmlFor="manual-quotation-switch">{t('equivalences.useManualQuotation')}</Label>
+              </div>
               <Table>
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
                     <TableRow>
                       <TableCell>
                           <div>{t('equivalences.ucsQuotationValue')}</div>
-                          {settings.calculation.equivalences.ucsQuotationDate && (
-                            <div className="text-xs text-muted-foreground">{t('equivalences.quotationDate')}: {settings.calculation.equivalences.ucsQuotationDate}</div>
+                          {!equivalences.useManualQuotation && equivalences.ucsQuotationDate && (
+                            <div className="text-xs text-muted-foreground">{t('equivalences.quotationDate')}: {equivalences.ucsQuotationDate}</div>
                           )}
                       </TableCell>
                       <TableCell>
                         <ParameterInput 
-                          name="calculation.equivalences.ucsQuotationValue" 
-                          value={settings.calculation.equivalences.ucsQuotationValue} 
+                          name="calculation.equivalences.manualQuotationValue" 
+                          value={equivalences.useManualQuotation ? equivalences.manualQuotationValue : equivalences.ucsQuotationValue}
                           onChange={handleNestedChange} 
-                          disabled={!isAdmin} 
-                          readOnly={true} 
+                          disabled={!isAdmin || !equivalences.useManualQuotation} 
+                          readOnly={!equivalences.useManualQuotation} 
                           adornment={'R$'} 
                           precision={2} 
                         />
@@ -460,5 +465,7 @@ export default function ParametersPage() {
     </AppShell>
   );
 }
+
+    
 
     

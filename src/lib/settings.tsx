@@ -22,6 +22,8 @@ export interface SystemSettings {
         };
         equivalences: {
           // Base
+          useManualQuotation: boolean;
+          manualQuotationValue: number;
           ucsQuotationValue: number; // BRL
           ucsQuotationValueUSD: number;
           ucsQuotationValueEUR: number;
@@ -61,6 +63,8 @@ export const defaultSettings: SystemSettings = {
             hourlyUcsConsumption: 0, // Calculated
         },
         equivalences: {
+            useManualQuotation: false,
+            manualQuotationValue: 150,
             ucsQuotationValue: 168.85,
             ucsQuotationValueUSD: 33.01,
             ucsQuotationValueEUR: 28.43,
@@ -92,6 +96,11 @@ const calculateDerivedSettings = (baseSettings: SystemSettings): SystemSettings 
     const calculated = JSON.parse(JSON.stringify(baseSettings)); // Deep copy
     const { perCapitaFactors, equivalences } = calculated.calculation;
 
+    // Use manual quotation if enabled
+    const finalQuotationValue = equivalences.useManualQuotation 
+        ? equivalences.manualQuotationValue 
+        : equivalences.ucsQuotationValue;
+
     // Calculate per capita factors
     perCapitaFactors.ucsConsumption73years = perCapitaFactors.averageUcsPerHectare * perCapitaFactors.perCapitaConsumptionHa;
     perCapitaFactors.annualUcsConsumption = perCapitaFactors.ucsConsumption73years / 73;
@@ -99,7 +108,7 @@ const calculateDerivedSettings = (baseSettings: SystemSettings): SystemSettings 
     perCapitaFactors.hourlyUcsConsumption = perCapitaFactors.dailyUcsConsumption / 24;
 
     // Calculate equivalences
-    equivalences.equivalenceValuePerYear = equivalences.ucsQuotationValue * perCapitaFactors.annualUcsConsumption;
+    equivalences.equivalenceValuePerYear = finalQuotationValue * perCapitaFactors.annualUcsConsumption;
     equivalences.gdpPercentage = equivalences.gdpPerCapita > 0 ? (equivalences.equivalenceValuePerYear / equivalences.gdpPerCapita) * 100 : 0;
     equivalences.equivalenceValuePerDay = equivalences.equivalenceValuePerYear / 365;
     equivalences.equivalenceValuePerHour = equivalences.equivalenceValuePerDay / 24;
@@ -128,7 +137,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     const [isSaving, setIsSaving] = useState(false);
     const { toast } = useToast();
     const { isAdmin } = useAuth();
-    const t = useTranslations("ParametersPage.toasts" as const);
+    const t = useTranslations("ParametersPage.toasts");
     const isMountedRef = useRef(false);
 
     // This function will receive the new base settings and will trigger a recalculation.
@@ -140,39 +149,51 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
       isMountedRef.current = true;
+      let unsubscribe: (() => void) | undefined;
       
       const loadSettings = async () => {
         setIsLoading(true);
         try {
             const dbSettings = await getSettingsFromDb();
-            const latestQuotationData = await getLatestUcsQuotation();
 
-            if (latestQuotationData) {
-                dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotationData.brl;
-                dbSettings.calculation.equivalences.ucsQuotationValueUSD = latestQuotationData.usd;
-                dbSettings.calculation.equivalences.ucsQuotationValueEUR = latestQuotationData.eur;
-                dbSettings.calculation.equivalences.ucsQuotationDate = latestQuotationData.date;
+            if (dbSettings.calculation.equivalences.useManualQuotation) {
                  if (isMountedRef.current) {
                     toast({
-                        title: t('loadQuotationSuccess.title'),
-                        description: t('loadQuotationSuccess.description', { value: latestQuotationData.brl }),
+                        title: t('manualQuotationActive.title'),
                     });
                 }
             } else {
-                 // Fallback: if DB has 0 or invalid quotation value, use default value to avoid zeroing costs
-                 if (!(dbSettings.calculation.equivalences.ucsQuotationValue > 0)) {
-                   dbSettings.calculation.equivalences.ucsQuotationValue = defaultSettings.calculation.equivalences.ucsQuotationValue;
-                   dbSettings.calculation.equivalences.ucsQuotationDate = null;
-                 }
-                 if (isMountedRef.current) {
-                    toast({
-                        variant: 'destructive',
-                        title: t('loadQuotationError.title'),
-                        description: t('loadQuotationError.description'),
-                    });
+                const latestQuotationData = await getLatestUcsQuotation();
+                if (latestQuotationData) {
+                    dbSettings.calculation.equivalences.ucsQuotationValue = latestQuotationData.brl;
+                    dbSettings.calculation.equivalences.ucsQuotationValueUSD = latestQuotationData.usd;
+                    dbSettings.calculation.equivalences.ucsQuotationValueEUR = latestQuotationData.eur;
+                    dbSettings.calculation.equivalences.ucsQuotationDate = latestQuotationData.date;
+                    if (isMountedRef.current) {
+                        toast({
+                            title: t('loadQuotationSuccess.title'),
+                            description: t('loadQuotationSuccess.description', { value: latestQuotationData.brl }),
+                        });
+                    }
+                } else {
+                    if (!(dbSettings.calculation.equivalences.ucsQuotationValue > 0)) {
+                        dbSettings.calculation.equivalences.ucsQuotationValue = defaultSettings.calculation.equivalences.ucsQuotationValue;
+                        dbSettings.calculation.equivalences.ucsQuotationDate = null;
+                    }
+                    if (isMountedRef.current) {
+                        toast({
+                            variant: 'destructive',
+                            title: t('loadQuotationError.title'),
+                            description: t('loadQuotationError.description'),
+                        });
+                    }
                 }
             }
-            updateAndRecalculate(dbSettings);
+
+            if (isMountedRef.current) {
+                updateAndRecalculate(dbSettings);
+            }
+
         } catch (error) {
           console.error("Failed to load settings from Firestore", error);
           if (isMountedRef.current) {
@@ -195,10 +216,13 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
       const handleQuotationChange = (data: UcsQuotation | null) => {
         if (!data || !isMountedRef.current) return;
         
-        let shouldToast = false;
-        
         startTransition(() => {
           setSettings((prev) => {
+            // Only update if manual mode is OFF
+            if (prev.calculation.equivalences.useManualQuotation) {
+              return prev;
+            }
+
             const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
             if (next.calculation.equivalences.ucsQuotationDate === data.date && next.calculation.equivalences.ucsQuotationValue === data.brl) {
               return prev; // No change
@@ -208,20 +232,20 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             next.calculation.equivalences.ucsQuotationValueEUR = data.eur;
             next.calculation.equivalences.ucsQuotationDate = data.date;
             
-            shouldToast = true;
-            return calculateDerivedSettings(next);
-          });
-        });
-
-        if (shouldToast) {
             toast({
               title: t('loadQuotationSuccess.title'),
               description: t('loadQuotationSuccess.description', { value: data.brl }),
             });
-        }
+            
+            return calculateDerivedSettings(next);
+          });
+        });
+
       };
       
-      const unsubscribe = subscribeLatestUcsQuotation(handleQuotationChange);
+      if (!settings.calculation.equivalences.useManualQuotation) {
+        unsubscribe = subscribeLatestUcsQuotation(handleQuotationChange);
+      }
 
       return () => {
         if (unsubscribe) {
@@ -229,7 +253,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         }
         isMountedRef.current = false;
       };
-    }, [t, toast, updateAndRecalculate]);
+     
+    }, [t, toast, updateAndRecalculate, settings.calculation.equivalences.useManualQuotation]);
 
 
     const saveSettings = async () => {
@@ -273,7 +298,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             description: t('resetSuccess.description'),
         });
     };
-
+    
     return (
         <SettingsContext.Provider value={{ settings, setSettings: updateAndRecalculate, saveSettings, resetSettings, isLoading, isSaving }}>
             {children}
@@ -290,4 +315,4 @@ export const useSettings = () => {
     return context;
 };
 
-  
+    

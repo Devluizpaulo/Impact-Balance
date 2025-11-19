@@ -295,7 +295,7 @@ export const saveSettings = (settings: SystemSettings) => {
             const permissionError = new FirestorePermissionError({
                 path: docRef.path,
                 operation: 'update',
-                requestResourceData: settings,
+                requestResourceData: settingsToSave,
             });
             errorEmitter.emit('permission-error', permissionError);
         } else {
@@ -305,5 +305,3 @@ export const saveSettings = (settings: SystemSettings) => {
         throw serverError;
     });
 };
-
-  

@@ -1,4 +1,3 @@
-
 {
   "Header": {
     "title": "Impact Balance",
@@ -212,7 +211,8 @@
       "equivalenceValuePerYear": "Equivalence Value per Year",
       "gdpPercentage": "Equivalence to GDP (%)",
       "equivalenceValuePerDay": "Equivalence Value per Day",
-      "equivalenceValuePerHour": "Equivalence Value per Hour"
+      "equivalenceValuePerHour": "Equivalence Value per Hour",
+      "useManualQuotation": "Use Manual Quotation"
     },
     "toasts": {
       "saveSuccess": {
@@ -242,6 +242,10 @@
       "loadQuotationError": {
         "title": "Failed to Load Quotation",
         "description": "Could not fetch the latest UCS quotation. Using the default value."
+      },
+      "manualQuotationActive": {
+        "title": "Manual Quotation Active",
+        "description": "The UCS quotation value is being set manually."
       }
     }
   },

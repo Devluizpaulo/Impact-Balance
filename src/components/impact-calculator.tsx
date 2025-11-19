@@ -135,7 +135,9 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 
     const breakdown: { category: string; ucs: number; cost: number, quantity: number, duration: number, durationUnit: 'days' | 'hours' }[] = [];
     let totalParticipantsValue = 0;
-    const quotationValue = calculation.equivalences.ucsQuotationValue > 0
+    const quotationValue = calculation.equivalences.useManualQuotation 
+      ? calculation.equivalences.manualQuotationValue
+      : calculation.equivalences.ucsQuotationValue > 0
       ? calculation.equivalences.ucsQuotationValue
       : defaultSettings.calculation.equivalences.ucsQuotationValue;
     
@@ -417,3 +419,5 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
 }
 
   
+
+    
