@@ -346,7 +346,6 @@ export default function ParametersPage() {
                           value={equivalences.useManualQuotation ? equivalences.manualQuotationValue : equivalences.ucsQuotationValue}
                           onChange={handleNestedChange} 
                           disabled={!isAdmin || !equivalences.useManualQuotation} 
-                          readOnly={!equivalences.useManualQuotation} 
                           adornment={'R$'} 
                           precision={2} 
                         />
