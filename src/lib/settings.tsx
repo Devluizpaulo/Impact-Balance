@@ -138,7 +138,9 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     const { toast } = useToast();
     const { isAdmin } = useAuth();
     const t = useTranslations("ParametersPage.toasts");
-    const isMountedRef = useRef(false);
+    
+    // Ref to track if the initial load is complete
+    const initialLoadComplete = useRef(false);
 
     // This function will receive the new base settings and will trigger a recalculation.
     const updateAndRecalculate = useCallback((newBaseSettings: SystemSettings) => {
@@ -147,21 +149,18 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
 
+    // Effect for initial loading from DB and subscribing to realtime updates
     useEffect(() => {
-      isMountedRef.current = true;
       let unsubscribe: (() => void) | undefined;
       
-      const loadSettings = async () => {
+      const loadAndSubscribe = async () => {
         setIsLoading(true);
         try {
             const dbSettings = await getSettingsFromDb();
 
             if (dbSettings.calculation.equivalences.useManualQuotation) {
-                 if (isMountedRef.current) {
-                    toast({
-                        title: t('manualQuotationActive.title'),
-                    });
-                }
+                 toast({ title: t('manualQuotationActive.title') });
+                 updateAndRecalculate(dbSettings);
             } else {
                 const latestQuotationData = await getLatestUcsQuotation();
                 if (latestQuotationData) {
@@ -169,92 +168,81 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
                     dbSettings.calculation.equivalences.ucsQuotationValueUSD = latestQuotationData.usd;
                     dbSettings.calculation.equivalences.ucsQuotationValueEUR = latestQuotationData.eur;
                     dbSettings.calculation.equivalences.ucsQuotationDate = latestQuotationData.date;
-                    if (isMountedRef.current) {
-                        toast({
-                            title: t('loadQuotationSuccess.title'),
-                            description: t('loadQuotationSuccess.description', { value: latestQuotationData.brl }),
-                        });
-                    }
                 } else {
                     if (!(dbSettings.calculation.equivalences.ucsQuotationValue > 0)) {
                         dbSettings.calculation.equivalences.ucsQuotationValue = defaultSettings.calculation.equivalences.ucsQuotationValue;
                         dbSettings.calculation.equivalences.ucsQuotationDate = null;
                     }
-                    if (isMountedRef.current) {
-                        toast({
-                            variant: 'destructive',
-                            title: t('loadQuotationError.title'),
-                            description: t('loadQuotationError.description'),
-                        });
-                    }
+                    toast({
+                        variant: 'destructive',
+                        title: t('loadQuotationError.title'),
+                        description: t('loadQuotationError.description'),
+                    });
                 }
-            }
-
-            if (isMountedRef.current) {
                 updateAndRecalculate(dbSettings);
+                
+                // Subscribe to future changes only if not using manual quotation
+                unsubscribe = subscribeLatestUcsQuotation((data: UcsQuotation | null) => {
+                  if (!data) return;
+                  startTransition(() => {
+                    setSettings((prev) => {
+                      if (prev.calculation.equivalences.useManualQuotation) return prev;
+                      if (prev.calculation.equivalences.ucsQuotationValue === data.brl) return prev;
+
+                      const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
+                      next.calculation.equivalences.ucsQuotationValue = data.brl;
+                      next.calculation.equivalences.ucsQuotationValueUSD = data.usd;
+                      next.calculation.equivalences.ucsQuotationValueEUR = data.eur;
+                      next.calculation.equivalences.ucsQuotationDate = data.date;
+                      return calculateDerivedSettings(next);
+                    });
+                  });
+                });
             }
 
         } catch (error) {
           console.error("Failed to load settings from Firestore", error);
-          if (isMountedRef.current) {
-            toast({
-                variant: 'destructive',
-                title: t('loadError.title'),
-                description: t('loadError.description'),
-            });
-          }
+          toast({
+              variant: 'destructive',
+              title: t('loadError.title'),
+              description: t('loadError.description'),
+          });
           updateAndRecalculate(defaultSettings);
         } finally {
-          if (isMountedRef.current) {
             setIsLoading(false);
-          }
+            initialLoadComplete.current = true;
         }
       };
 
-      loadSettings();
+      loadAndSubscribe();
       
-      const handleQuotationChange = (data: UcsQuotation | null) => {
-        if (!data || !isMountedRef.current) return;
-        
-        startTransition(() => {
-          setSettings((prev) => {
-            // Only update if manual mode is OFF
-            if (prev.calculation.equivalences.useManualQuotation) {
-              return prev;
-            }
-
-            const next = JSON.parse(JSON.stringify(prev)) as SystemSettings;
-            if (next.calculation.equivalences.ucsQuotationDate === data.date && next.calculation.equivalences.ucsQuotationValue === data.brl) {
-              return prev; // No change
-            }
-            next.calculation.equivalences.ucsQuotationValue = data.brl;
-            next.calculation.equivalences.ucsQuotationValueUSD = data.usd;
-            next.calculation.equivalences.ucsQuotationValueEUR = data.eur;
-            next.calculation.equivalences.ucsQuotationDate = data.date;
-            
-            toast({
-              title: t('loadQuotationSuccess.title'),
-              description: t('loadQuotationSuccess.description', { value: data.brl }),
-            });
-            
-            return calculateDerivedSettings(next);
-          });
-        });
-
-      };
-      
-      if (!settings.calculation.equivalences.useManualQuotation) {
-        unsubscribe = subscribeLatestUcsQuotation(handleQuotationChange);
-      }
-
       return () => {
         if (unsubscribe) {
             unsubscribe();
         }
-        isMountedRef.current = false;
       };
-     
-    }, [t, toast, updateAndRecalculate, settings.calculation.equivalences.useManualQuotation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [t, updateAndRecalculate, settings.calculation.equivalences.useManualQuotation]);
+
+
+    // Separate effect for showing toast notifications on quotation change
+    useEffect(() => {
+        // Don't show toast on the initial load
+        if (!initialLoadComplete.current) {
+            return;
+        }
+        
+        // Don't show if using manual quotation
+        if (settings.calculation.equivalences.useManualQuotation) {
+            return;
+        }
+
+        toast({
+            title: t('loadQuotationSuccess.title'),
+            description: t('loadQuotationSuccess.description', { value: settings.calculation.equivalences.ucsQuotationValue }),
+        });
+
+    }, [settings.calculation.equivalences.ucsQuotationValue, settings.calculation.equivalences.useManualQuotation, t, toast]);
 
 
     const saveSettings = async () => {
@@ -314,5 +302,3 @@ export const useSettings = () => {
     }
     return context;
 };
-
-    
