@@ -29,8 +29,80 @@
     "agenda": "Agenda"
   },
   "AgendaPage": {
-    "title": "Editar Usuários",
-    "description": "Gerencie seus clientes e contatos em um só lugar."
+    "title": "Agenda de Clientes",
+    "description": "Gerencie seus clientes e contatos em um só lugar.",
+    "kpi": {
+      "total": "Total de Clientes",
+      "active": "Ativos",
+      "inactive": "Inativos"
+    },
+    "actions": {
+      "downloadCsv": "Baixar CSV",
+      "new": "Novo Cliente",
+      "edit": "Editar",
+      "delete": "Excluir"
+    },
+    "filters": {
+      "searchPlaceholder": "Busque por nome ou documento...",
+      "statusPlaceholder": "Todos Status",
+      "allStatus": "Todos Status",
+      "profilePlaceholder": "Todos Perfis",
+      "allProfiles": "Todos Perfis",
+      "startDate": "Data Início",
+      "endDate": "Data Fim",
+      "clear": "Limpar Filtros"
+    },
+    "table": {
+      "name": "Nome",
+      "document": "Documento",
+      "phone": "Celular",
+      "email": "E-mail",
+      "status": "Status",
+      "actions": "Ações",
+      "activeStatus": "Ativo",
+      "noClients": "Nenhum cliente encontrado."
+    },
+    "pagination": {
+      "showing": "Mostrando {start} a {end} de {total} clientes",
+      "rowsPerPage": "Linhas por página:",
+      "page": "Página {page} de {totalPages}"
+    },
+    "form": {
+      "newClientTitle": "Cadastrar Novo Cliente",
+      "editClientTitle": "Editar Cliente",
+      "newClientDescription": "Preencha os dados abaixo para adicionar um novo cliente à sua agenda.",
+      "saveSuccess": "Cliente salvo com sucesso!",
+      "saveError": "Erro ao salvar cliente",
+      "accountTitle": "Conta",
+      "addressTitle": "Endereço",
+      "bankTitle": "Dados Bancários",
+      "accountType": "Tipo de conta",
+      "person": "Pessoa Física",
+      "company": "Pessoa Jurídica",
+      "documentType": "Tipo de documento",
+      "razaoSocial": "Razão Social",
+      "nomeFantasia": "Nome Fantasia",
+      "fullName": "Nome Completo",
+      "phone": "Telefone",
+      "mobile": "Celular",
+      "country": "País",
+      "state": "Estado",
+      "city": "Cidade",
+      "street": "Rua",
+      "complement": "Complemento",
+      "neighborhood": "Bairro",
+      "number": "Número",
+      "bank": "Banco",
+      "bankAccountType": "Tipo de Conta",
+      "checking": "Conta Corrente",
+      "savings": "Conta Poupança",
+      "agency": "Agência",
+      "accountNumber": "Conta",
+      "selectPlaceholder": "Selecione...",
+      "cancel": "Cancelar",
+      "save": "Salvar",
+      "update": "Atualizar"
+    }
   },
   "SealStatusPage": {
     "title": "Status dos Selos",

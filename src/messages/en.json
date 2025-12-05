@@ -29,8 +29,80 @@
     "agenda": "Agenda"
   },
   "AgendaPage": {
-    "title": "Edit Users",
-    "description": "Manage your clients and contacts in one place."
+    "title": "Client Agenda",
+    "description": "Manage your clients and contacts in one place.",
+    "kpi": {
+      "total": "Total Clients",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "downloadCsv": "Download CSV",
+      "new": "New Client",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by name or document...",
+      "statusPlaceholder": "All Statuses",
+      "allStatus": "All Statuses",
+      "profilePlaceholder": "All Profiles",
+      "allProfiles": "All Profiles",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "clear": "Clear Filters"
+    },
+    "table": {
+      "name": "Name",
+      "document": "Document",
+      "phone": "Mobile",
+      "email": "E-mail",
+      "status": "Status",
+      "actions": "Actions",
+      "activeStatus": "Active",
+      "noClients": "No clients found."
+    },
+    "pagination": {
+      "showing": "Showing {start} to {end} of {total} clients",
+      "rowsPerPage": "Rows per page:",
+      "page": "Page {page} of {totalPages}"
+    },
+    "form": {
+      "newClientTitle": "Register New Client",
+      "editClientTitle": "Edit Client",
+      "newClientDescription": "Fill in the data below to add a new client to your agenda.",
+      "saveSuccess": "Client saved successfully!",
+      "saveError": "Error saving client",
+      "accountTitle": "Account",
+      "addressTitle": "Address",
+      "bankTitle": "Bank Details",
+      "accountType": "Account type",
+      "person": "Individual",
+      "company": "Company",
+      "documentType": "Document type",
+      "razaoSocial": "Company Name",
+      "nomeFantasia": "Trade Name",
+      "fullName": "Full Name",
+      "phone": "Phone",
+      "mobile": "Mobile",
+      "country": "Country",
+      "state": "State",
+      "city": "City",
+      "street": "Street",
+      "complement": "Complement",
+      "neighborhood": "Neighborhood",
+      "number": "Number",
+      "bank": "Bank",
+      "bankAccountType": "Account Type",
+      "checking": "Checking Account",
+      "savings": "Savings Account",
+      "agency": "Agency",
+      "accountNumber": "Account",
+      "selectPlaceholder": "Select...",
+      "cancel": "Cancel",
+      "save": "Save",
+      "update": "Update"
+    }
   },
   "SealStatusPage": {
     "title": "Seal Status",

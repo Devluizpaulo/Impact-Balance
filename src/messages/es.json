@@ -29,8 +29,80 @@
     "agenda": "Agenda"
   },
   "AgendaPage": {
-    "title": "Editar Usuarios",
-    "description": "Gestione sus clientes y contactos en un solo lugar."
+    "title": "Agenda de Clientes",
+    "description": "Gestione sus clientes y contactos en un solo lugar.",
+    "kpi": {
+      "total": "Total de Clientes",
+      "active": "Activos",
+      "inactive": "Inactivos"
+    },
+    "actions": {
+      "downloadCsv": "Descargar CSV",
+      "new": "Nuevo Cliente",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "filters": {
+      "searchPlaceholder": "Busque por nombre o documento...",
+      "statusPlaceholder": "Todos los Estados",
+      "allStatus": "Todos los Estados",
+      "profilePlaceholder": "Todos los Perfiles",
+      "allProfiles": "Todos los Perfiles",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "clear": "Limpiar Filtros"
+    },
+    "table": {
+      "name": "Nombre",
+      "document": "Documento",
+      "phone": "Celular",
+      "email": "E-mail",
+      "status": "Estado",
+      "actions": "Acciones",
+      "activeStatus": "Activo",
+      "noClients": "No se encontraron clientes."
+    },
+    "pagination": {
+      "showing": "Mostrando {start} a {end} de {total} clientes",
+      "rowsPerPage": "Filas por página:",
+      "page": "Página {page} de {totalPages}"
+    },
+    "form": {
+      "newClientTitle": "Registrar Nuevo Cliente",
+      "editClientTitle": "Editar Cliente",
+      "newClientDescription": "Complete los datos a continuación para agregar un nuevo cliente a su agenda.",
+      "saveSuccess": "¡Cliente guardado con éxito!",
+      "saveError": "Error al guardar el cliente",
+      "accountTitle": "Cuenta",
+      "addressTitle": "Dirección",
+      "bankTitle": "Datos Bancarios",
+      "accountType": "Tipo de cuenta",
+      "person": "Persona Física",
+      "company": "Persona Jurídica",
+      "documentType": "Tipo de documento",
+      "razaoSocial": "Razón Social",
+      "nomeFantasia": "Nombre de Fantasía",
+      "fullName": "Nombre Completo",
+      "phone": "Teléfono",
+      "mobile": "Celular",
+      "country": "País",
+      "state": "Estado",
+      "city": "Ciudad",
+      "street": "Calle",
+      "complement": "Complemento",
+      "neighborhood": "Barrio",
+      "number": "Número",
+      "bank": "Banco",
+      "bankAccountType": "Tipo de Cuenta",
+      "checking": "Cuenta Corriente",
+      "savings": "Cuenta de Ahorros",
+      "agency": "Agencia",
+      "accountNumber": "Cuenta",
+      "selectPlaceholder": "Seleccione...",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "update": "Actualizar"
+    }
   },
   "SealStatusPage": {
     "title": "Estado de los Sellos",
