@@ -3,7 +3,7 @@
 
 import { db } from './firebase/config';
 import { collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import type { EventRecord, NewEventRecord, ClientData, FormData } from './types';
+import type { EventRecord, NewEventRecord, ClientData, FormData, ParticipantData } from './types';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
@@ -115,7 +115,8 @@ export const addEvent = (newEvent: NewEventRecord, eventTimestamp?: number) => {
 export const updateEvent = (eventId: string, dataToUpdate: Partial<FormData>): Promise<void> => {
     const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
     
-    const updatePayload: Record<string, unknown> = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updatePayload: Record<string, any> = {};
     for (const key in dataToUpdate) {
         updatePayload[`formData.${key}`] = dataToUpdate[key as keyof typeof dataToUpdate];
     }
@@ -141,5 +142,3 @@ export const deleteEvent = (eventId: string): Promise<void> => {
     const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
     return deleteDoc(eventDoc);
 };
-
-    

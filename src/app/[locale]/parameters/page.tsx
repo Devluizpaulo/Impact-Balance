@@ -19,7 +19,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -558,7 +558,16 @@ export default function ParametersPage() {
             </AccordionItem>
           </Accordion>
 
-          <AlertDialog open={isManualQuotationDialogOpen} onOpenChange={setIsManualQuotationDialogOpen}>
+          <AlertDialog open={isManualQuotationDialogOpen} onOpenChange={(open) => {
+              if (!open) {
+                // If user cancels, switch back if they didn't save
+                if (!settings.calculation.equivalences.useManualQuotation) {
+                    setIsManualQuotationDialogOpen(false);
+                }
+              } else {
+                setIsManualQuotationDialogOpen(true);
+              }
+            }}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>{t('toasts.manualQuotationPrompt.title')}</AlertDialogTitle>
