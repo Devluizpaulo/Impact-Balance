@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef, startTransition } from 'react';
@@ -23,7 +24,11 @@ export interface SystemSettings {
         equivalences: {
           // Base
           useManualQuotation: boolean;
-          manualQuotationValue: number;
+          manualQuotationValue: number; // BRL
+          manualQuotationValueUSD: number; // Calculated from BRL and rate
+          manualQuotationValueEUR: number; // Calculated from BRL and rate
+          manualExchangeRateUSD: number; // Manual exchange rate for USD
+          manualExchangeRateEUR: number; // Manual exchange rate for EUR
           ucsQuotationValue: number; // BRL
           ucsQuotationValueUSD: number;
           ucsQuotationValueEUR: number;
@@ -65,6 +70,10 @@ export const defaultSettings: SystemSettings = {
         equivalences: {
             useManualQuotation: false,
             manualQuotationValue: 150,
+            manualQuotationValueUSD: 0, 
+            manualQuotationValueEUR: 0, 
+            manualExchangeRateUSD: 5.45,
+            manualExchangeRateEUR: 5.95,
             ucsQuotationValue: 168.85,
             ucsQuotationValueUSD: 33.01,
             ucsQuotationValueEUR: 28.43,
@@ -96,9 +105,8 @@ const calculateDerivedSettings = (baseSettings: SystemSettings): SystemSettings 
     const calculated = JSON.parse(JSON.stringify(baseSettings)); // Deep copy
     const { perCapitaFactors, equivalences } = calculated.calculation;
 
-    // Use manual quotation if enabled
-    const finalQuotationValue = equivalences.useManualQuotation 
-        ? equivalences.manualQuotationValue 
+    const finalBrlValue = equivalences.useManualQuotation
+        ? equivalences.manualQuotationValue
         : equivalences.ucsQuotationValue;
 
     // Calculate per capita factors
@@ -108,10 +116,21 @@ const calculateDerivedSettings = (baseSettings: SystemSettings): SystemSettings 
     perCapitaFactors.hourlyUcsConsumption = perCapitaFactors.dailyUcsConsumption / 24;
 
     // Calculate equivalences
-    equivalences.equivalenceValuePerYear = finalQuotationValue * perCapitaFactors.annualUcsConsumption;
+    equivalences.equivalenceValuePerYear = finalBrlValue * perCapitaFactors.annualUcsConsumption;
     equivalences.gdpPercentage = equivalences.gdpPerCapita > 0 ? (equivalences.equivalenceValuePerYear / equivalences.gdpPerCapita) * 100 : 0;
     equivalences.equivalenceValuePerDay = equivalences.equivalenceValuePerYear / 365;
     equivalences.equivalenceValuePerHour = equivalences.equivalenceValuePerDay / 24;
+
+    // If using manual quotation, re-calculate USD and EUR from rates
+    if (equivalences.useManualQuotation) {
+        if (equivalences.manualExchangeRateUSD > 0) {
+            equivalences.manualQuotationValueUSD = equivalences.manualQuotationValue / equivalences.manualExchangeRateUSD;
+        }
+        if (equivalences.manualExchangeRateEUR > 0) {
+            equivalences.manualQuotationValueEUR = equivalences.manualQuotationValue / equivalences.manualExchangeRateEUR;
+        }
+    }
+
 
     return calculated;
 };
@@ -141,6 +160,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
     
     // Ref to track if the initial load is complete
     const initialLoadComplete = useRef(false);
+    const previousQuotationValue = useRef<number>(0);
 
     // This function will receive the new base settings and will trigger a recalculation.
     const updateAndRecalculate = useCallback((newBaseSettings: SystemSettings) => {
@@ -159,8 +179,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
             const dbSettings = await getSettingsFromDb();
 
             if (dbSettings.calculation.equivalences.useManualQuotation) {
-                 toast({ title: t('manualQuotationActive.title') });
                  updateAndRecalculate(dbSettings);
+                 previousQuotationValue.current = dbSettings.calculation.equivalences.manualQuotationValue;
             } else {
                 const latestQuotationData = await getLatestUcsQuotation();
                 if (latestQuotationData) {
@@ -168,16 +188,13 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
                     dbSettings.calculation.equivalences.ucsQuotationValueUSD = latestQuotationData.usd;
                     dbSettings.calculation.equivalences.ucsQuotationValueEUR = latestQuotationData.eur;
                     dbSettings.calculation.equivalences.ucsQuotationDate = latestQuotationData.date;
+                    previousQuotationValue.current = latestQuotationData.brl;
                 } else {
                     if (!(dbSettings.calculation.equivalences.ucsQuotationValue > 0)) {
                         dbSettings.calculation.equivalences.ucsQuotationValue = defaultSettings.calculation.equivalences.ucsQuotationValue;
                         dbSettings.calculation.equivalences.ucsQuotationDate = null;
+                        previousQuotationValue.current = defaultSettings.calculation.equivalences.ucsQuotationValue;
                     }
-                    toast({
-                        variant: 'destructive',
-                        title: t('loadQuotationError.title'),
-                        description: t('loadQuotationError.description'),
-                    });
                 }
                 updateAndRecalculate(dbSettings);
                 
@@ -202,15 +219,13 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
         } catch (error) {
           console.error("Failed to load settings from Firestore", error);
-          toast({
-              variant: 'destructive',
-              title: t('loadError.title'),
-              description: t('loadError.description'),
-          });
           updateAndRecalculate(defaultSettings);
         } finally {
             setIsLoading(false);
-            initialLoadComplete.current = true;
+            // Use timeout to prevent setting this before the first render is fully complete
+            setTimeout(() => {
+              initialLoadComplete.current = true;
+            }, 500);
         }
       };
 
@@ -222,27 +237,50 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         }
       };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [t, updateAndRecalculate, settings.calculation.equivalences.useManualQuotation]);
+    }, []);
 
 
     // Separate effect for showing toast notifications on quotation change
     useEffect(() => {
-        // Don't show toast on the initial load
-        if (!initialLoadComplete.current) {
-            return;
-        }
+        if (!initialLoadComplete.current || isLoading) return;
+
+        const handleQuotationChange = () => {
+          const currentQuotation = settings.calculation.equivalences.useManualQuotation
+            ? settings.calculation.equivalences.manualQuotationValue
+            : settings.calculation.equivalences.ucsQuotationValue;
         
-        // Don't show if using manual quotation
-        if (settings.calculation.equivalences.useManualQuotation) {
-            return;
+          if (currentQuotation !== previousQuotationValue.current) {
+              if (settings.calculation.equivalences.useManualQuotation) {
+                  toast({
+                      title: t('manualQuotationActive.title'),
+                      description: t('manualQuotationActive.description'),
+                  });
+              } else if (currentQuotation > 0) {
+                  toast({
+                      title: t('loadQuotationSuccess.title'),
+                      description: t('loadQuotationSuccess.description', { value: currentQuotation }),
+                  });
+              } else {
+                   toast({
+                      variant: 'destructive',
+                      title: t('loadQuotationError.title'),
+                      description: t('loadQuotationError.description'),
+                  });
+              }
+              previousQuotationValue.current = currentQuotation;
+          }
         }
-
-        toast({
-            title: t('loadQuotationSuccess.title'),
-            description: t('loadQuotationSuccess.description', { value: settings.calculation.equivalences.ucsQuotationValue }),
-        });
-
-    }, [settings.calculation.equivalences.ucsQuotationValue, settings.calculation.equivalences.useManualQuotation, t, toast]);
+        // Use a small timeout to defer the toast until after the current render cycle.
+        const timer = setTimeout(handleQuotationChange, 100);
+        return () => clearTimeout(timer);
+    }, [
+        settings.calculation.equivalences.useManualQuotation, 
+        settings.calculation.equivalences.manualQuotationValue, 
+        settings.calculation.equivalences.ucsQuotationValue,
+        isLoading,
+        t, 
+        toast
+    ]);
 
 
     const saveSettings = async () => {
@@ -302,3 +340,6 @@ export const useSettings = () => {
     }
     return context;
 };
+
+
+    

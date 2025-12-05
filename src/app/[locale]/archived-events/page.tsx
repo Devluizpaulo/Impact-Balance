@@ -28,6 +28,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function ArchivedEventsPage() {
     const t = useTranslations("ArchivedEventsPage");
@@ -39,6 +40,9 @@ export default function ArchivedEventsPage() {
     const [isReportOpen, setIsReportOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [eventToDelete, setEventToDelete] = useState<EventRecord | null>(null);
+    const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
+    const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);
+
     const { toast } = useToast();
 
     const fetchEvents = async () => {
@@ -63,7 +67,7 @@ export default function ArchivedEventsPage() {
       try {
         await unarchiveEvent(eventId);
         toast({ title: t('unarchiveSuccess') });
-        fetchEvents(); // Refresh list
+        fetchEvents();
       } catch (error) {
         toast({ variant: 'destructive', title: t('unarchiveError') });
         console.error("Failed to unarchive event:", error);
@@ -80,7 +84,7 @@ export default function ArchivedEventsPage() {
         try {
             await deleteEvent(eventToDelete.id);
             toast({ title: t('deleteSuccess') });
-            fetchEvents(); // Refresh list
+            fetchEvents();
             setIsDeleteDialogOpen(false);
             setEventToDelete(null);
         } catch (error) {
@@ -89,10 +93,55 @@ export default function ArchivedEventsPage() {
         }
     };
 
+    const handleSelectEvent = (eventId: string, checked: boolean | 'indeterminate') => {
+        if (checked) {
+            setSelectedEvents((prev) => [...prev, eventId]);
+        } else {
+            setSelectedEvents((prev) => prev.filter((id) => id !== eventId));
+        }
+    };
+
+    const handleSelectAll = (checked: boolean | 'indeterminate') => {
+        if (checked) {
+            setSelectedEvents(events.map((e) => e.id));
+        } else {
+            setSelectedEvents([]);
+        }
+    };
+
+    const handleBulkUnarchive = async () => {
+        try {
+            await Promise.all(selectedEvents.map(id => unarchiveEvent(id)));
+            toast({ title: t('bulkUnarchiveSuccess', {count: selectedEvents.length})});
+            fetchEvents();
+            setSelectedEvents([]);
+        } catch (error) {
+            toast({ variant: 'destructive', title: t('unarchiveError') });
+            console.error("Failed to bulk unarchive events:", error);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        if (selectedEvents.length === 0) return;
+        try {
+            await Promise.all(selectedEvents.map(id => deleteEvent(id)));
+            toast({ title: t('bulkDeleteSuccess', {count: selectedEvents.length})});
+            fetchEvents();
+            setSelectedEvents([]);
+        } catch (error) {
+            toast({ variant: 'destructive', title: t('deleteError') });
+            console.error("Failed to bulk delete events:", error);
+        } finally {
+            setIsBulkDeleteDialogOpen(false);
+        }
+    };
+
 
     const formatCurrency = (value: number) => {
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
     }
+
+    const isAllSelected = events.length > 0 && selectedEvents.length === events.length;
 
     return (
         <AppShell>
@@ -103,8 +152,24 @@ export default function ArchivedEventsPage() {
 
             <Card>
                 <CardHeader>
-                        <CardTitle>{t('table.title')}</CardTitle>
-                        <CardDescription>{t('table.description')}</CardDescription>
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <CardTitle>{t('table.title')}</CardTitle>
+                            <CardDescription>{t('table.description')}</CardDescription>
+                        </div>
+                        {selectedEvents.length > 0 && isAdmin && (
+                            <div className="flex gap-2">
+                                <Button variant="outline" onClick={handleBulkUnarchive}>
+                                    <ArchiveRestore className="mr-2 h-4 w-4" />
+                                    {t('bulkUnarchiveButton', { count: selectedEvents.length })}
+                                </Button>
+                                <Button variant="destructive" onClick={() => setIsBulkDeleteDialogOpen(true)}>
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    {t('bulkDeleteButton', { count: selectedEvents.length })}
+                                </Button>
+                            </div>
+                        )}
+                    </div>
                 </CardHeader>
                 <CardContent>
                     {loading ? (
@@ -120,6 +185,15 @@ export default function ArchivedEventsPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    {isAdmin && (
+                                        <TableHead className="w-[40px]">
+                                            <Checkbox
+                                                checked={isAllSelected}
+                                                onCheckedChange={handleSelectAll}
+                                                aria-label="Select all"
+                                            />
+                                        </TableHead>
+                                    )}
                                     <TableHead className="w-[40%]">{t('table.eventName')}</TableHead>
                                     <TableHead>{t('table.date')}</TableHead>
                                     <TableHead className="text-right">{t('table.totalUCS')}</TableHead>
@@ -129,7 +203,16 @@ export default function ArchivedEventsPage() {
                             </TableHeader>
                             <TableBody>
                                 {events.map((event) => (
-                                    <TableRow key={event.id}>
+                                    <TableRow key={event.id} data-state={selectedEvents.includes(event.id) && "selected"}>
+                                        {isAdmin && (
+                                            <TableCell>
+                                                <Checkbox
+                                                    checked={selectedEvents.includes(event.id)}
+                                                    onCheckedChange={(checked) => handleSelectEvent(event.id, checked)}
+                                                    aria-label={`Select event ${event.formData.eventName}`}
+                                                />
+                                            </TableCell>
+                                        )}
                                         <TableCell className="font-medium">
                                             <div className="flex items-center">
                                                 <Award className="h-4 w-4 mr-2 text-primary/70" />
@@ -220,6 +303,23 @@ export default function ArchivedEventsPage() {
                 <AlertDialogFooter>
                 <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>{t('deleteDialog.cancel')}</AlertDialogCancel>
                 <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                    {t('deleteDialog.confirm')}
+                </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog open={isBulkDeleteDialogOpen} onOpenChange={setIsBulkDeleteDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>{t('bulkDeleteDialog.title')}</AlertDialogTitle>
+                <AlertDialogDescription>
+                    {t('bulkDeleteDialog.description', { count: selectedEvents.length })}
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setIsBulkDeleteDialogOpen(false)}>{t('deleteDialog.cancel')}</AlertDialogCancel>
+                <AlertDialogAction onClick={handleBulkDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                     {t('deleteDialog.confirm')}
                 </AlertDialogAction>
                 </AlertDialogFooter>

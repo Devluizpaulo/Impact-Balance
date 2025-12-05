@@ -18,13 +18,53 @@
     "documentation": "Documentation",
     "scientificReview": "Scientific Review",
     "eventSeal": "Certificates",
+    "sealStatus": "Seal Status",
     "archivedEvents": "Archived",
     "dashboard": "Dashboard",
     "logout": "Logout",
     "adminOnly": "Admin only",
     "adminLogin": "Admin Login",
     "manage": "Manage",
-    "dataAnalysis": "Data & Analysis"
+    "dataAnalysis": "Data & Analysis",
+    "agenda": "Agenda"
+  },
+  "AgendaPage": {
+    "title": "Edit Users",
+    "description": "Manage your clients and contacts in one place."
+  },
+  "SealStatusPage": {
+    "title": "Seal Status",
+    "description": "Monitor the validity of issued seals and import legacy data.",
+    "importButton": "Import Data",
+    "importModal": {
+      "title": "Import Legacy Seals",
+      "description": "Select an XLSX or CSV file to import. The file must contain columns for <code >Pedido</code>, <code >Data</code>, <code >Cliente</code>, <code >Telefone</code>, <code >PARC/PROG</code>, <code >UF</code>, <code >Quantidade</code>, <code >Taxa</code>, and <code >Total</code>. The date can be in a standard format (e.g., YYYY-MM-DD) or an Excel date number.<span></span>",
+      "selectFile": "Select File",
+      "downloadTemplate": "Download Template",
+      "cancel": "Cancel"
+    },
+    "importSuccess": {
+      "title": "Import Successful",
+      "description": "{count} records were imported and added to the system."
+    },
+    "importError": {
+      "title": "Import Failed",
+      "description": "An error occurred while processing the file. Please check the file format and try again.",
+      "readError": "Could not read the selected file."
+    },
+    "noSeals": "No seals found in the system.",
+    "table": {
+      "title": "Seal Validity",
+      "eventName": "Event Name",
+      "issueDate": "Issue Date",
+      "expiryDate": "Expiry Date",
+      "status": "Status"
+    },
+    "status": {
+      "valid": "Valid",
+      "expiring": "Expiring Soon",
+      "expired": "Expired"
+    }
   },
   "Dashboard": {
     "title": "Dashboard",
@@ -206,6 +246,8 @@
     },
     "equivalences": {
       "ucsQuotationValue": "UCS Quotation Value",
+      "ucsQuotationValueUSD": "UCS Quotation Value (USD)",
+      "ucsQuotationValueEUR": "UCS Quotation Value (EUR)",
       "quotationDate": "Quotation Date",
       "gdpPerCapita": "GDP per Capita",
       "equivalenceValuePerYear": "Equivalence Value per Year",
@@ -237,7 +279,7 @@
       },
       "loadQuotationSuccess": {
         "title": "UCS Quotation Loaded",
-        "description": "The current UCS quotation value (R$ {value}) has been loaded from the database."
+        "description": "The current UCS quotation value ($ {value}) has been loaded from the database."
       },
       "loadQuotationError": {
         "title": "Failed to Load Quotation",
@@ -246,16 +288,79 @@
       "manualQuotationActive": {
         "title": "Manual Quotation Active",
         "description": "The UCS quotation value is being set manually."
+      },
+      "manualQuotationPrompt": {
+        "title": "Enter Manual Quotation",
+        "description": "Enter the base UCS value in BRL and the daily exchange rates to calculate the final values.",
+        "brlLabel": "UCS Value (BRL)",
+        "usdLabel": "USD Exchange Rate (to BRL)",
+        "eurLabel": "EUR Exchange Rate (to BRL)",
+        "save": "Save",
+        "cancel": "Cancel"
+      },
+      "manualQuotationError": {
+        "title": "Invalid Values",
+        "description": "Please enter valid, positive numbers for all fields."
       }
     }
   },
   "EventSealPage": {
     "title": "Event Certificates",
-    "description": "Manage and view certificates for calculated events.",
+    "description": "Manage and view certificates for calculated events and legacy seals.",
     "noEvents": "No events have been calculated yet.",
     "tabs": {
       "report": "Executive Report",
-      "certificate": "Certificate"
+      "certificate": "Certificate",
+      "events": "Events",
+      "seals": "Seals"
+    },
+    "status": {
+      "valid": "Valid",
+      "expiring": "Expiring Soon",
+      "expired": "Expired"
+    },
+    "renewalStatus": {
+      "pending": "Pending",
+      "contacted": "Contacted",
+      "renewed": "Renewed",
+      "archived": "Not Renewed (Archived)"
+    },
+    "sealsTable": {
+      "title": "Legacy Seals",
+      "description": "List of seals imported from the legacy system.",
+      "noSeals": "No legacy seals found.",
+      "pedido": "Order",
+      "data": "Date",
+      "cliente": "Client",
+      "telefone": "Phone",
+      "parcProg": "PARC/PROG",
+      "uf": "State",
+      "quantidade": "Quantity",
+      "taxa": "Fee",
+      "total": "Total",
+      "status": "Status",
+      "renew": "Request Renewal",
+      "renewalMessage": "Hello {client}, your seal for order {pedido} expires on {expiryDate}. Would you like to renew it?",
+      "renewalErrorTitle": "Cannot Request Renewal",
+      "renewalErrorNoPhone": "No phone number is registered for this client.",
+      "filterYear": "Filter by Year",
+      "filterMonth": "Filter by Month",
+      "allYears": "All Years",
+      "allMonths": "All Months",
+      "renewalModal": {
+        "title": "Renewal Process",
+        "description": "Manage the renewal with {client} for the order '{order}'.",
+        "contact": "Contact via WhatsApp",
+        "contactName": "Contact Name",
+        "notes": "Observations",
+        "notesPlaceholder": "Add notes about the negotiation...",
+        "status": "Renewal Status",
+        "statusPlaceholder": "Select a status",
+        "save": "Save",
+        "expiry": "Expires on"
+      },
+      "renewalSaveSuccess": "Renewal data saved successfully.",
+      "renewalSaveError": "Failed to save renewal data."
     },
     "tooltips": {
       "view": "View Report",
@@ -263,7 +368,7 @@
       "delete": "Delete Event"
     },
     "table": {
-      "title": "Saved Events",
+      "title": "Calculated Events",
       "description": "List of all events calculated and saved in the system.",
       "eventName": "Event Name",
       "date": "Date",
@@ -284,10 +389,20 @@
       "cancel": "Cancel",
       "confirm": "Delete"
     },
+    "bulkDeleteDialog": {
+      "title": "Are you sure?",
+      "description": "This action cannot be undone. This will permanently delete the {count} selected events.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
     "archiveSuccess": "Event archived successfully.",
     "archiveError": "Failed to archive event.",
     "deleteSuccess": "Event deleted successfully.",
-    "deleteError": "Failed to delete event."
+    "deleteError": "Failed to delete event.",
+    "bulkArchiveButton": "Archive {count} items",
+    "bulkDeleteButton": "Delete {count} items",
+    "bulkArchiveSuccess": "{count} events archived successfully.",
+    "bulkDeleteSuccess": "{count} events deleted successfully."
   },
   "ArchivedEventsPage": {
     "title": "Archived Events",
@@ -317,10 +432,20 @@
       "cancel": "Cancel",
       "confirm": "Delete"
     },
+    "bulkDeleteDialog": {
+      "title": "Are you sure?",
+      "description": "This action cannot be undone. This will permanently delete the {count} selected events.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
     "unarchiveSuccess": "Event unarchived successfully.",
     "unarchiveError": "Failed to unarchive event.",
     "deleteSuccess": "Event deleted successfully.",
-    "deleteError": "Failed to delete event."
+    "deleteError": "Failed to delete event.",
+    "bulkUnarchiveButton": "Unarchive {count} items",
+    "bulkDeleteButton": "Delete {count} items",
+    "bulkUnarchiveSuccess": "{count} events unarchived successfully.",
+    "bulkDeleteSuccess": "{count} events deleted successfully."
   },
   "EventCertificate": {
     "title": "Certificate of Sustainability",

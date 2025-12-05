@@ -417,7 +417,3 @@ export default function ImpactCalculator({ onCalculate, onReset }: ImpactCalcula
     </Card>
   );
 }
-
-  
-
-    

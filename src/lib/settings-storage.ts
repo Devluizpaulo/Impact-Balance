@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { db } from './firebase/config';
@@ -268,26 +269,16 @@ export const getSettings = async (): Promise<SystemSettings> => {
 // Function to save settings to Firestore
 export const saveSettings = (settings: SystemSettings) => {
     const docRef = doc(db, SETTINGS_COLLECTION, SETTINGS_DOC_ID);
-    // Exclude the dynamically loaded quotation values from being saved
-    const { 
-        calculation: { 
-            equivalences: { 
-                ucsQuotationValue: _brl, 
-                ucsQuotationValueUSD: _usd,
-                ucsQuotationValueEUR: _eur,
-                ucsQuotationDate: _date, 
-                ...restEquivalences 
-            }, 
-            ...restCalculation 
-        } 
-    } = settings;
-    
-    const settingsToSave = {
-        calculation: {
-            ...restCalculation,
-            equivalences: restEquivalences
-        }
-    };
+
+    // Prepare a clone of the settings to avoid modifying the original object
+    const settingsToSave = JSON.parse(JSON.stringify(settings));
+
+    // We never want to save the real-time quotation values to the 'default' settings doc.
+    // We only save the manual values. The real-time values are always fetched from the 'ucs_ase' collection.
+    delete settingsToSave.calculation.equivalences.ucsQuotationValue;
+    delete settingsToSave.calculation.equivalences.ucsQuotationValueUSD;
+    delete settingsToSave.calculation.equivalences.ucsQuotationValueEUR;
+    delete settingsToSave.calculation.equivalences.ucsQuotationDate;
 
 
     setDoc(docRef, settingsToSave, { merge: true }).catch(async (serverError) => {

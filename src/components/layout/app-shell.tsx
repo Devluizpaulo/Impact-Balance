@@ -1,7 +1,7 @@
 
 "use client"
 
-import { Calculator, LayoutDashboard, LogOut, Award, Archive, Settings, FilePieChart, Globe2, FileText, PanelLeft } from "lucide-react";
+import { Calculator, LayoutDashboard, LogOut, Award, Archive, Settings, FilePieChart, Globe2, FileText, PanelLeft, ShieldCheck, Contact } from "lucide-react";
 import { Link, usePathname, pathnames } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -16,7 +16,7 @@ type Pathname = keyof typeof pathnames;
 type NavItem = {
   href: Pathname;
   icon: React.ReactNode;
-  translationKey: 'calculator' | 'eventSeal' | 'archivedEvents' | 'parameters' | 'dataFigures' | 'countryResults' | 'scientificReview' | 'dashboard' | 'logout' | 'adminOnly' | 'adminLogin' | 'manage' | 'dataAnalysis';
+  translationKey: 'calculator' | 'eventSeal' | 'archivedEvents' | 'parameters' | 'dataFigures' | 'countryResults' | 'scientificReview' | 'dashboard' | 'logout' | 'adminOnly' | 'adminLogin' | 'manage' | 'dataAnalysis' | 'sealStatus' | 'agenda';
   isProtected?: boolean;
 }
 
@@ -29,7 +29,9 @@ const mainNavItems: NavItem[] = [
 ];
 
 const eventManagementNavItems: NavItem[] = [
+    { href: "/agenda", icon: <Contact className="h-5 w-5" />, translationKey: 'agenda' },
     { href: "/event-seal", icon: <Award className="h-5 w-5" />, translationKey: 'eventSeal' },
+    { href: "/seal-status", icon: <ShieldCheck className="h-5 w-5" />, translationKey: 'sealStatus' },
     { href: "/archived-events", icon: <Archive className="h-5 w-5" />, translationKey: 'archivedEvents' },
 ];
 
@@ -245,13 +247,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { isAdmin } = useAuth();
 
   const dashboardPaths = [
-    '/dashboard', 
+    '/dashboard',
+    '/agenda',
     '/event-seal', 
     '/archived-events',
     '/parameters',
     '/data-figures',
     '/country-results',
-    '/scientific-review'
+    '/scientific-review',
+    '/seal-status'
   ];
 
   const isDashboardPage = dashboardPaths.includes(pathname) && isAdmin;

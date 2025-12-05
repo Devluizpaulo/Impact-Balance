@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useSettings } from "@/lib/settings.tsx";
+import { useSettings } from "@/lib/settings";
 import { useAuth } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RefreshCcw, Save, Loader2, Hash } from "lucide-react";
@@ -19,6 +19,19 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useState, useEffect } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+
 
 function DocumentationContent() {
   const _t = useTranslations("DocumentationPage");
@@ -147,7 +160,7 @@ function DocumentationContent() {
   )
 }
 
-const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly = false, precision }: { name: string, value: string | number | null, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean, adornment: React.ReactNode, readOnly?: boolean, precision?: number }) => {
+const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly = false, precision, placeholder }: { name: string, value: string | number | null, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean, adornment: React.ReactNode, readOnly?: boolean, precision?: number, placeholder?: string }) => {
     
     const formatNumber = (num: number, fracDigits: number) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -167,13 +180,14 @@ const ParameterInput = ({ name, value, onChange, disabled, adornment, readOnly =
                 <span className="text-muted-foreground sm:text-sm">{adornment}</span>
             </div>
             <Input
-                type="text" // Use text to allow for formatted values
+                type="text"
                 name={name}
                 value={displayValue}
                 onChange={onChange}
                 className="text-right pl-8"
                 disabled={disabled}
                 readOnly={readOnly}
+                placeholder={placeholder}
             />
         </div>
     );
@@ -185,7 +199,16 @@ export default function ParametersPage() {
   const t_docs = useTranslations("DocumentationPage");
   const { settings, setSettings, saveSettings, resetSettings, isLoading, isSaving } = useSettings();
   const { isAdmin } = useAuth();
+  const { toast } = useToast();
+  
+  const [isManualQuotationDialogOpen, setIsManualQuotationDialogOpen] = useState(false);
+  const [manualBRL, setManualBRL] = useState<number | string>("");
+  const [exchangeRateUSD, setExchangeRateUSD] = useState<number | string>("");
+  const [exchangeRateEUR, setExchangeRateEUR] = useState<number | string>("");
+
+
   const { equivalences } = settings.calculation;
+
 
   const handleNestedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value: rawValue } = e.target;
@@ -217,10 +240,54 @@ export default function ParametersPage() {
   };
   
   const handleSwitchChange = (checked: boolean) => {
-    const newSettings = JSON.parse(JSON.stringify(settings));
-    newSettings.calculation.equivalences.useManualQuotation = checked;
-    setSettings(newSettings);
+    if (checked) {
+        // Pre-fill dialog with current manual values when it opens
+        setManualBRL(settings.calculation.equivalences.manualQuotationValue || "");
+        setExchangeRateUSD(settings.calculation.equivalences.manualExchangeRateUSD || "");
+        setExchangeRateEUR(settings.calculation.equivalences.manualExchangeRateEUR || "");
+        setIsManualQuotationDialogOpen(true);
+    } else {
+        const newSettings = JSON.parse(JSON.stringify(settings));
+        newSettings.calculation.equivalences.useManualQuotation = false;
+        setSettings(newSettings);
+        saveSettings(); // Save immediately when turning off
+    }
   };
+  
+  const handleSaveManualQuotation = async () => {
+    const parseNumericValue = (value: string | number): number => {
+        if (typeof value === 'number') return value;
+        return parseFloat(String(value).replace(/\./g, '').replace(',', '.')) || 0;
+    };
+
+    const brlValue = parseNumericValue(manualBRL);
+    const usdRate = parseNumericValue(exchangeRateUSD);
+    const eurRate = parseNumericValue(exchangeRateEUR);
+
+    if (brlValue <= 0 || usdRate <= 0 || eurRate <= 0) {
+        toast({
+            variant: "destructive",
+            title: t('toasts.manualQuotationError.title'),
+            description: t('toasts.manualQuotationError.description'),
+        });
+        return;
+    }
+
+    const newSettings = JSON.parse(JSON.stringify(settings));
+
+    newSettings.calculation.equivalences.useManualQuotation = true;
+    newSettings.calculation.equivalences.manualQuotationValue = brlValue;
+    newSettings.calculation.equivalences.manualExchangeRateUSD = usdRate;
+    newSettings.calculation.equivalences.manualExchangeRateEUR = eurRate;
+    newSettings.calculation.equivalences.manualQuotationValueUSD = brlValue / usdRate;
+    newSettings.calculation.equivalences.manualQuotationValueEUR = brlValue / eurRate;
+    
+    setSettings(newSettings);
+    await saveSettings();
+    
+    setIsManualQuotationDialogOpen(false);
+  };
+
 
   if (isLoading) {
     return (
@@ -321,12 +388,12 @@ export default function ParametersPage() {
               <CardTitle>{t('equivalencesAndCosts')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center space-x-2 mb-4 p-2 rounded-md bg-muted/50">
+              <div className="flex items-center space-x-2 mb-4 p-3 rounded-md bg-muted/50 border">
                   <Switch
                     id="manual-quotation-switch"
                     checked={equivalences.useManualQuotation}
                     onCheckedChange={handleSwitchChange}
-                    disabled={!isAdmin}
+                    disabled={!isAdmin || isSaving}
                   />
                   <Label htmlFor="manual-quotation-switch">{t('equivalences.useManualQuotation')}</Label>
               </div>
@@ -334,22 +401,51 @@ export default function ParametersPage() {
                 <TableHeader><TableRow><TableHead>{t('table.parameter')}</TableHead><TableHead className="w-48 text-right">{t('table.value')}</TableHead></TableRow></TableHeader>
                 <TableBody>
                     <TableRow>
-                      <TableCell>
-                          <div>{t('equivalences.ucsQuotationValue')}</div>
-                          {!equivalences.useManualQuotation && equivalences.ucsQuotationDate && (
-                            <div className="text-xs text-muted-foreground">{t('equivalences.quotationDate')}: {equivalences.ucsQuotationDate}</div>
-                          )}
-                      </TableCell>
-                      <TableCell>
-                        <ParameterInput 
-                          name="calculation.equivalences.manualQuotationValue" 
-                          value={equivalences.useManualQuotation ? equivalences.manualQuotationValue : equivalences.ucsQuotationValue}
-                          onChange={handleNestedChange} 
-                          disabled={!isAdmin || !equivalences.useManualQuotation} 
-                          adornment={'R$'} 
-                          precision={2} 
-                        />
-                      </TableCell>
+                        <TableCell>
+                            <div>{t('equivalences.ucsQuotationValue')} (BRL)</div>
+                            {!equivalences.useManualQuotation && equivalences.ucsQuotationDate && (
+                                <div className="text-xs text-muted-foreground">{t('equivalences.quotationDate')}: {equivalences.ucsQuotationDate}</div>
+                            )}
+                        </TableCell>
+                        <TableCell>
+                             <ParameterInput 
+                                name="calculation.equivalences.ucsQuotationValue" 
+                                value={equivalences.useManualQuotation ? equivalences.manualQuotationValue : equivalences.ucsQuotationValue}
+                                onChange={handleNestedChange}
+                                disabled={true}
+                                readOnly={true}
+                                adornment={'R$'} 
+                                precision={2} 
+                            />
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>{t('equivalences.ucsQuotationValueUSD')}</TableCell>
+                        <TableCell>
+                            <ParameterInput 
+                                name="calculation.equivalences.ucsQuotationValueUSD" 
+                                value={equivalences.useManualQuotation ? equivalences.manualQuotationValueUSD : equivalences.ucsQuotationValueUSD}
+                                onChange={handleNestedChange}
+                                disabled={true}
+                                readOnly={true}
+                                adornment={'$'} 
+                                precision={2} 
+                            />
+                        </TableCell>
+                    </TableRow>
+                     <TableRow>
+                        <TableCell>{t('equivalences.ucsQuotationValueEUR')}</TableCell>
+                        <TableCell>
+                            <ParameterInput 
+                                name="calculation.equivalences.ucsQuotationValueEUR" 
+                                value={equivalences.useManualQuotation ? equivalences.manualQuotationValueEUR : equivalences.ucsQuotationValueEUR}
+                                onChange={handleNestedChange}
+                                disabled={true}
+                                readOnly={true}
+                                adornment={'€'} 
+                                precision={2} 
+                            />
+                        </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>{t('equivalences.gdpPerCapita')}</TableCell>
@@ -461,9 +557,40 @@ export default function ParametersPage() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
+
+          <AlertDialog open={isManualQuotationDialogOpen} onOpenChange={setIsManualQuotationDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>{t('toasts.manualQuotationPrompt.title')}</AlertDialogTitle>
+                    <AlertDialogDescription>{t('toasts.manualQuotationPrompt.description')}</AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="manual-brl">{t('toasts.manualQuotationPrompt.brlLabel')}</Label>
+                        <Input id="manual-brl" type="text" value={manualBRL} onChange={(e) => setManualBRL(e.target.value)} placeholder="150,00" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="exchange-usd">{t('toasts.manualQuotationPrompt.usdLabel')}</Label>
+                        <Input id="exchange-usd" type="text" value={exchangeRateUSD} onChange={(e) => setExchangeRateUSD(e.target.value)} placeholder="5,45" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="exchange-eur">{t('toasts.manualQuotationPrompt.eurLabel')}</Label>
+                        <Input id="exchange-eur" type="text" value={exchangeRateEUR} onChange={(e) => setExchangeRateEUR(e.target.value)} placeholder="5,95" />
+                    </div>
+                </div>
+                <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setIsManualQuotationDialogOpen(false)}>{t('toasts.manualQuotationPrompt.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleSaveManualQuotation}>{t('toasts.manualQuotationPrompt.save')}</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
     </AppShell>
   );
 }
+
+
+
+
 
     
 

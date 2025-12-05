@@ -31,6 +31,16 @@ service cloud.firestore {
       allow list, get: if true; // Publicly readable
       allow update, delete: if isAdmin(); // Only admins can modify
     }
+    
+    /**
+     * @description Manages client data for the Agenda.
+     * Only admins can manage clients.
+     * @path /impact-balance-clients/{clientId}
+     */
+    match /impact-balance-clients/{clientId} {
+      allow read, write: if isAdmin();
+    }
+
 
     /**
      * @description Manages system parameters for the Impact Balance Calculator.

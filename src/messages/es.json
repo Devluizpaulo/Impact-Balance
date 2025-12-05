@@ -18,13 +18,53 @@
     "documentation": "Documentación",
     "scientificReview": "Revisión Científica",
     "eventSeal": "Certificados",
+    "sealStatus": "Estado de los Sellos",
     "archivedEvents": "Archivados",
     "dashboard": "Dashboard",
     "logout": "Cerrar Sesión",
     "adminOnly": "Solo para administradores",
     "adminLogin": "Acceso de Administrador",
     "manage": "Gestionar",
-    "dataAnalysis": "Datos y Análisis"
+    "dataAnalysis": "Datos y Análisis",
+    "agenda": "Agenda"
+  },
+  "AgendaPage": {
+    "title": "Editar Usuarios",
+    "description": "Gestione sus clientes y contactos en un solo lugar."
+  },
+  "SealStatusPage": {
+    "title": "Estado de los Sellos",
+    "description": "Monitoree la validez de los sellos emitidos e importe datos heredados.",
+    "importButton": "Importar Datos",
+    "importModal": {
+      "title": "Importar Sellos Heredados",
+      "description": "Seleccione un archivo XLSX o CSV para importar. El archivo debe contener columnas para <code >Pedido</code>, <code >Data</code>, <code >Cliente</code>, <code >Telefone</code>, <code >PARC/PROG</code>, <code >UF</code>, <code >Quantidade</code>, <code >Taxa</code>, y <code >Total</code>. La fecha puede estar en un formato estándar (ej., YYYY-MM-DD) o como un número de fecha de Excel.<span></span>",
+      "selectFile": "Seleccionar Archivo",
+      "downloadTemplate": "Descargar Plantilla",
+      "cancel": "Cancelar"
+    },
+    "importSuccess": {
+      "title": "Importación Exitosa",
+      "description": "Se importaron y agregaron {count} registros al sistema."
+    },
+    "importError": {
+      "title": "Error en la Importación",
+      "description": "Ocurrió un error al procesar el archivo. Por favor, verifique el formato del archivo e intente de nuevo.",
+      "readError": "No se pudo leer el archivo seleccionado."
+    },
+    "noSeals": "No se encontraron sellos en el sistema.",
+    "table": {
+      "title": "Validez de los Sellos",
+      "eventName": "Nombre del Evento",
+      "issueDate": "Fecha de Emisión",
+      "expiryDate": "Fecha de Vencimiento",
+      "status": "Estado"
+    },
+    "status": {
+      "valid": "Válido",
+      "expiring": "Vence Pronto",
+      "expired": "Vencido"
+    }
   },
   "Dashboard": {
     "title": "Dashboard",
@@ -206,6 +246,8 @@
     },
     "equivalences": {
       "ucsQuotationValue": "Valor de Cotización UCS",
+      "ucsQuotationValueUSD": "Valor de Cotización UCS (USD)",
+      "ucsQuotationValueEUR": "Valor de Cotización UCS (EUR)",
       "quotationDate": "Fecha de Cotización",
       "gdpPerCapita": "PIB per Cápita",
       "equivalenceValuePerYear": "Valor de Equivalencia por Año",
@@ -237,7 +279,7 @@
       },
       "loadQuotationSuccess": {
         "title": "Cotización de UCS Cargada",
-        "description": "El valor actual de la cotización de UCS (R$ {value}) se cargó desde la base de datos."
+        "description": "El valor actual de la cotización de UCS ($ {value}) se cargó desde la base de datos."
       },
       "loadQuotationError": {
         "title": "Error al Cargar la Cotización",
@@ -246,16 +288,79 @@
       "manualQuotationActive": {
         "title": "Cotización Manual Activa",
         "description": "El valor de la cotización de UCS se está definiendo manualmente."
+      },
+      "manualQuotationPrompt": {
+        "title": "Ingresar Cotización Manual",
+        "description": "Ingrese el valor base de UCS en BRL y las tasas de cambio diarias para calcular los valores finales.",
+        "brlLabel": "Valor de UCS (BRL)",
+        "usdLabel": "Tasa de Cambio del Dólar (a BRL)",
+        "eurLabel": "Tasa de Cambio del Euro (a BRL)",
+        "save": "Guardar",
+        "cancel": "Cancelar"
+      },
+      "manualQuotationError": {
+        "title": "Valores Inválidos",
+        "description": "Por favor, ingrese números válidos y positivos para todos los campos."
       }
     }
   },
   "EventSealPage": {
     "title": "Certificados de Eventos",
-    "description": "Administre y vea los certificados de los eventos calculados.",
+    "description": "Administre y vea los certificados para los eventos calculados y los sellos heredados.",
     "noEvents": "Aún no se han calculado eventos.",
     "tabs": {
       "report": "Informe Ejecutivo",
-      "certificate": "Certificado"
+      "certificate": "Certificado",
+      "events": "Eventos",
+      "seals": "Sellos"
+    },
+    "status": {
+      "valid": "Válido",
+      "expiring": "Vence Pronto",
+      "expired": "Vencido"
+    },
+    "renewalStatus": {
+      "pending": "Pendiente",
+      "contacted": "Contactado",
+      "renewed": "Renovado",
+      "archived": "No Renovado (Archivado)"
+    },
+    "sealsTable": {
+      "title": "Sellos Heredados",
+      "description": "Lista de sellos importados del sistema heredado.",
+      "noSeals": "No se encontraron sellos heredados.",
+      "pedido": "Pedido",
+      "data": "Fecha",
+      "cliente": "Cliente",
+      "telefone": "Teléfono",
+      "parcProg": "PARC/PROG",
+      "uf": "Estado",
+      "quantidade": "Cantidad",
+      "taxa": "Tasa",
+      "total": "Total",
+      "status": "Estado",
+      "renew": "Solicitar Renovación",
+      "renewalMessage": "Hola {client}, su sello para el pedido {pedido} vence el {expiryDate}. ¿Le gustaría renovarlo?",
+      "renewalErrorTitle": "No se puede solicitar la renovación",
+      "renewalErrorNoPhone": "No hay un número de teléfono registrado para este cliente.",
+      "filterYear": "Filtrar por Año",
+      "filterMonth": "Filtrar por Mes",
+      "allYears": "Todos los Años",
+      "allMonths": "Todos los Meses",
+      "renewalModal": {
+        "title": "Proceso de Renovación",
+        "description": "Gestione la renovación con {client} para el pedido '{order}'.",
+        "contact": "Contactar vía WhatsApp",
+        "contactName": "Nombre de Contacto",
+        "notes": "Observaciones",
+        "notesPlaceholder": "Añada anotaciones sobre la negociación...",
+        "status": "Estado de la Renovación",
+        "statusPlaceholder": "Seleccione un estado",
+        "save": "Guardar",
+        "expiry": "Vencimiento"
+      },
+      "renewalSaveSuccess": "Datos de renovación guardados.",
+      "renewalSaveError": "Error al guardar los datos de renovación."
     },
     "tooltips": {
       "view": "Ver Informe",
@@ -263,7 +368,7 @@
       "delete": "Eliminar Evento"
     },
     "table": {
-      "title": "Eventos Guardados",
+      "title": "Eventos Calculados",
       "description": "Lista de todos los eventos calculados y guardados en el sistema.",
       "eventName": "Nombre del Evento",
       "date": "Fecha",
@@ -284,10 +389,20 @@
       "cancel": "Cancelar",
       "confirm": "Eliminar"
     },
+    "bulkDeleteDialog": {
+      "title": "¿Estás seguro?",
+      "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente los {count} eventos seleccionados.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
     "archiveSuccess": "Evento archivado con éxito.",
     "archiveError": "Error al archivar el evento.",
     "deleteSuccess": "Evento eliminado con éxito.",
-    "deleteError": "Error al eliminar el evento."
+    "deleteError": "Error al eliminar el evento.",
+    "bulkArchiveButton": "Archivar {count} elementos",
+    "bulkDeleteButton": "Eliminar {count} elementos",
+    "bulkArchiveSuccess": "{count} eventos archivados con éxito.",
+    "bulkDeleteSuccess": "{count} eventos eliminados con éxito."
   },
   "ArchivedEventsPage": {
     "title": "Eventos Archivados",
@@ -317,10 +432,20 @@
       "cancel": "Cancelar",
       "confirm": "Eliminar"
     },
+    "bulkDeleteDialog": {
+      "title": "¿Estás seguro?",
+      "description": "Esta acción no se puede deshacer. Esto eliminará permanentemente los {count} eventos seleccionados.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
     "unarchiveSuccess": "Evento desarchivado con éxito.",
     "unarchiveError": "Error al desarchivar el evento.",
     "deleteSuccess": "Evento eliminado con éxito.",
-    "deleteError": "Error al eliminar el evento."
+    "deleteError": "Error al eliminar el evento.",
+    "bulkUnarchiveButton": "Desarchivar {count} elementos",
+    "bulkDeleteButton": "Eliminar {count} elementos",
+    "bulkUnarchiveSuccess": "{count} eventos desarchivados con éxito.",
+    "bulkDeleteSuccess": "{count} eventos eliminados con éxito."
   },
   "EventCertificate": {
     "title": "Certificado de Sostenibilidad",
