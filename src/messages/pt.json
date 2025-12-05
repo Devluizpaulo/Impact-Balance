@@ -38,9 +38,36 @@
     },
     "actions": {
       "downloadCsv": "Baixar CSV",
+      "importCsv": "Importar CSV",
       "new": "Novo Cliente",
       "edit": "Editar",
-      "delete": "Excluir"
+      "delete": "Excluir",
+      "view": "Ver Perfil",
+      "deleteSelected": "Excluir Selecionados",
+      "selected": "{count} selecionado(s)",
+      "bulkDeleteConfirmTitle": "Excluir Clientes?",
+      "bulkDeleteConfirmDescription": "Tem certeza que deseja excluir os {count} clientes selecionados? Esta ação não pode ser desfeita.",
+      "bulkDeleteSuccess": "{count} clientes excluídos com sucesso.",
+      "deleteError": "Falha ao excluir clientes."
+    },
+    "importModal": {
+      "title": "Importar Clientes",
+      "description": "Selecione um arquivo .xlsx ou .csv para importar ou atualizar clientes. Para atualizar, certifique-se de que a coluna 'id' está presente.",
+      "selectFile": "Selecionar Arquivo",
+      "downloadTemplate": "Baixar Modelo",
+      "cancel": "Cancelar",
+      "importSuccess": {
+        "title": "Importação Concluída",
+        "description": "{created} clientes criados e {updated} clientes atualizados."
+      },
+      "importError": {
+        "title": "Falha na Importação",
+        "description": "Ocorreu um erro ao processar o arquivo. Verifique o formato e tente novamente.",
+        "readError": "Não foi possível ler o arquivo selecionado."
+      },
+      "previewTitle": "Pré-visualização da Importação",
+      "previewDescription": "Verifique os dados abaixo. {count} registros serão importados ou atualizados.",
+      "confirmImport": "Confirmar e Importar"
     },
     "filters": {
       "searchPlaceholder": "Busque por nome ou documento...",
@@ -70,6 +97,7 @@
     "form": {
       "newClientTitle": "Cadastrar Novo Cliente",
       "editClientTitle": "Editar Cliente",
+      "viewClientTitle": "Detalhes de {name}",
       "newClientDescription": "Preencha os dados abaixo para adicionar um novo cliente à sua agenda.",
       "saveSuccess": "Cliente salvo com sucesso!",
       "saveError": "Erro ao salvar cliente",
@@ -82,7 +110,8 @@
       "documentType": "Tipo de documento",
       "razaoSocial": "Razão Social",
       "nomeFantasia": "Nome Fantasia",
-      "fullName": "Nome Completo",
+      "firstName": "Nome",
+      "lastName": "Sobrenome",
       "phone": "Telefone",
       "mobile": "Celular",
       "country": "País",
@@ -101,7 +130,13 @@
       "selectPlaceholder": "Selecione...",
       "cancel": "Cancelar",
       "save": "Salvar",
-      "update": "Atualizar"
+      "update": "Atualizar",
+      "status": "Situação",
+      "profiles": "Perfis",
+      "searchProfile": "Buscar perfil...",
+      "noProfileFound": "Nenhum perfil encontrado.",
+      "close": "Fechar",
+      "registerDate": "Data do registro"
     }
   },
   "SealStatusPage": {
@@ -110,7 +145,7 @@
     "importButton": "Importar Dados",
     "importModal": {
       "title": "Importar Selos Legados",
-      "description": "Selecione um arquivo XLSX ou CSV para importar. O arquivo deve conter colunas para <code >Pedido</code>, <code >Data</code>, <code >Cliente</code>, <code >Telefone</code>, <code >PARC/PROG</code>, <code >UF</code>, <code >Quantidade</code>, <code >Taxa</code> e <code >Total</code>. A data pode estar em formato padrão (ex: AAAA-MM-DD) ou como um número de data do Excel.<span></span>",
+      "description": "Selecione um arquivo XLSX ou CSV para importar. O arquivo deve conter colunas para <code >Pedido</code>, <code >Data</code>, <code >Cliente</code>, <code >Telefone</code>, <code >PARC/PROG</code>, <code >UF</code>, <code >Quantidade</code>, <code >Taxa</code> e <code >Total</code>. A data pode estar em formato padrão (ex: AAAA-MM-DD) ou como um número de data do Excel.<span>Se um cliente não existir na Agenda, ele será criado automaticamente.</span>",
       "selectFile": "Selecionar Arquivo",
       "downloadTemplate": "Baixar Modelo",
       "cancel": "Cancelar"
@@ -631,5 +666,26 @@
     "logoutSuccess": {
       "title": "Logout Bem-sucedido"
     }
+  },
+  "Profiles": {
+    "Administrador": "Administrador",
+    "Usuário AKSES": "Usuário AKSES",
+    "Cliente": "Cliente",
+    "IMEI": "IMEI",
+    "Associação": "Associação",
+    "Produtor": "Produtor",
+    "Governo": "Governo",
+    "Parceiro": "Parceiro",
+    "Distribuidor Geral": "Distribuidor Geral",
+    "Distribuidor Financeiro": "Distribuidor Financeiro",
+    "Distribuidor Credenciado": "Distribuidor Credenciado",
+    "Jurídico": "Jurídico",
+    "Diretor": "Diretor",
+    "Supervisor": "Supervisor",
+    "Operador GEO": "Operador GEO",
+    "Administrativo": "Administrativo",
+    "TI": "TI",
+    "Auditoria": "Auditoria",
+    "Financeiro": "Financeiro"
   }
 }

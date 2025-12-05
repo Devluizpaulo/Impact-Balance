@@ -38,9 +38,36 @@
     },
     "actions": {
       "downloadCsv": "Download CSV",
+      "importCsv": "Import CSV",
       "new": "New Client",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "view": "View Profile",
+      "deleteSelected": "Delete Selected",
+      "selected": "{count} selected",
+      "bulkDeleteConfirmTitle": "Delete Clients?",
+      "bulkDeleteConfirmDescription": "Are you sure you want to delete the {count} selected clients? This action cannot be undone.",
+      "bulkDeleteSuccess": "{count} clients deleted successfully.",
+      "deleteError": "Failed to delete clients."
+    },
+    "importModal": {
+      "title": "Import Clients",
+      "description": "Select an .xlsx or .csv file to import or update clients. To update, make sure the 'id' column is present.",
+      "selectFile": "Select File",
+      "downloadTemplate": "Download Template",
+      "cancel": "Cancel",
+      "importSuccess": {
+        "title": "Import Successful",
+        "description": "{created} clients created and {updated} clients updated."
+      },
+      "importError": {
+        "title": "Import Failed",
+        "description": "An error occurred while processing the file. Please check the file format and try again.",
+        "readError": "Could not read the selected file."
+      },
+      "previewTitle": "Import Preview",
+      "previewDescription": "Please review the data below. {count} records will be imported or updated.",
+      "confirmImport": "Confirm and Import"
     },
     "filters": {
       "searchPlaceholder": "Search by name or document...",
@@ -70,6 +97,7 @@
     "form": {
       "newClientTitle": "Register New Client",
       "editClientTitle": "Edit Client",
+      "viewClientTitle": "Details of {name}",
       "newClientDescription": "Fill in the data below to add a new client to your agenda.",
       "saveSuccess": "Client saved successfully!",
       "saveError": "Error saving client",
@@ -82,7 +110,8 @@
       "documentType": "Document type",
       "razaoSocial": "Company Name",
       "nomeFantasia": "Trade Name",
-      "fullName": "Full Name",
+      "firstName": "First Name",
+      "lastName": "Last Name",
       "phone": "Phone",
       "mobile": "Mobile",
       "country": "Country",
@@ -101,7 +130,13 @@
       "selectPlaceholder": "Select...",
       "cancel": "Cancel",
       "save": "Save",
-      "update": "Update"
+      "update": "Update",
+      "status": "Situation",
+      "profiles": "Profiles",
+      "searchProfile": "Search profile...",
+      "noProfileFound": "No profile found.",
+      "close": "Close",
+      "registerDate": "Register date"
     }
   },
   "SealStatusPage": {
@@ -110,7 +145,7 @@
     "importButton": "Import Data",
     "importModal": {
       "title": "Import Legacy Seals",
-      "description": "Select an XLSX or CSV file to import. The file must contain columns for <code >Pedido</code>, <code >Data</code>, <code >Cliente</code>, <code >Telefone</code>, <code >PARC/PROG</code>, <code >UF</code>, <code >Quantidade</code>, <code >Taxa</code>, and <code >Total</code>. The date can be in a standard format (e.g., YYYY-MM-DD) or an Excel date number.<span></span>",
+      "description": "Select an XLSX or CSV file to import. The file must contain columns for <code >Pedido</code>, <code >Data</code>, <code >Cliente</code>, <code >Telefone</code>, <code >PARC/PROG</code>, <code >UF</code>, <code >Quantidade</code>, <code >Taxa</code>, and <code >Total</code>. The date can be in a standard format (e.g., YYYY-MM-DD) or an Excel date number.<span>If a client does not exist in the Agenda, they will be created automatically.</span>",
       "selectFile": "Select File",
       "downloadTemplate": "Download Template",
       "cancel": "Cancel"
@@ -631,5 +666,26 @@
     "logoutSuccess": {
       "title": "Logout Successful"
     }
+  },
+  "Profiles": {
+    "Administrador": "Administrator",
+    "Usuário AKSES": "AKSES User",
+    "Cliente": "Client",
+    "IMEI": "IMEI",
+    "Associação": "Association",
+    "Produtor": "Producer",
+    "Governo": "Government",
+    "Parceiro": "Partner",
+    "Distribuidor Geral": "General Distributor",
+    "Distribuidor Financeiro": "Financial Distributor",
+    "Distribuidor Credenciado": "Certified Distributor",
+    "Jurídico": "Legal",
+    "Diretor": "Director",
+    "Supervisor": "Supervisor",
+    "Operador GEO": "GEO Operator",
+    "Administrativo": "Administrative",
+    "TI": "IT",
+    "Auditoria": "Audit",
+    "Financeiro": "Financial"
   }
 }

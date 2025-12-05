@@ -38,9 +38,36 @@
     },
     "actions": {
       "downloadCsv": "Descargar CSV",
+      "importCsv": "Importar CSV",
       "new": "Nuevo Cliente",
       "edit": "Editar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "view": "Ver Perfil",
+      "deleteSelected": "Eliminar Seleccionados",
+      "selected": "{count} seleccionado(s)",
+      "bulkDeleteConfirmTitle": "¿Eliminar Clientes?",
+      "bulkDeleteConfirmDescription": "¿Está seguro de que desea eliminar los {count} clientes seleccionados? Esta acción no se puede deshacer.",
+      "bulkDeleteSuccess": "{count} clientes eliminados con éxito.",
+      "deleteError": "Error al eliminar clientes."
+    },
+    "importModal": {
+      "title": "Importar Clientes",
+      "description": "Seleccione un archivo .xlsx o .csv para importar o actualizar clientes. Para actualizar, asegúrese de que la columna 'id' esté presente.",
+      "selectFile": "Seleccionar Archivo",
+      "downloadTemplate": "Descargar Plantilla",
+      "cancel": "Cancelar",
+      "importSuccess": {
+        "title": "Importación Exitosa",
+        "description": "{created} clientes creados y {updated} clientes actualizados."
+      },
+      "importError": {
+        "title": "Error en la Importación",
+        "description": "Ocurrió un error al procesar el archivo. Por favor, verifique el formato del archivo e intente de nuevo.",
+        "readError": "No se pudo leer el archivo seleccionado."
+      },
+      "previewTitle": "Vista Previa de la Importación",
+      "previewDescription": "Revise los datos a continuación. Se importarán o actualizarán {count} registros.",
+      "confirmImport": "Confirmar e Importar"
     },
     "filters": {
       "searchPlaceholder": "Busque por nombre o documento...",
@@ -70,6 +97,7 @@
     "form": {
       "newClientTitle": "Registrar Nuevo Cliente",
       "editClientTitle": "Editar Cliente",
+      "viewClientTitle": "Detalles de {name}",
       "newClientDescription": "Complete los datos a continuación para agregar un nuevo cliente a su agenda.",
       "saveSuccess": "¡Cliente guardado con éxito!",
       "saveError": "Error al guardar el cliente",
@@ -82,7 +110,8 @@
       "documentType": "Tipo de documento",
       "razaoSocial": "Razón Social",
       "nomeFantasia": "Nombre de Fantasía",
-      "fullName": "Nombre Completo",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
       "phone": "Teléfono",
       "mobile": "Celular",
       "country": "País",
@@ -101,7 +130,13 @@
       "selectPlaceholder": "Seleccione...",
       "cancel": "Cancelar",
       "save": "Guardar",
-      "update": "Actualizar"
+      "update": "Actualizar",
+      "status": "Situación",
+      "profiles": "Perfiles",
+      "searchProfile": "Buscar perfil...",
+      "noProfileFound": "No se encontró ningún perfil.",
+      "close": "Cerrar",
+      "registerDate": "Fecha de registro"
     }
   },
   "SealStatusPage": {
@@ -110,7 +145,7 @@
     "importButton": "Importar Datos",
     "importModal": {
       "title": "Importar Sellos Heredados",
-      "description": "Seleccione un archivo XLSX o CSV para importar. El archivo debe contener columnas para <code >Pedido</code>, <code >Data</code>, <code >Cliente</code>, <code >Telefone</code>, <code >PARC/PROG</code>, <code >UF</code>, <code >Quantidade</code>, <code >Taxa</code>, y <code >Total</code>. La fecha puede estar en un formato estándar (ej., YYYY-MM-DD) o como un número de fecha de Excel.<span></span>",
+      "description": "Seleccione un archivo XLSX o CSV para importar. El archivo debe contener columnas para <code >Pedido</code>, <code >Data</code>, <code >Cliente</code>, <code >Telefone</code>, <code >PARC/PROG</code>, <code >UF</code>, <code >Quantidade</code>, <code >Taxa</code>, y <code >Total</code>. La fecha puede estar en un formato estándar (ej., YYYY-MM-DD) o como un número de fecha de Excel.<span>Si un cliente no existe en la Agenda, se creará automáticamente.</span>",
       "selectFile": "Seleccionar Archivo",
       "downloadTemplate": "Descargar Plantilla",
       "cancel": "Cancelar"
@@ -631,5 +666,26 @@
     "logoutSuccess": {
       "title": "Cierre de Sesión Exitoso"
     }
+  },
+  "Profiles": {
+    "Administrador": "Administrador",
+    "Usuário AKSES": "Usuario AKSES",
+    "Cliente": "Cliente",
+    "IMEI": "IMEI",
+    "Associação": "Asociación",
+    "Produtor": "Productor",
+    "Governo": "Gobierno",
+    "Parceiro": "Socio",
+    "Distribuidor Geral": "Distribuidor General",
+    "Distribuidor Financeiro": "Distribuidor Financiero",
+    "Distribuidor Credenciado": "Distribuidor Certificado",
+    "Jurídico": "Legal",
+    "Diretor": "Director",
+    "Supervisor": "Supervisor",
+    "Operador GEO": "Operador GEO",
+    "Administrativo": "Administrativo",
+    "TI": "TI",
+    "Auditoria": "Auditoría",
+    "Financeiro": "Financiero"
   }
 }

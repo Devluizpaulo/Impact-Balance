@@ -2,8 +2,8 @@
 "use client";
 
 import { db } from './firebase/config';
-import { collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import type { EventRecord, NewEventRecord, ClientData, FormData, ParticipantData } from './types';
+import { collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc, writeBatch } from 'firebase/firestore';
+import type { EventRecord, NewEventRecord, ClientData, FormData as EventFormData } from './types';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
@@ -34,7 +34,14 @@ export const getClients = async (): Promise<(ClientData & { id: string })[]> => 
 
 export const addClient = (newClient: ClientData) => {
      const clientsCollection = collection(db, CLIENTS_COLLECTION);
-     addDoc(clientsCollection, newClient).catch(async (serverError) => {
+     
+     // Add createdAt timestamp for new clients
+     const dataToSave = {
+         ...newClient,
+         createdAt: new Date(),
+     }
+
+     addDoc(clientsCollection, dataToSave).catch(async (serverError) => {
         const err = serverError as { code?: string };
         if (err?.code === 'permission-denied') {
             const permissionError = new FirestorePermissionError({
@@ -48,6 +55,51 @@ export const addClient = (newClient: ClientData) => {
         }
     });
 };
+
+export const updateClient = async (clientId: string, dataToUpdate: Partial<ClientData>) => {
+    const clientDoc = doc(db, CLIENTS_COLLECTION, clientId);
+    try {
+        await updateDoc(clientDoc, dataToUpdate);
+    } catch (serverError) {
+        const err = serverError as { code?: string };
+        if (err?.code === 'permission-denied') {
+            const permissionError = new FirestorePermissionError({
+                path: clientDoc.path,
+                operation: 'update',
+                requestResourceData: dataToUpdate,
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        } else {
+             console.error("Error updating client in Firestore", serverError);
+        }
+    }
+};
+
+
+export const deleteClients = async (clientIds: string[]): Promise<void> => {
+    const batch = writeBatch(db);
+    clientIds.forEach(id => {
+        const docRef = doc(db, CLIENTS_COLLECTION, id);
+        batch.delete(docRef);
+    });
+    
+    try {
+        await batch.commit();
+    } catch (serverError) {
+        const err = serverError as { code?: string };
+        if (err?.code === 'permission-denied') {
+            const permissionError = new FirestorePermissionError({
+                path: `/${CLIENTS_COLLECTION}/{multiple_ids}`,
+                operation: 'delete',
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        } else {
+            console.error("Error bulk deleting clients from Firestore", serverError);
+        }
+        // Re-throw to be caught by the calling function
+        throw serverError;
+    }
+}
 
 
 // --- EVENTS / SEALS ---
@@ -90,10 +142,10 @@ export const getEvents = async (): Promise<EventRecord[]> => {
 export const addEvent = (newEvent: NewEventRecord, eventTimestamp?: number) => {
     const eventsCollection = collection(db, EVENTS_COLLECTION);
     
-    const payload: Omit<EventRecord, 'id'> = {
-        timestamp: eventTimestamp || Date.now(),
-        archived: false,
+    const payload = {
         ...newEvent,
+        timestamp: eventTimestamp || Date.now(),
+        archived: newEvent.archived ?? false,
     };
 
     addDoc(eventsCollection, payload).catch(async (serverError) => {
@@ -112,11 +164,10 @@ export const addEvent = (newEvent: NewEventRecord, eventTimestamp?: number) => {
 };
 
 // Function to update partial data of an event/seal
-export const updateEvent = (eventId: string, dataToUpdate: Partial<FormData>): Promise<void> => {
+export const updateEvent = (eventId: string, dataToUpdate: Partial<EventFormData>): Promise<void> => {
     const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
     
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const updatePayload: Record<string, any> = {};
+    const updatePayload: Record<string, unknown> = {};
     for (const key in dataToUpdate) {
         updatePayload[`formData.${key}`] = dataToUpdate[key as keyof typeof dataToUpdate];
     }
@@ -142,3 +193,5 @@ export const deleteEvent = (eventId: string): Promise<void> => {
     const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
     return deleteDoc(eventDoc);
 };
+
+    

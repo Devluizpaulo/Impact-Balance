@@ -1,4 +1,5 @@
 
+
 import { z } from 'zod';
 
 type FormTranslations = {
@@ -11,33 +12,63 @@ type FormTranslations = {
 };
 
 // --- Client / Agenda ---
+export const clientStatusSchema = z.enum(['Ativo', 'Inativo', 'Pendente']);
+export type ClientStatus = z.infer<typeof clientStatusSchema>;
+
+export const clientProfileSchema = z.enum([
+    'Administrador', 'Usuário AKSES', 'Cliente', 'IMEI', 'Associação', 
+    'Produtor', 'Governo', 'Parceiro', 'Distribuidor Geral', 
+    'Distribuidor Financeiro', 'Distribuidor Credenciado', 'Jurídico', 
+    'Diretor', 'Supervisor', 'Operador GEO', 'Administrativo', 'TI', 
+    'Auditoria', 'Financeiro'
+]);
+export type ClientProfile = z.infer<typeof clientProfileSchema>;
+
+
 export const clientSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  firstName: z.string().min(1, "O nome é obrigatório"),
+  lastName: z.string().optional(),
+  email: z.string().email("E-mail inválido").optional(),
+  mobile: z.string().optional(),
+  phone: z.string().optional(),
+  createdAt: z.any().optional(),
+  status: clientStatusSchema.default('Ativo'),
+  
   accountType: z.enum(['pf', 'pj']),
-  documentType: z.string(),
-  documentNumber: z.string().min(1, "Campo obrigatório"),
+  documentType: z.string().optional(),
+  documentNumber: z.string().optional(),
+  
   razaoSocial: z.string().optional(),
   nomeFantasia: z.string().optional(),
-  name: z.string().optional(),
-  phone: z.string().optional(),
-  mobile: z.string().min(1, "Celular é obrigatório"),
-  email: z.string().email("E-mail inválido"),
   
   // Endereço
-  cep: z.string().min(1, "CEP é obrigatório"),
-  country: z.string().default('Brasil'),
-  state: z.string().min(1, "Estado é obrigatório"),
-  city: z.string().min(1, "Cidade é obrigatória"),
-  street: z.string().min(1, "Rua é obrigatória"),
+  addressType: z.string().optional(),
+  street: z.string().optional(),
+  number: z.string().optional(),
   complement: z.string().optional(),
-  neighborhood: z.string().min(1, "Bairro é obrigatório"),
-  number: z.string().min(1, "Número é obrigatório"),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  postalCode: z.string().optional(),
+  country: z.string().default('Brasil'),
+
+  stateRegistration: z.string().optional(),
+
+  // Perfis
+  profiles: z.array(clientProfileSchema).optional(),
 
   // Dados Bancários
   bank: z.string().optional(),
   accountTypeBank: z.string().optional(),
   agency: z.string().optional(),
   accountNumber: z.string().optional(),
-});
+}).transform(data => ({
+    ...data,
+    name: `${data.firstName} ${data.lastName || ''}`.trim()
+}));
+
 
 export type ClientData = z.infer<typeof clientSchema>;
 
@@ -151,4 +182,3 @@ export interface EventRecord {
 
 export type NewEventRecord = Omit<EventRecord, 'id' | 'timestamp'>;
 
-    

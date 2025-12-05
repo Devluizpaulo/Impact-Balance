@@ -128,10 +128,12 @@ export default function SealStatusPage() {
                             razaoSocial: clientName,
                             nomeFantasia: clientName,
                             name: clientName,
+                            firstName: clientName,
+                            lastName: '',
                             phone: phone,
                             mobile: phone || 'N/A',
                             email: 'email@padrao.com',
-                            cep: 'N/A',
+                            postalCode: 'N/A',
                             country: 'Brasil',
                             state: String(row['UF'] || 'N/A'),
                             city: 'N/A',
@@ -139,6 +141,7 @@ export default function SealStatusPage() {
                             complement: '',
                             neighborhood: 'N/A',
                             number: 'N/A',
+                            status: 'Ativo',
                         };
                         await addClient(newClient);
                         existingClientNames.add(normalizedClientName);
@@ -280,7 +283,7 @@ export default function SealStatusPage() {
                             <AlertDialogTitle>{t('importModal.title')}</AlertDialogTitle>
                             <AlertDialogDescription>
                                 {t.rich('importModal.description', {
-                                    span: (chunks) => <div className="mt-2">{chunks}</div>,
+                                    span: (chunks) => <span className="block mt-2">{chunks}</span>,
                                     code: (chunks) => <code className="font-mono bg-muted p-1 rounded-sm text-xs">{chunks}</code>
                                 })}
                             </AlertDialogDescription>
@@ -355,6 +358,3 @@ export default function SealStatusPage() {
     );
 }
 
-
-
-    
