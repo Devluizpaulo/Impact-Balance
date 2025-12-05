@@ -2,7 +2,7 @@
 "use client";
 
 import { db } from './firebase/config';
-import { collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, orderBy, doc, updateDoc, deleteDoc, writeBatch, type FieldValue } from 'firebase/firestore';
 import type { EventRecord, NewEventRecord, ClientData, FormData as EventFormData } from './types';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -35,7 +35,6 @@ export const getClients = async (): Promise<(ClientData & { id: string })[]> => 
 export const addClient = (newClient: ClientData) => {
      const clientsCollection = collection(db, CLIENTS_COLLECTION);
      
-     // Add createdAt timestamp for new clients
      const dataToSave = {
          ...newClient,
          createdAt: new Date(),
@@ -145,7 +144,6 @@ export const addEvent = (newEvent: NewEventRecord, eventTimestamp?: number) => {
     const payload = {
         ...newEvent,
         timestamp: eventTimestamp || Date.now(),
-        archived: newEvent.archived ?? false,
     };
 
     addDoc(eventsCollection, payload).catch(async (serverError) => {
@@ -167,7 +165,7 @@ export const addEvent = (newEvent: NewEventRecord, eventTimestamp?: number) => {
 export const updateEvent = (eventId: string, dataToUpdate: Partial<EventFormData>): Promise<void> => {
     const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
     
-    const updatePayload: Record<string, unknown> = {};
+    const updatePayload: { [key: string]: FieldValue | Partial<unknown> | undefined } = {};
     for (const key in dataToUpdate) {
         updatePayload[`formData.${key}`] = dataToUpdate[key as keyof typeof dataToUpdate];
     }
@@ -193,5 +191,3 @@ export const deleteEvent = (eventId: string): Promise<void> => {
     const eventDoc = doc(db, EVENTS_COLLECTION, eventId);
     return deleteDoc(eventDoc);
 };
-
-    

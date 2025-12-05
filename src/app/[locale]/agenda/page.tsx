@@ -398,7 +398,7 @@ export default function AgendaPage() {
     
     // States for import flow
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-    const [isImporting, setIsImporting] = useState(isImportModalOpen);
+    const [isImporting, setIsImporting] = useState(false);
     const [previewData, setPreviewData] = useState<Partial<ClientData>[]>([]);
     const [isPreviewing, setIsPreviewing] = useState(false);
     
@@ -1053,4 +1053,3 @@ export default function AgendaPage() {
         </AppShell>
     );
 }
-    
