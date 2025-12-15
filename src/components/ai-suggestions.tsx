@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -25,11 +26,17 @@ export default function AiSuggestions({ formData }: AiSuggestionsProps) {
             setIsLoading(true);
             setSuggestions(null);
 
+            const getMaxDays = () => {
+                const participantDays = Object.values(formData.participants).map(p => p?.days || 0);
+                const visitorDays = formData.visitors?.unit === 'days' ? (formData.visitors.days || 0) : 0;
+                return Math.max(...participantDays, visitorDays, 0);
+            }
+
             const eventData = `
                 Event: ${formData.eventName}
                 Participants: ${JSON.stringify(formData.participants)}
-                Visitors: ${formData.visitors}
-                Duration: ${formData.durationDays} days
+                Visitors: ${JSON.stringify(formData.visitors)}
+                Duration: ${getMaxDays()} days
             `.trim().replace(/^\s+/gm, '');
 
             // Temporarily using static suggestions instead of AI

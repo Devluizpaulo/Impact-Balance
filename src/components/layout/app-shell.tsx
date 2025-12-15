@@ -1,15 +1,17 @@
+
 "use client"
 
 import { BookText, Calculator, Globe, Map, Settings, Leaf, PanelLeft } from "lucide-react";
-import { Link, usePathname } from "@/navigation";
+import { Link, usePathname, Pathnames } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
 import Header from "./header"
 import { cn } from "@/lib/utils";
+import { pathnames } from "@/navigation";
 
-const navItemsConfig = [
+const navItemsConfig: { href: keyof typeof pathnames; icon: React.ReactNode; translationKey: string }[] = [
   { href: "/", icon: <Calculator className="h-5 w-5" />, translationKey: 'calculator' },
   { href: "/parameters", icon: <Settings className="h-5 w-5" />, translationKey: 'parameters' },
   { href: "/data-figures", icon: <Globe className="h-5 w-5" />, translationKey: 'dataFigures' },
